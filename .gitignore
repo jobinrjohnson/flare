@@ -1,0 +1,7 @@
+build/
+cmake-build-*
+.idea
+.vscode/
+.DS_Store
+program.sampleast
+temp
