@@ -12,6 +12,7 @@
     #include <iostream>
 
     #include"../ast/Node.h"
+    #include"../ast/ExprNode.h"
 
 }
 
@@ -42,11 +43,11 @@
 }
 
 %start start
-%type <ast> start expr scalar
+%type <ast> start expr scalar statements statement assignment_expression
 
 
 %token <tIntegerValue> T_INTEGER
-%token TOK_EOF 0 PLUS
+%token TOK_EOF 0 PLUS IDENTIFIER
 
 %left '+' '-'
 %left '*' '/' 
@@ -54,7 +55,7 @@
 %%
 
 start:
-    '{' expr '}' {
+    '{' statements '}' {
 
         $$ = $2;
         $$->printLLVMir();
@@ -62,16 +63,29 @@ start:
     }
 ;
 
+statements:
+    statement                       { $$ = $1; }
+    | statement statements          { $$ = $1; }
+;
+
+statement:
+    ';'                             { $$ = nullptr; }
+    | expr ';'                      { $$ = $1; }
+;
+
+
 expr:
-        expr '+' expr   { $$ = new ast::Node('+', $1, $3);  }
-        |
-        scalar          { $$ = $1; }
+        expr '+' expr                   { $$ = new ast::Node('+', $1, $3);  }
+        | assignment_expression         { $$ = $1; }
+        | scalar                        { $$ = $1; }
+;
+
+assignment_expression:
+        IDENTIFIER '=' expr             { }
 ;
 
 scalar :
-    T_INTEGER {
-        $$ = new ast::Node($1);
-    }
+    T_INTEGER                           { $$ = new ast::Node($1); }
 ;
 
 %%

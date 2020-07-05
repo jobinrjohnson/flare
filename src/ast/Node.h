@@ -57,6 +57,11 @@ namespace ast {
 
 
     public:
+
+        Node(){
+
+        }
+
         Node(int a) {
 
             this->nodeType = 0;

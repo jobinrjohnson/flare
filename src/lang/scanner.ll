@@ -41,10 +41,11 @@ typedef lang::Parser::token_type token_type;
   STEP();
 %}
 
+[a-zA-Z_]([a-zA-Z_]|[0-9])* {  return token::IDENTIFIER; }
 
 [0-9]+        {
                   yylval->tIntegerValue = atoi(yytext);
-                  return Parser::token::T_INTEGER;
+                  return token::T_INTEGER;
               }
 "+"           {return '+';}
 "-"           {return '-';}
@@ -55,9 +56,19 @@ typedef lang::Parser::token_type token_type;
 "}"           {return '}';}
 
 
+
+";"           {return ';';}
+
+
+
+
 [ \t]+       STEP();
 
-[\n\r]+         {LINE(yyleng); return token::TOK_EOF;};
+[\n\r]+         {
+                    STEP();
+                    // LINE(yyleng); //return token::TOK_EOF;
+                    // return '\n';
+                }
 
 .             {
                 std::cerr << *driver.cursor << " Unexpected token : "

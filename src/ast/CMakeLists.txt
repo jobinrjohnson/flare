@@ -6,4 +6,4 @@ add_library(
         ast
         STATIC
 
-        Node.cpp)
+        Node.cpp ExprNode.cpp ExprNode.h)
