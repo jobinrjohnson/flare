@@ -5,5 +5,5 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_library(
         ast
         STATIC
-
-        Node.cpp ExprNode.cpp ExprNode.h)
+        Node.h Node.cpp
+        ExprNode.cpp ExprNode.h)
