@@ -15,15 +15,15 @@ namespace ast {
     class ExprNode : public Node {
 
     private:
-        std::vector<Node> operands;
+        std::vector<Node*> operands;
         OperatorType opr;
 
     public:
         ExprNode();
 
-        ExprNode(OperatorType opr, Node a); // unary
-        ExprNode(OperatorType opr, Node a, Node b); // binary
-        ExprNode(OperatorType opr, Node a, Node b, Node c); // ternary
+        ExprNode(OperatorType opr, Node *a); // unary
+        ExprNode(OperatorType opr, Node *a, Node *b); // binary
+        ExprNode(OperatorType opr, Node *a, Node *b, Node *c); // ternary
 
         llvm::Value *codeGen();
 

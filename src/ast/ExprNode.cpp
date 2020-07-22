@@ -3,6 +3,7 @@
 //
 
 #include "ExprNode.h"
+#include "LiteralNode.h"
 
 namespace ast {
     ExprNode::ExprNode() {
@@ -10,19 +11,19 @@ namespace ast {
     }
 
 
-    ExprNode::ExprNode(OperatorType opr, Node a) {
+    ExprNode::ExprNode(OperatorType opr, Node *a) {
         this->opr = opr;
         this->operands.push_back(a);
     }
 
 
-    ExprNode::ExprNode(OperatorType opr, Node a, Node b) {
+    ExprNode::ExprNode(OperatorType opr, Node *a, Node *b) {
         this->opr = opr;
         this->operands.push_back(a);
         this->operands.push_back(b);
     }
 
-    ExprNode::ExprNode(OperatorType opr, Node a, Node b, Node c) {
+    ExprNode::ExprNode(OperatorType opr, Node *a, Node *b, Node *c) {
         this->opr = opr;
         this->operands.push_back(a);
         this->operands.push_back(b);
@@ -36,12 +37,12 @@ namespace ast {
         switch (this->opr) {
             case PLUS:
                 value = builder.CreateAdd(
-                        this->operands[0].codeGen(), this->operands[1].codeGen(),
+                        this->operands[0]->codeGen(), this->operands[1]->codeGen(),
                         "add");
                 break;
             case MINUS:
                 value = builder.CreateFSub(
-                        this->operands[0].codeGen(), this->operands[1].codeGen(),
+                        this->operands[0]->codeGen(), this->operands[1]->codeGen(),
                         "sub");
                 break;
             default:

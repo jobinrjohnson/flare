@@ -11,8 +11,8 @@
     #include "location.hh"
     #include <iostream>
 
-    #include"../ast/Node.h"
     #include"../ast/ExprNode.h"
+    #include"../ast/LiteralNode.h"
 
 }
 
@@ -38,12 +38,17 @@
 
 %union
 {
-    ast::Node *ast;
+    ast::ExprNode *ast;
+    // Originals
+    ast::LiteralNode *literal;
+    ast::ExprNode *expression;
     int tIntegerValue;
 }
 
 %start start
-%type <ast> start expr scalar statements statement assignment_expression
+%type <ast> start
+%type <expression> expr
+%type <literal> scalar
 
 
 %token <tIntegerValue> T_INTEGER
@@ -55,7 +60,7 @@
 %%
 
 start:
-    '{' statements '}' {
+    '{' expr '}' {
 
         $$ = $2;
         $$->printLLVMir();
@@ -63,29 +68,13 @@ start:
     }
 ;
 
-statements:
-    statement                       { $$ = $1; }
-    | statement statements          { $$ = $1; }
-;
-
-statement:
-    ';'                             { $$ = nullptr; }
-    | expr ';'                      { $$ = $1; }
-;
-
-
 expr:
-        expr '+' expr                   { $$ = new ast::Node('+', $1, $3);  }
-        | assignment_expression         { $$ = $1; }
-        | scalar                        { $$ = $1; }
+        scalar '+' scalar             { $$ = new ast::ExprNode(OperatorType::PLUS, $1, $3); }
 ;
 
-assignment_expression:
-        IDENTIFIER '=' expr             { }
-;
 
-scalar :
-    T_INTEGER                           { $$ = new ast::Node($1); }
+scalar:
+    T_INTEGER                         { $$ = new ast::LiteralNode($1); }
 ;
 
 %%

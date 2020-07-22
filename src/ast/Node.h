@@ -27,82 +27,10 @@ namespace ast {
     private:
 
         int nodeType;
-        // For Type 0
-        int nodeValue;
-
-        // For type 1
-        Node *opA, *opB;
-        char opr;
-
-        // For type 2
-        Node *mNode;
-
-
-    protected:
-        llvm::Value *codeGenConstNode() {
-//            std::cout << "Constant : " << this->nodeValue << std::endl;
-            return llvm::ConstantFP::get(llvmContext, llvm::APFloat((float) this->nodeValue));
-        }
-
-        llvm::Value *codeGenExprNode() {
-
-            llvm::Value *l = this->opA->codeGen();
-            llvm::Value *r = this->opB->codeGen();
-
-//            std::cout << "Expression : " << this->opr << std::endl;
-
-            return builder.CreateFAdd(l, r, "tmpAdd");
-
-        }
-
 
     public:
 
-        Node(){
-
-        }
-
-        Node(int a) {
-
-            this->nodeType = 0;
-
-            this->nodeValue = a;
-
-        }
-
-        Node(char opr, Node *a, Node *b) {
-
-            this->nodeType = 1;
-
-            this->opA = a;
-            this->opB = b;
-            this->opr = opr;
-
-        }
-
-        Node(Node *a) {
-
-            this->nodeType = 2;
-
-            this->mNode = a;
-
-        }
-
-        llvm::Value *codeGen() {
-
-            switch (this->nodeType) {
-                case 0:
-                    return this->codeGenConstNode();
-                case 1:
-                    return this->codeGenExprNode();
-                case 2:
-                    return mNode->codeGen();
-                default:
-                    throw "Invalid node type.";
-            }
-
-        }
-
+        virtual llvm::Value *codeGen() = 0;
 
         void printLLVMir() {
 
