@@ -8,14 +8,19 @@
 #include "Node.h"
 
 enum OperatorType {
-    PLUS, MINUS
+    PLUS,
+    MINUS,
+    MUL,
+    DIV,
+    MODE,
+    SCALAR
 };
 
 namespace ast {
     class ExprNode : public Node {
 
     private:
-        std::vector<Node*> operands;
+        std::vector<Node *> operands;
         OperatorType opr;
 
     public:

@@ -69,7 +69,12 @@ start:
 ;
 
 expr:
-        scalar '+' scalar             { $$ = new ast::ExprNode(OperatorType::PLUS, $1, $3); }
+        scalar                          { $$ = new ast::ExprNode(OperatorType::SCALAR, $1); }
+        | expr '+' expr                 { $$ = new ast::ExprNode(OperatorType::PLUS, $1, $3); }
+        | expr '-' expr                 { $$ = new ast::ExprNode(OperatorType::MINUS, $1, $3); }
+        | expr '*' expr                 { $$ = new ast::ExprNode(OperatorType::MUL, $1, $3); }
+        | expr '/' expr                 { $$ = new ast::ExprNode(OperatorType::DIV, $1, $3); }
+        | expr '%' expr                 { $$ = new ast::ExprNode(OperatorType::MODE, $1, $3); }
 ;
 
 

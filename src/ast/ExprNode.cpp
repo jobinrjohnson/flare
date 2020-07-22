@@ -3,7 +3,6 @@
 //
 
 #include "ExprNode.h"
-#include "LiteralNode.h"
 
 namespace ast {
     ExprNode::ExprNode() {
@@ -35,15 +34,28 @@ namespace ast {
         llvm::Value *value;
 
         switch (this->opr) {
+            case SCALAR:
+                value = this->operands[0]->codeGen();
+                break;
             case PLUS:
                 value = builder.CreateAdd(
                         this->operands[0]->codeGen(), this->operands[1]->codeGen(),
-                        "add");
+                        "mAdd");
                 break;
             case MINUS:
                 value = builder.CreateFSub(
                         this->operands[0]->codeGen(), this->operands[1]->codeGen(),
-                        "sub");
+                        "mSub");
+                break;
+            case MUL:
+                value = builder.CreateFMul(
+                        this->operands[0]->codeGen(), this->operands[1]->codeGen(),
+                        "mMul");
+                break;
+            case DIV:
+                value = builder.CreateFDiv(
+                        this->operands[0]->codeGen(), this->operands[1]->codeGen(),
+                        "mDiv");
                 break;
             default:
                 throw "Operand not implemented."; // TODO throw proper error.
