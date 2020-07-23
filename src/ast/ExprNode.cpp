@@ -38,7 +38,7 @@ namespace ast {
                 value = this->operands[0]->codeGen();
                 break;
             case PLUS:
-                value = builder.CreateAdd(
+                value = builder.CreateFAdd(
                         this->operands[0]->codeGen(), this->operands[1]->codeGen(),
                         "mAdd");
                 break;
