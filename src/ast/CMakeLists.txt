@@ -6,4 +6,4 @@ add_library(
         ast
         STATIC
         Node.h Node.cpp
-        ExprNode.cpp ExprNode.h LiteralNode.cpp LiteralNode.h)
+        ExprNode.cpp ExprNode.h LiteralNode.cpp LiteralNode.h StatementListNode.cpp StatementListNode.h)
