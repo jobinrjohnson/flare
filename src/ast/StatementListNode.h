@@ -7,6 +7,7 @@
 
 
 #include "Node.h"
+#include "VarDeclNode.h"
 
 namespace ast {
 
@@ -30,6 +31,7 @@ namespace ast {
         llvm::Value *codeGen() {
             std::cout << "Calling StatementListNode@codegen" << "\n";
             llvm::Value *last = NULL;
+            (new VarDeclNode("hello"))->codeGen();
             for (auto const &value:this->statements) {
                 last = value->codeGen();
             }
