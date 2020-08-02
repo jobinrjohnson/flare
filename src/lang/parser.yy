@@ -44,7 +44,10 @@
     ast::LiteralNode *literal;
     ast::ExprNode *expression;
     ast::StatementListNode *statementList;
+    ast::VarDeclNode *varDecl;
+
     int tIntegerValue;
+    char *yyText;
 }
 
 
@@ -55,10 +58,12 @@
 %type <expression> expr
 %type <literal> scalar
 %type <statementList> statements
+%type <varDecl> variable_declaration
 
 
+%token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
-%token TOK_EOF 0 PLUS IDENTIFIER
+%token TOK_EOF 0 PLUS KW_LET
 
 %left '+' '-'
 %left '*' '/' 
@@ -81,7 +86,12 @@ statements:
 ;
 
 statement:
-    expr ';'                            { }
+    expr                                { }
+    | variable_declaration              { }
+;
+
+variable_declaration:
+    KW_LET IDENTIFIER                   { $$ = new ast::VarDeclNode($2); }
 ;
 
 
