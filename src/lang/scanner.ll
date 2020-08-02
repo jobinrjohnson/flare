@@ -43,17 +43,16 @@ typedef lang::Parser::token_type token_type;
 
 [a-zA-Z_]([a-zA-Z_]|[0-9])* {
 
-    if(
-        strcmp("let",yytext)==0 ||
-        strcmp("var",yytext)==0
-    ){
-        return token::KW_LET;
-    }
+                if (strcmp("let", yytext) == 0) {
+                    return token::KW_LET;
+                } else if (strcmp("var", yytext) == 0) {
+                    return token::KW_VAR;
+                }
 
-    yylval->yyText = yytext;
-    return token::IDENTIFIER;
+                yylval->yyText = yytext;
+                return token::IDENTIFIER;
 
-   }
+              }
 
 [0-9]+        {
                   yylval->tIntegerValue = atoi(yytext);

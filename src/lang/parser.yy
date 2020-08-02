@@ -63,7 +63,7 @@
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
-%token TOK_EOF 0 PLUS KW_LET
+%token TOK_EOF 0 PLUS KW_LET KW_VAR
 
 %left '+' '-'
 %left '*' '/' 
@@ -92,6 +92,7 @@ statement:
 
 variable_declaration:
     KW_LET IDENTIFIER                   { $$ = new ast::VarDeclNode($2); }
+    | KW_VAR IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
 ;
 
 
