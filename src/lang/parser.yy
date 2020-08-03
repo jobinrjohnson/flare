@@ -93,8 +93,8 @@ statement:
 variable_declaration:
     KW_LET IDENTIFIER                   { $$ = new ast::VarDeclNode($2); }
     | KW_VAR IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
-    | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); }
-    | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); }
+    | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
+    | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
 ;
 
 

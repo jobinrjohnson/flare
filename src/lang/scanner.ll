@@ -49,7 +49,9 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_VAR;
                 }
 
-                yylval->yyText = yytext;
+                yylval->yyText = (char *) malloc(strlen(yytext));
+                strcpy(yylval->yyText, yytext);
+
                 return token::IDENTIFIER;
 
               }
@@ -62,6 +64,7 @@ typedef lang::Parser::token_type token_type;
 "-"           {return '-';}
 "*"           {return '*';}
 "/"           {return '/';}
+"="           {return '=';}
 
 "{"           {return '{';}
 "}"           {return '}';}

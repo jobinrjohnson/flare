@@ -1,6 +1,6 @@
 {
-let xkkkkk
-let hello
+let xkkkkk = 10
+let hello = 20 + 10
 var hello2
 50+10-10*10/20
 50+10

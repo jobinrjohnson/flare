@@ -25,7 +25,7 @@ namespace ast {
         }
 
         VarDeclNode(char *name, Node *initialValue) {
-            this->variableName.assign(name);
+            this->variableName = name;
             this->initialValue = initialValue;
         }
 
@@ -41,7 +41,7 @@ namespace ast {
                     this->variableName);
 
             Value *value = this->initialValue->codeGen();
-            gvar_ptr_abc->setInitializer(static_cast<Constant *>(value));
+            gvar_ptr_abc->setInitializer(dyn_cast<Constant>(value));
 
             return gvar_ptr_abc;
         }
