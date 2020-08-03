@@ -16,6 +16,7 @@
     #include"../ast/LiteralNode.h"
     #include"../ast/StatementListNode.h"
     #include"../ast/VariableDerefNode.h"
+    #include"../ast/AssignmentNode.h"
 
 }
 
@@ -46,6 +47,7 @@
     ast::ExprNode *expression;
     ast::StatementListNode *statementList;
     ast::VarDeclNode *varDecl;
+    ast::AssignmentNode *assignmentNode;
 
     int tIntegerValue;
     char *yyText;
@@ -60,6 +62,7 @@
 %type <literal> scalar
 %type <statementList> statements
 %type <varDecl> variable_declaration
+%type <assignmentNode> assignment_expr
 
 
 %token <yyText> IDENTIFIER
@@ -89,6 +92,7 @@ statements:
 statement:
     expr                                { }
     | variable_declaration              { }
+    | assignment_expr                   { }
 ;
 
 variable_declaration:
@@ -96,6 +100,10 @@ variable_declaration:
     | KW_VAR IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
     | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
     | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
+;
+
+assignment_expr:
+    IDENTIFIER '=' expr                 { $$ = new ast::AssignmentNode($1, $3); free($1); }
 ;
 
 
