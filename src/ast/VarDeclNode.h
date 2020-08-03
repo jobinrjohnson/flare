@@ -7,6 +7,7 @@
 
 
 #include "Node.h"
+#include "LiteralNode.h"
 
 namespace ast {
 
@@ -14,17 +15,22 @@ namespace ast {
 
     protected:
         std::string variableName;
+        Node *initialValue;
 
     public:
 
         VarDeclNode(char *name) {
             this->variableName.assign(name);
+            this->initialValue = new ast::LiteralNode(0);
+        }
+
+        VarDeclNode(char *name, Node *initialValue) {
+            this->variableName.assign(name);
+            this->initialValue = initialValue;
         }
 
         llvm::Value *codeGen() {
             std::cout << "Calling VarDeclNode@codegen" << "\n";
-
-            auto value = llvm::ConstantFP::get(llvmContext, llvm::APFloat(0.0));
 
             llvm::GlobalVariable *gvar_ptr_abc = new llvm::GlobalVariable(
                     *modules,
@@ -33,7 +39,9 @@ namespace ast {
                     llvm::GlobalValue::CommonLinkage,
                     0,
                     this->variableName);
-            gvar_ptr_abc->setInitializer(value);
+
+            Value *value = this->initialValue->codeGen();
+            gvar_ptr_abc->setInitializer(static_cast<Constant *>(value));
 
             return gvar_ptr_abc;
         }

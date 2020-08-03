@@ -16,6 +16,8 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Verifier.h"
 
+using namespace llvm;
+
 static llvm::LLVMContext llvmContext;
 static llvm::IRBuilder<> builder(llvmContext);
 static std::unique_ptr<llvm::Module> modules;
