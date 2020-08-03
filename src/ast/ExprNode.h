@@ -13,7 +13,8 @@ enum OperatorType {
     MUL,
     DIV,
     MODE,
-    SCALAR
+    SCALAR,
+    VAR_DE_REF
 };
 
 namespace ast {

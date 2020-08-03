@@ -15,6 +15,7 @@
     #include"../ast/ExprNode.h"
     #include"../ast/LiteralNode.h"
     #include"../ast/StatementListNode.h"
+    #include"../ast/VariableDerefNode.h"
 
 }
 
@@ -100,6 +101,7 @@ variable_declaration:
 
 expr:
         scalar                          { $$ = new ast::ExprNode(OperatorType::SCALAR, $1); }
+        | IDENTIFIER                    { $$ = new ast::ExprNode(OperatorType::SCALAR, new ast::VariableDerefNode($1)); }
         | expr '+' expr                 { $$ = new ast::ExprNode(OperatorType::PLUS, $1, $3); }
         | expr '-' expr                 { $$ = new ast::ExprNode(OperatorType::MINUS, $1, $3); }
         | expr '*' expr                 { $$ = new ast::ExprNode(OperatorType::MUL, $1, $3); }

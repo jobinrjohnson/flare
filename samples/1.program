@@ -1,9 +1,9 @@
 {
 let xkkkkk = 10
 let hello = 20 + 10
-var hello2
-50+10-10*10/20
+var hello2 = 1
+50+10-10*10/hello
 50+10
 50+10
-50+10
+50+hello
 }
