@@ -36,7 +36,7 @@ namespace ast {
         llvm::Value *codeGen() {
             std::cout << "Calling VarDeclNode@codegen" << "\n";
 
-            llvm::GlobalVariable *gvar_ptr_abc = new llvm::GlobalVariable(
+            llvm::GlobalVariable *gvar = new llvm::GlobalVariable(
                     *modules,
                     llvm::Type::getInt32Ty(llvmContext),
                     false,
@@ -45,9 +45,9 @@ namespace ast {
                     this->variableName);
 
             Value *value = this->initialValue->codeGen();
-            gvar_ptr_abc->setInitializer(dyn_cast<Constant>(value));
+            gvar->setInitializer(dyn_cast<Constant>(value));
 
-            return gvar_ptr_abc;
+            return gvar;
         }
 
     };

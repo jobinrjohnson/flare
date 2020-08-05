@@ -29,10 +29,9 @@ namespace ast {
         }
 
         llvm::Value *codeGen() {
-            Value *value = this->expression->codeGen();
 
             auto variable = modules->getGlobalVariable(this->varName);
-
+            Value *value = this->expression->codeGen();
             return builder.CreateStore(value,variable);
         }
 
