@@ -12,16 +12,29 @@ namespace ast {
     class VariableDerefNode : public Node {
 
     protected:
+
         std::string variableName;
 
     public:
+
+        NodeType getNodeType() {
+            return VAR_DEREF_NODE;
+        }
 
         VariableDerefNode(char *mLiteralValue) {
             this->variableName = mLiteralValue;
         }
 
         llvm::Value *codeGen() {
-            return modules->getNamedGlobal(this->variableName);
+            std::cout << "Calling VariableDerefNode@codegen" << "\n";
+
+            auto gVar = modules->getNamedGlobal(this->variableName);
+            if (!gVar) {
+                throw "no global variable declared with the name"; // TODO throw proper error
+            }
+
+            return builder.CreateLoad(gVar, this->variableName);
+
         }
 
 

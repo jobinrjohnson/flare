@@ -30,32 +30,44 @@ namespace ast {
     }
 
     llvm::Value *ExprNode::codeGen() {
+        std::cout << "Calling ExprNode@codegen" << "\n";
 
         llvm::Value *value;
 
         switch (this->opr) {
             case SCALAR:
-                value = this->operands[0]->codeGen();
+                return this->operands[0]->codeGen();
+                break;
+            case VAR_DE_REF:
+                return this->operands[0]->codeGen();
                 break;
             case PLUS:
-                value = builder.CreateFAdd(
-                        this->operands[0]->codeGen(), this->operands[1]->codeGen(),
-                        "mAdd");
+                value = builder.CreateAdd(
+                        this->operands[0]->codeGen(),
+                        this->operands[1]->codeGen(),
+                        "mAdd"
+                );
                 break;
             case MINUS:
-                value = builder.CreateFSub(
-                        this->operands[0]->codeGen(), this->operands[1]->codeGen(),
-                        "mSub");
+                value = builder.CreateSub(
+                        this->operands[0]->codeGen(),
+                        this->operands[1]->codeGen(),
+                        "mSub"
+                );
                 break;
             case MUL:
-                value = builder.CreateFMul(
-                        this->operands[0]->codeGen(), this->operands[1]->codeGen(),
-                        "mMul");
+                value = builder.CreateMul(
+                        this->operands[0]->codeGen(),
+                        this->operands[1]->codeGen(),
+                        "mMul"
+                );
                 break;
             case DIV:
                 value = builder.CreateFDiv(
-                        this->operands[0]->codeGen(), this->operands[1]->codeGen(),
-                        "mDiv");
+                        this->operands[0]->codeGen(),
+                        this->operands[1]->codeGen(),
+                        "mDiv"
+                );
                 break;
             default:
                 throw "Operand not implemented."; // TODO throw proper error.

@@ -18,6 +18,11 @@ namespace ast {
 
 
     public:
+
+        NodeType getNodeType() {
+            return STATEMENT_LIST_NODE;
+        }
+
         StatementListNode() {}
 
         StatementListNode(Node *node) {
@@ -30,12 +35,10 @@ namespace ast {
 
         llvm::Value *codeGen() {
             std::cout << "Calling StatementListNode@codegen" << "\n";
-            llvm::Value *last = NULL;
-//            (new VarDeclNode("hello"))->codeGen();
             for (auto const &value:this->statements) {
-                last = value->codeGen();
+                value->codeGen();
             }
-            return last;
+            return ConstantInt::get(llvmContext, APInt(32, 0));
         }
 
     };

@@ -109,7 +109,7 @@ assignment_expr:
 
 expr:
         scalar                          { $$ = new ast::ExprNode(OperatorType::SCALAR, $1); }
-        | IDENTIFIER                    { $$ = new ast::ExprNode(OperatorType::SCALAR, new ast::VariableDerefNode($1)); }
+        | IDENTIFIER                    { $$ = new ast::ExprNode(OperatorType::VAR_DE_REF, new ast::VariableDerefNode($1)); }
         | expr '+' expr                 { $$ = new ast::ExprNode(OperatorType::PLUS, $1, $3); }
         | expr '-' expr                 { $$ = new ast::ExprNode(OperatorType::MINUS, $1, $3); }
         | expr '*' expr                 { $$ = new ast::ExprNode(OperatorType::MUL, $1, $3); }

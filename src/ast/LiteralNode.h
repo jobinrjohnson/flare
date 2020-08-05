@@ -17,12 +17,16 @@ namespace ast {
 
     public:
 
+        NodeType getNodeType() {
+            return LITERAL_NODE;
+        }
+
         LiteralNode(int mLiteralValue) {
             this->literalValue = mLiteralValue;
         }
 
         llvm::Value *codeGen() {
-            return llvm::ConstantFP::get(llvmContext, llvm::APFloat((float) this->literalValue));
+            return llvm::ConstantInt::get(llvmContext, APInt(32, this->literalValue));
         }
 
 

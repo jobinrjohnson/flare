@@ -22,6 +22,16 @@ static llvm::LLVMContext llvmContext;
 static llvm::IRBuilder<> builder(llvmContext);
 static std::unique_ptr<llvm::Module> modules;
 
+enum NodeType {
+    NODE,
+    ASSIGNMENT_NODE,
+    EXPR_NODE,
+    LITERAL_NODE,
+    STATEMENT_LIST_NODE,
+    VAR_DECL_NODE,
+    VAR_DEREF_NODE
+};
+
 namespace ast {
 
     class Node {
@@ -32,21 +42,27 @@ namespace ast {
 
     public:
 
+        void printDebug(std::string str) {
+            std::cout << str << "\n\n";
+            std::cout.flush();
+        }
+
         virtual llvm::Value *codeGen() = 0;
+
+        virtual NodeType getNodeType() = 0;
 
         void printLLVMir() {
 
             modules = std::make_unique<llvm::Module>("FlareTest", llvmContext);
 
             std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(llvmContext));
-            llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getFloatTy(llvmContext),
+            llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(llvmContext),
                                                                           argVector, false);
             llvm::Function *function = llvm::Function::Create(functionRetType, llvm::GlobalValue::ExternalLinkage,
                                                               "main", modules.get());
 
             llvm::BasicBlock *basicBlock = llvm::BasicBlock::Create(llvmContext, "entry", function);
             builder.SetInsertPoint(basicBlock);
-
             if (llvm::Value *ret = this->codeGen()) {
                 builder.CreateRet(ret);
                 llvm::verifyFunction(*function);

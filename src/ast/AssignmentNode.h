@@ -18,19 +18,22 @@ namespace ast {
 
     public:
 
+        NodeType getNodeType() {
+            return ASSIGNMENT_NODE;
+        }
+
+
         AssignmentNode(char *name, Node *node) {
             this->varName = name;
             this->expression = node;
         }
 
         llvm::Value *codeGen() {
-
             Value *value = this->expression->codeGen();
 
             auto variable = modules->getGlobalVariable(this->varName);
-            builder.CreateStore(value,variable);
 
-            return value;
+            return builder.CreateStore(value,variable);
         }
 
 

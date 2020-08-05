@@ -19,6 +19,10 @@ namespace ast {
 
     public:
 
+        NodeType getNodeType() {
+            return VAR_DECL_NODE;
+        }
+
         VarDeclNode(char *name) {
             this->variableName.assign(name);
             this->initialValue = new ast::LiteralNode(0);
@@ -34,7 +38,7 @@ namespace ast {
 
             llvm::GlobalVariable *gvar_ptr_abc = new llvm::GlobalVariable(
                     *modules,
-                    llvm::Type::getFloatTy(llvmContext),
+                    llvm::Type::getInt32Ty(llvmContext),
                     false,
                     llvm::GlobalValue::CommonLinkage,
                     0,

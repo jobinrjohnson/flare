@@ -25,6 +25,11 @@ namespace ast {
         OperatorType opr;
 
     public:
+
+        NodeType getNodeType() {
+            return EXPR_NODE;
+        }
+
         ExprNode();
 
         ExprNode(OperatorType opr, Node *a); // unary
@@ -32,6 +37,7 @@ namespace ast {
         ExprNode(OperatorType opr, Node *a, Node *b, Node *c); // ternary
 
         llvm::Value *codeGen();
+        llvm::Value *codeGen2();
 
     };
 
