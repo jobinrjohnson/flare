@@ -16,6 +16,18 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Verifier.h"
 
+
+#include "llvm/ExecutionEngine/Interpreter.h"
+#include "llvm/ExecutionEngine/GenericValue.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/Support/ManagedStatic.h"
+#include "llvm/Support/TargetSelect.h"
+#include "llvm/Support/raw_ostream.h"
+
+
 using namespace llvm;
 
 static llvm::LLVMContext llvmContext;
@@ -65,14 +77,32 @@ namespace ast {
             builder.SetInsertPoint(basicBlock);
             if (llvm::Value *ret = this->codeGen()) {
                 builder.CreateRet(ret);
-                if (!llvm::verifyFunction(*function, &(llvm::errs()))) {
-                    std::cout << "llvm verification fail" << "\n\n\n";
-                }
+                llvm::verifyFunction(*function, &(llvm::errs()));
             }
 
-            std::cout << "========================================\n";
-            modules->print(llvm::outs(), nullptr);
-            std::cout << "========================================\n\n";
+//            std::cout << "========================================\n";
+//            modules->print(llvm::outs(), nullptr);
+//            std::cout << "========================================\n\n";
+
+
+            int retVal = -1;
+
+
+            InitializeNativeTarget();
+            ExecutionEngine *EE = EngineBuilder(std::move(modules)).create();
+            std::vector<GenericValue> args;
+            GenericValue gv = EE->runFunction(
+                    function,
+                    args
+            );
+
+            retVal = gv.IntVal.getZExtValue();
+
+            outs() << "Exit code: " << retVal << "\n";
+            delete EE;
+            llvm_shutdown();
+
+
         }
 
 
