@@ -67,7 +67,7 @@
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
-%token TOK_EOF 0 PLUS KW_LET KW_VAR
+%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF
 
 %left '+' '-'
 %left '*' '/' 
@@ -93,6 +93,14 @@ statement:
     expr                                { }
     | variable_declaration              { }
     | assignment_expr                   { }
+;
+
+if_statement:
+    KW_IF '(' expr ')' '{' statements '}'       {
+
+
+
+    }
 ;
 
 variable_declaration:
