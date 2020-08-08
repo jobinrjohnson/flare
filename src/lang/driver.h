@@ -11,27 +11,32 @@
 
 namespace lang {
 
-class Parser;
-class Scanner;
-class location;
+    class Parser;
 
-class Driver {
+    class Scanner;
 
-public:
-  Driver();
-  ~Driver();
-  int parseFile(std::string &path);
+    class location;
 
-private:
-  Scanner *scanner;
-  Parser *parser;
-  location *cursor;
+    class Driver {
 
-  int error_;
+    public:
+        Driver();
 
-  friend class Parser;
-  friend class Scanner;
-};
+        ~Driver();
+
+        int parseFile(std::string &path);
+
+    private:
+        Scanner *scanner;
+        Parser *parser;
+        location *cursor;
+
+        int error_;
+
+        friend class Parser;
+
+        friend class Scanner;
+    };
 
 } // namespace lang
 

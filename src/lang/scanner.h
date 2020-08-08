@@ -18,19 +18,21 @@
 #endif
 
 namespace lang {
-class Scanner : public LangFlexLexer {
-public:
-  Scanner();
-  virtual ~Scanner();
-  void setDebug(bool b);
+    class Scanner : public LangFlexLexer {
+    public:
+        Scanner();
+
+        virtual ~Scanner();
+
+        void setDebug(bool b);
 
 //#pragma clang diagnostic push
 //#pragma clang diagnostic ignored "-Woverloaded-virtual"
-  virtual int yylex(Parser::semantic_type *yylval,
-                                   Parser::location_type *l, Driver &driver);
+        virtual int yylex(Parser::semantic_type *yylval,
+                          Parser::location_type *l, Driver &driver);
 //#pragma clang diagnostic pop
 
-};
+    };
 } // namespace lang
 
 #endif // SCANPIT_HH_

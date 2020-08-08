@@ -65,12 +65,14 @@ namespace ast {
             builder.SetInsertPoint(basicBlock);
             if (llvm::Value *ret = this->codeGen()) {
                 builder.CreateRet(ret);
-                if (!llvm::verifyFunction(*function)) {
+                if (!llvm::verifyFunction(*function, &(llvm::errs()))) {
                     std::cout << "llvm verification fail" << "\n\n\n";
                 }
             }
 
-            modules->print(llvm::errs(), nullptr);
+            std::cout << "========================================\n";
+            modules->print(llvm::outs(), nullptr);
+            std::cout << "========================================\n\n";
         }
 
 
