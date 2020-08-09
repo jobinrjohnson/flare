@@ -45,7 +45,8 @@ enum NodeType {
     VAR_DECL_NODE,
     VAR_DEREF_NODE,
     IF_NODE,
-    LOG_NODE
+    LOG_NODE,
+    VALUE_PLACEHOLDER_NODE
 };
 
 namespace ast {
