@@ -44,7 +44,8 @@ enum NodeType {
     STATEMENT_LIST_NODE,
     VAR_DECL_NODE,
     VAR_DEREF_NODE,
-    IF_NODE
+    IF_NODE,
+    LOG_NODE
 };
 
 namespace ast {
@@ -83,21 +84,6 @@ namespace ast {
 
         virtual NodeType getNodeType() = 0;
 
-
-
-        void doPrintFinal(Value *valueToPrint) {
-            FunctionType *printfType = FunctionType::get(
-                    Type::getInt32Ty(llvmContext),
-                    {Type::getInt8PtrTy(llvmContext)},
-                    true
-            );
-            auto calleeFunction = modules->getOrInsertFunction("printf", printfType);
-            std::vector<Value *> calleeArgs;
-
-            calleeArgs.push_back(builder.CreateGlobalStringPtr("%d\n", "printfFormat"));
-            calleeArgs.push_back(valueToPrint);
-            builder.CreateCall(calleeFunction, calleeArgs, "printCall");
-        }
 
         void printLLVMir() {
 

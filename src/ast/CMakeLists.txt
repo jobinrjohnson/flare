@@ -6,4 +6,4 @@ add_library(
         ast
         STATIC
         Node.h Node.cpp
-        ExprNode.cpp ExprNode.h LiteralNode.cpp LiteralNode.h StatementListNode.cpp StatementListNode.h VarDeclNode.cpp VarDeclNode.h VariableDerefNode.cpp VariableDerefNode.h AssignmentNode.cpp AssignmentNode.h IfStatementNode.cpp IfStatementNode.h)
+        ExprNode.cpp ExprNode.h LiteralNode.cpp LiteralNode.h StatementListNode.cpp StatementListNode.h VarDeclNode.cpp VarDeclNode.h VariableDerefNode.cpp VariableDerefNode.h AssignmentNode.cpp AssignmentNode.h IfStatementNode.cpp IfStatementNode.h LogSmtNode.cpp LogSmtNode.h)

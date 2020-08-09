@@ -18,6 +18,7 @@
     #include"../ast/VariableDerefNode.h"
     #include"../ast/AssignmentNode.h"
     #include"../ast/IfStatementNode.h"
+    #include"../ast/LogSmtNode.h"
 
 }
 
@@ -50,6 +51,7 @@
     ast::VarDeclNode *varDecl;
     ast::AssignmentNode *assignmentNode;
     ast::IfStatementNode *ifStatementNode;
+    ast::LogSmtNode *logSmtNode;
 
     int tIntegerValue;
     char *yyText;
@@ -66,11 +68,12 @@
 %type <varDecl> variable_declaration
 %type <assignmentNode> assignment_expr
 %type <ifStatementNode> if_statement if_else_if
+%type <logSmtNode> log_statement
 
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
-%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE
+%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG
 
 %left '+' '-'
 %left '*' '/' 
@@ -98,6 +101,11 @@ statement:
     | assignment_expr                   { }
     | if_statement                      { }
     | if_else_if                        { }
+    | log_statement                     { }
+;
+
+log_statement:
+    KW_LOG '(' expr ')'                 {  $$ = new ast::LogSmtNode($<node>3);  }
 ;
 
 if_else_if:

@@ -51,8 +51,9 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_IF;
                 } else if (strcmp("else", yytext) == 0) {
                     return token::KW_ELSE;
+                }else if (strcmp("log", yytext) == 0) {
+                    return token::KW_LOG;
                 }
-
                 yylval->yyText = (char *) malloc(strlen(yytext));
                 strcpy(yylval->yyText, yytext);
 
