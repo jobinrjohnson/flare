@@ -67,7 +67,7 @@
 %type <statementList> statements
 %type <varDecl> variable_declaration
 %type <assignmentNode> assignment_expr
-%type <ifStatementNode> if_statement if_else_if
+%type <ifStatementNode> if_else_if
 %type <logSmtNode> log_statement
 
 
@@ -95,11 +95,11 @@ statements:
     | statements statement              { $1->push($<node>2); }
 ;
 
+
 statement:
     expr                                { }
     | variable_declaration              { }
     | assignment_expr                   { }
-    | if_statement                      { }
     | if_else_if                        { }
     | log_statement                     { }
 ;
@@ -108,18 +108,18 @@ log_statement:
     KW_LOG '(' expr ')'                 {  $$ = new ast::LogSmtNode($<node>3);  }
 ;
 
+
 if_else_if:
-    if_statement  KW_ELSE KW_IF '(' expr ')' '{' statements '}' {
+    KW_IF '(' expr ')' '{' statements '}'                           {
+        $$ = new ast::IfStatementNode($3, $6);
+    }
+    | if_else_if KW_ELSE KW_IF '(' expr ')' '{' statements '}'      {
         $1->addBranch($5, $8);
         $$ = $1;
     }
-;
-
-if_statement:
-    KW_IF '(' expr ')' '{' statements '}'      {
-
-            $$ = new ast::IfStatementNode($3, $6);
-
+    | if_else_if KW_ELSE '{' statements '}'                         {
+        $1->addElseBranch($4);
+        $$ = $1;
     }
 ;
 
@@ -129,6 +129,7 @@ variable_declaration:
     | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
     | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
 ;
+
 
 assignment_expr:
     IDENTIFIER '=' expr                 { $$ = new ast::AssignmentNode($1, $3); free($1); }

@@ -1,12 +1,13 @@
 {
-    let a  = 10
-    a = 10
+    let a  = 30
+    let b = 20
 
     if ( a < 10 ){
-        a = a + 1
-        log(a)
+        a = 1
     } else if ( a < 20 ) {
-        a = a + 10
+        a = 10
+    } else {
+        a = 100
     }
 
     log(a)
