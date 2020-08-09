@@ -43,7 +43,8 @@ enum NodeType {
     LITERAL_NODE,
     STATEMENT_LIST_NODE,
     VAR_DECL_NODE,
-    VAR_DEREF_NODE
+    VAR_DEREF_NODE,
+    IF_NODE
 };
 
 namespace ast {
@@ -82,9 +83,28 @@ namespace ast {
 
         virtual NodeType getNodeType() = 0;
 
+
+
+        void doPrintFinal(Value *valueToPrint) {
+            FunctionType *printfType = FunctionType::get(
+                    Type::getInt32Ty(llvmContext),
+                    {Type::getInt8PtrTy(llvmContext)},
+                    true
+            );
+            auto calleeFunction = modules->getOrInsertFunction("printf", printfType);
+            std::vector<Value *> calleeArgs;
+
+            calleeArgs.push_back(builder.CreateGlobalStringPtr("%d\n", "printfFormat"));
+            calleeArgs.push_back(valueToPrint);
+            builder.CreateCall(calleeFunction, calleeArgs, "printCall");
+        }
+
         void printLLVMir() {
 
             modules = std::make_unique<llvm::Module>("FlareTest", llvmContext);
+
+
+
 
             std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(llvmContext));
             llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(llvmContext),
@@ -94,14 +114,16 @@ namespace ast {
 
             llvm::BasicBlock *basicBlock = llvm::BasicBlock::Create(llvmContext, "entry", function);
             builder.SetInsertPoint(basicBlock);
-            if (llvm::Value *ret = this->codeGen(0)) {
-                builder.CreateRet(ret);
-                llvm::verifyFunction(*function, &(llvm::errs()));
-            }
 
-//            std::cout << "========================================\n";
-//            modules->print(llvm::outs(), nullptr);
-//            std::cout << "========================================\n\n";
+
+            this->codeGen(0);
+
+            builder.CreateRet(ConstantInt::get(llvmContext, APInt(32, 0)));
+            llvm::verifyFunction(*function, &(llvm::errs()));
+
+            std::cout << "========================================\n";
+            modules->print(llvm::outs(), nullptr);
+            std::cout << "========================================\n\n";
 
             if (FLARE_DEBUG) {
                 outs() << "\n\n";

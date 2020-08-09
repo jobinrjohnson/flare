@@ -14,7 +14,10 @@ enum OperatorType {
     DIV,
     MODE,
     SCALAR,
-    VAR_DE_REF
+    VAR_DE_REF,
+    GREATER_THAN,
+    LESS_THAN,
+    EQUALITY
 };
 
 namespace ast {
@@ -43,7 +46,7 @@ namespace ast {
 
         llvm::Value *codeGen(int depth) {
 
-            this->printCallStack(depth,"ExprNode", __FUNCTION__);
+            this->printCallStack(depth, "ExprNode", __FUNCTION__);
 
             llvm::Value *value;
 
@@ -78,6 +81,13 @@ namespace ast {
                             this->operands[0]->codeGen(depth + 1),
                             this->operands[1]->codeGen(depth + 1),
                             "mDiv"
+                    );
+                    break;
+                case LESS_THAN:
+                    value = builder.CreateICmpSLT(
+                            this->operands[0]->codeGen(depth + 1),
+                            this->operands[1]->codeGen(depth + 1),
+                            "boolEq"
                     );
                     break;
                 default:

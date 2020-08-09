@@ -17,6 +17,7 @@
     #include"../ast/StatementListNode.h"
     #include"../ast/VariableDerefNode.h"
     #include"../ast/AssignmentNode.h"
+    #include"../ast/IfStatementNode.h"
 
 }
 
@@ -48,6 +49,7 @@
     ast::StatementListNode *statementList;
     ast::VarDeclNode *varDecl;
     ast::AssignmentNode *assignmentNode;
+    ast::IfStatementNode *ifStatementNode;
 
     int tIntegerValue;
     char *yyText;
@@ -63,11 +65,12 @@
 %type <statementList> statements
 %type <varDecl> variable_declaration
 %type <assignmentNode> assignment_expr
+%type <ifStatementNode> if_statement if_else_if
 
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
-%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF
+%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE
 
 %left '+' '-'
 %left '*' '/' 
@@ -93,12 +96,21 @@ statement:
     expr                                { }
     | variable_declaration              { }
     | assignment_expr                   { }
+    | if_statement                      { }
+    | if_else_if                        { }
+;
+
+if_else_if:
+    if_statement  KW_ELSE KW_IF '(' expr ')' '{' statements '}' {
+        $1->addBranch($5, $8);
+        $$ = $1;
+    }
 ;
 
 if_statement:
-    KW_IF '(' expr ')' '{' statements '}'       {
+    KW_IF '(' expr ')' '{' statements '}'      {
 
-
+            $$ = new ast::IfStatementNode($3, $6);
 
     }
 ;
@@ -126,6 +138,7 @@ expr:
     | expr '*' expr                 { $$ = new ast::ExprNode(OperatorType::MUL, $1, $3); }
     | expr '/' expr                 { $$ = new ast::ExprNode(OperatorType::DIV, $1, $3); }
     | expr '%' expr                 { $$ = new ast::ExprNode(OperatorType::MODE, $1, $3); }
+    | expr '<' expr                 { $$ = new ast::ExprNode(OperatorType::LESS_THAN, $1, $3); }
 ;
 
 

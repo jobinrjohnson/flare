@@ -47,6 +47,10 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_LET;
                 } else if (strcmp("var", yytext) == 0) {
                     return token::KW_VAR;
+                } else if (strcmp("if", yytext) == 0) {
+                    return token::KW_IF;
+                } else if (strcmp("else", yytext) == 0) {
+                    return token::KW_ELSE;
                 }
 
                 yylval->yyText = (char *) malloc(strlen(yytext));
@@ -60,14 +64,19 @@ typedef lang::Parser::token_type token_type;
                   yylval->tIntegerValue = atoi(yytext);
                   return token::T_INTEGER;
               }
+
 "+"           {return '+';}
 "-"           {return '-';}
 "*"           {return '*';}
 "/"           {return '/';}
 "="           {return '=';}
+"<"           {return '<';}
 
 "{"           {return '{';}
 "}"           {return '}';}
+
+"("           {return '(';}
+")"           {return ')';}
 
 
 
