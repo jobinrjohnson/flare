@@ -41,41 +41,42 @@ namespace ast {
             this->operands.push_back(b);
         }
 
-        llvm::Value *codeGen() {
-            std::cout << "Calling ExprNode@codegen" << "\n";
+        llvm::Value *codeGen(int depth) {
+
+            this->printCallStack(depth,"ExprNode", __FUNCTION__);
 
             llvm::Value *value;
 
             switch (this->opr) {
                 case SCALAR:
-                    return this->operands[0]->codeGen();
+                    return this->operands[0]->codeGen(depth + 1);
                 case VAR_DE_REF:
-                    return this->operands[0]->codeGen();
+                    return this->operands[0]->codeGen(depth + 1);
                 case PLUS:
                     value = builder.CreateAdd(
-                            this->operands[0]->codeGen(),
-                            this->operands[1]->codeGen(),
+                            this->operands[0]->codeGen(depth + 1),
+                            this->operands[1]->codeGen(depth + 1),
                             "mAdd"
                     );
                     break;
                 case MINUS:
                     value = builder.CreateSub(
-                            this->operands[0]->codeGen(),
-                            this->operands[1]->codeGen(),
+                            this->operands[0]->codeGen(depth + 1),
+                            this->operands[1]->codeGen(depth + 1),
                             "mSub"
                     );
                     break;
                 case MUL:
                     value = builder.CreateMul(
-                            this->operands[0]->codeGen(),
-                            this->operands[1]->codeGen(),
+                            this->operands[0]->codeGen(depth + 1),
+                            this->operands[1]->codeGen(depth + 1),
                             "mMul"
                     );
                     break;
                 case DIV:
                     value = builder.CreateFDiv(
-                            this->operands[0]->codeGen(),
-                            this->operands[1]->codeGen(),
+                            this->operands[0]->codeGen(depth + 1),
+                            this->operands[1]->codeGen(depth + 1),
                             "mDiv"
                     );
                     break;

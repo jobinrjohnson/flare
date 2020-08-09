@@ -25,8 +25,8 @@ namespace ast {
             this->variableName = mLiteralValue;
         }
 
-        llvm::Value *codeGen() {
-            std::cout << "Calling VariableDerefNode@codegen" << "\n";
+        llvm::Value *codeGen(int depth) {
+            this->printCallStack(depth, "VariableDerefNode", __FUNCTION__);
 
             auto gVar = modules->getNamedGlobal(this->variableName);
             if (!gVar) {

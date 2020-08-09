@@ -5,6 +5,8 @@
 #ifndef FLARE_NODE_H
 #define FLARE_NODE_H
 
+#define FLARE_DEBUG true
+
 #include <iostream>
 
 #include "llvm/ADT/STLExtras.h"
@@ -54,12 +56,29 @@ namespace ast {
 
     public:
 
+        void printCallStack(int depth, std::string className, std::string functionName) {
+
+            if (!FLARE_DEBUG) {
+                return;
+            }
+
+            while (depth > 0) {
+                if (depth == 1) {
+                    std::cout << "|__";
+                } else {
+                    std::cout << "|  ";
+                };
+                depth--;
+            }
+            std::cout << className << "@" << functionName << std::endl;
+        }
+
         void printDebug(std::string str) {
             std::cout << str << "\n\n";
             std::cout.flush();
         }
 
-        virtual llvm::Value *codeGen() = 0;
+        virtual llvm::Value *codeGen(int depth) = 0;
 
         virtual NodeType getNodeType() = 0;
 
@@ -75,7 +94,7 @@ namespace ast {
 
             llvm::BasicBlock *basicBlock = llvm::BasicBlock::Create(llvmContext, "entry", function);
             builder.SetInsertPoint(basicBlock);
-            if (llvm::Value *ret = this->codeGen()) {
+            if (llvm::Value *ret = this->codeGen(0)) {
                 builder.CreateRet(ret);
                 llvm::verifyFunction(*function, &(llvm::errs()));
             }
@@ -83,6 +102,10 @@ namespace ast {
 //            std::cout << "========================================\n";
 //            modules->print(llvm::outs(), nullptr);
 //            std::cout << "========================================\n\n";
+
+            if (FLARE_DEBUG) {
+                outs() << "\n\n";
+            }
 
 
             int retVal = -1;

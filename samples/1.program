@@ -1,7 +1,9 @@
 {
-    let a = 1
-    a = a+10
-    a=a+100
-    a=a-1
+    let a = 10
+    let b = 1
+    a = a + b
+    b = a - b
+    a = a - b + 10 + 20 + 20 + 11
+
     a
 }

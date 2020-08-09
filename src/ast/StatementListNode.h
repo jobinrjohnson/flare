@@ -48,13 +48,13 @@ namespace ast {
         }
 
 
-        llvm::Value *codeGen() {
+        llvm::Value *codeGen(int depth) {
+
+            this->printCallStack(depth,"StatementListNode", __FUNCTION__);
 
             Value *finalValue = nullptr;
-
-            std::cout << "Calling StatementListNode@codegen" << "\n";
             for (auto const &value:this->statements) {
-                finalValue = value->codeGen();
+                finalValue = value->codeGen(depth+1);
             }
 
             if (finalValue != nullptr)
