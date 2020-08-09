@@ -37,8 +37,8 @@ namespace ast {
             this->printCallStack(depth,"VarDeclNode", __FUNCTION__);
 
             llvm::GlobalVariable *gvar = new llvm::GlobalVariable(
-                    *modules,
-                    llvm::Type::getInt32Ty(llvmContext),
+                    *module,
+                    llvm::Type::getInt32Ty(context),
                     false,
                     llvm::GlobalValue::CommonLinkage,
                     0,

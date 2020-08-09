@@ -28,11 +28,11 @@ namespace ast {
             this->printCallStack(depth, "LogSmtNode", __FUNCTION__);
 
             FunctionType *printfType = FunctionType::get(
-                    Type::getInt32Ty(llvmContext),
-                    {Type::getInt8PtrTy(llvmContext)},
+                    Type::getInt32Ty(context),
+                    {Type::getInt8PtrTy(context)},
                     true
             );
-            auto calleeFunction = modules->getOrInsertFunction("printf", printfType);
+            auto calleeFunction = module->getOrInsertFunction("printf", printfType);
             std::vector<Value *> calleeArgs;
 
             calleeArgs.push_back(builder.CreateGlobalStringPtr("%d\n", "printfFormat"));

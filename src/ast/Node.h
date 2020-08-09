@@ -32,9 +32,9 @@
 
 using namespace llvm;
 
-static llvm::LLVMContext llvmContext;
-static llvm::IRBuilder<> builder(llvmContext);
-static std::unique_ptr<llvm::Module> modules;
+static llvm::LLVMContext context;
+static llvm::IRBuilder<> builder(context);
+static std::unique_ptr<llvm::Module> module;
 
 enum NodeType {
     NODE,
@@ -88,28 +88,28 @@ namespace ast {
 
         void printLLVMir() {
 
-            modules = std::make_unique<llvm::Module>("FlareTest", llvmContext);
+            module = std::make_unique<llvm::Module>("FlareTest", context);
 
 
 
 
-            std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(llvmContext));
-            llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(llvmContext),
+            std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(context));
+            llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(context),
                                                                           argVector, false);
             llvm::Function *function = llvm::Function::Create(functionRetType, llvm::GlobalValue::ExternalLinkage,
-                                                              "main", modules.get());
+                                                              "main", module.get());
 
-            llvm::BasicBlock *basicBlock = llvm::BasicBlock::Create(llvmContext, "entry", function);
+            llvm::BasicBlock *basicBlock = llvm::BasicBlock::Create(context, "entry", function);
             builder.SetInsertPoint(basicBlock);
 
 
             this->codeGen(0);
 
-            builder.CreateRet(ConstantInt::get(llvmContext, APInt(32, 0)));
+            builder.CreateRet(ConstantInt::get(context, APInt(32, 0)));
             llvm::verifyFunction(*function, &(llvm::errs()));
 
             std::cout << "========================================\n";
-            modules->print(llvm::outs(), nullptr);
+            module->print(llvm::outs(), nullptr);
             std::cout << "========================================\n\n";
 
             if (FLARE_DEBUG) {
@@ -121,7 +121,7 @@ namespace ast {
 
 
             InitializeNativeTarget();
-            ExecutionEngine *EE = EngineBuilder(std::move(modules)).create();
+            ExecutionEngine *EE = EngineBuilder(std::move(module)).create();
             std::vector<GenericValue> args;
             GenericValue gv = EE->runFunction(
                     function,

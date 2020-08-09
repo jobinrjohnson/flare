@@ -32,7 +32,7 @@ namespace ast {
 
             this->printCallStack(depth,"AssignmentNode", __FUNCTION__);
 
-            auto variable = modules->getGlobalVariable(this->varName);
+            auto variable = module->getGlobalVariable(this->varName);
             Value *value = this->expression->codeGen(depth+1);
             return builder.CreateStore(value, variable);
         }

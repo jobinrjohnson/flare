@@ -27,7 +27,7 @@ namespace ast {
 
         llvm::Value *codeGen(int depth) {
             this->printCallStack(depth, "LiteralNode", __FUNCTION__);
-            return llvm::ConstantInt::get(llvmContext, APInt(32, this->literalValue));
+            return llvm::ConstantInt::get(context, APInt(32, this->literalValue));
         }
 
 

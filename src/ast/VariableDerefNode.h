@@ -28,7 +28,7 @@ namespace ast {
         llvm::Value *codeGen(int depth) {
             this->printCallStack(depth, "VariableDerefNode", __FUNCTION__);
 
-            auto gVar = modules->getNamedGlobal(this->variableName);
+            auto gVar = module->getNamedGlobal(this->variableName);
             if (!gVar) {
                 throw "no global variable declared with the name"; // TODO throw proper error
             }

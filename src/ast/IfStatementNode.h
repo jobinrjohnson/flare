@@ -40,7 +40,7 @@ namespace ast {
         void addElseBranch(Node *smt) {
             this->statementList.push_back(smt);
 
-            auto node = new ValuePlaceholderNode(ConstantInt::get(Type::getInt1Ty(llvmContext), 1, false));
+            auto node = new ValuePlaceholderNode(ConstantInt::get(Type::getInt1Ty(context), 1, false));
 
 
             this->condition.push_back(node);
@@ -59,12 +59,12 @@ namespace ast {
         llvm::Value *codegenIfElseIf(int depth) {
 
             llvm::Function *function = builder.GetInsertBlock()->getParent();
-            llvm::BasicBlock *mergeBlock = llvm::BasicBlock::Create(llvmContext, "ifCont");
+            llvm::BasicBlock *mergeBlock = llvm::BasicBlock::Create(context, "ifCont");
 
             for (unsigned long i = 0; i < this->condition.size(); ++i) {
 
-                llvm::BasicBlock *elseIfBlock = llvm::BasicBlock::Create(llvmContext, "ifCont");
-                llvm::BasicBlock *thenBlock = llvm::BasicBlock::Create(llvmContext, "thenBlk");
+                llvm::BasicBlock *elseIfBlock = llvm::BasicBlock::Create(context, "ifCont");
+                llvm::BasicBlock *thenBlock = llvm::BasicBlock::Create(context, "thenBlk");
 
                 builder.CreateCondBr(
                         this->condition[i]->codeGen(depth + 1),
