@@ -1,14 +1,6 @@
 {
-    let a  = 30
+    let a[]
     let b = 20
-
-    if ( a < 10 ){
-        a = 1
-    } else if ( a < 20 ) {
-        a = 10
-    } else {
-        a = 100
-    }
-
-    log(a)
+    b=20
+    log(b)
 }

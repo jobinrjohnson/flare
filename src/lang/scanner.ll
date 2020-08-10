@@ -79,6 +79,9 @@ typedef lang::Parser::token_type token_type;
 "("           {return '(';}
 ")"           {return ')';}
 
+"["           {return '[';}
+"]"           {return ']';}
+
 
 
 ";"           {return ';';}

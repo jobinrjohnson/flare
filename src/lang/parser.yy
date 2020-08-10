@@ -65,7 +65,7 @@
 %type <expression> expr
 %type <literal> scalar
 %type <statementList> statements
-%type <varDecl> variable_declaration
+%type <varDecl> variable_declaration array_declaration
 %type <assignmentNode> assignment_expr
 %type <ifStatementNode> if_else_if
 %type <logSmtNode> log_statement
@@ -124,10 +124,15 @@ if_else_if:
 ;
 
 variable_declaration:
-    KW_LET IDENTIFIER                   { $$ = new ast::VarDeclNode($2); }
+    array_declaration                   { }
+    | KW_LET IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
     | KW_VAR IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
     | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
     | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
+;
+
+array_declaration:
+    KW_LET IDENTIFIER '[' ']'           { $$ = new ast::VarDeclNode($2, true); }
 ;
 
 
