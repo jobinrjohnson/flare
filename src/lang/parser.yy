@@ -147,6 +147,10 @@ expr:
                                         auto derefrence = new ast::VariableDerefNode($1);
                                         $$ = new ast::ExprNode(OperatorType::VAR_DE_REF, derefrence);
                                     }
+    | IDENTIFIER '[' expr ']'       {
+                                        auto derefrence = new ast::VariableDerefNode($1, $3);
+                                        $$ = new ast::ExprNode(OperatorType::VAR_DE_REF, derefrence);
+                                    }
     | expr '+' expr                 { $$ = new ast::ExprNode(OperatorType::PLUS, $1, $3); }
     | expr '-' expr                 { $$ = new ast::ExprNode(OperatorType::MINUS, $1, $3); }
     | expr '*' expr                 { $$ = new ast::ExprNode(OperatorType::MUL, $1, $3); }

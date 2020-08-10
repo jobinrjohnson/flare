@@ -1,6 +1,7 @@
 {
     let a[]
     let b = 20
-    b=20
+    let c = 8
+    b = a[c]
     log(b)
 }
