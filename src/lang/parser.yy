@@ -54,6 +54,7 @@
     ast::LogSmtNode *logSmtNode;
 
     int tIntegerValue;
+    double tDecimalValue;
     char *yyText;
 }
 
@@ -73,6 +74,7 @@
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
+%token <tDecimalValue> T_DECIMAL
 %token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG
 
 %left '+' '-'
@@ -127,8 +129,8 @@ variable_declaration:
     array_declaration                   { }
     | KW_LET IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
     | KW_VAR IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
-    | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
-    | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
+//    | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
+//    | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
 ;
 
 array_declaration:
@@ -162,6 +164,7 @@ expr:
 
 scalar:
     T_INTEGER                         { $$ = new ast::LiteralNode($1); }
+    | T_DECIMAL                       { $$ = new ast::LiteralNode($1); }
 ;
 
 %%

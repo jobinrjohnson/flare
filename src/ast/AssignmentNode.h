@@ -30,11 +30,12 @@ namespace ast {
 
         llvm::Value *codeGen(int depth) {
 
-            this->printCallStack(depth,"AssignmentNode", __FUNCTION__);
+            this->printCallStack(depth, "AssignmentNode", __FUNCTION__);
 
             auto variable = module->getGlobalVariable(this->varName);
-            Value *value = this->expression->codeGen(depth+1);
+            Value *value = this->expression->codeGen(depth + 1);
             return builder.CreateStore(value, variable);
+
         }
 
 

@@ -37,41 +37,38 @@ namespace ast {
             this->isArray = isArray;
         }
 
-        llvm::Value *codeGen(int depth) {
+        Value *codeGenArray() {
 
-            if (this->isArray) {
+            std::vector<llvm::Constant *> initList;
 
-                std::vector<llvm::Constant *> initList;
+            int i = 100;
 
-                int i = 100;
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
 
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-                initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
+            llvm::ArrayType *array = llvm::ArrayType::get(Type::getInt32Ty(context), 10);
+            llvm::Constant *initializer = llvm::ConstantArray::get(array, initList);
 
-                llvm::ArrayType *array = llvm::ArrayType::get(Type::getInt32Ty(context), 10);
-                llvm::Constant *initializer = llvm::ConstantArray::get(array, initList);
+            llvm::Value *unitInitList = new llvm::GlobalVariable(*module,
+                                                                 array,
+                                                                 false,
+                                                                 llvm::GlobalValue::ExternalLinkage,
+                                                                 initializer,
+                                                                 this->variableName
+            );
 
-                llvm::Value *unitInitList = new llvm::GlobalVariable(*module,
-                                                                     array,
-                                                                     false,
-                                                                     llvm::GlobalValue::ExternalLinkage,
-                                                                     initializer,
-                                                                     this->variableName
-                );
+            return unitInitList;
+        }
 
-                return unitInitList;
-            }
-
-
-            this->printCallStack(depth, "VarDeclNode", __FUNCTION__);
+        Value *codeGenBuiltInTy(int depth) {
 
             llvm::GlobalVariable *gvar = new llvm::GlobalVariable(
                     *module,
@@ -85,6 +82,18 @@ namespace ast {
             gvar->setInitializer(dyn_cast<Constant>(value));
 
             return gvar;
+        }
+
+
+        llvm::Value *codeGen(int depth) {
+            this->printCallStack(depth, "VarDeclNode", __FUNCTION__);
+
+            if (this->isArray) {
+                return this->codeGenArray();
+            } else {
+                return this->codeGenBuiltInTy(depth);
+            };
+
         }
 
     };

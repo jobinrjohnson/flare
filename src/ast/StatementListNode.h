@@ -43,9 +43,6 @@ namespace ast {
                 finalValue = value->codeGen(depth+1);
             }
 
-//            if (finalValue != nullptr)
-//                this->doPrintFinal(finalValue);
-
             return finalValue;
         }
 

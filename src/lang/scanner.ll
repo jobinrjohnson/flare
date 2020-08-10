@@ -66,6 +66,16 @@ typedef lang::Parser::token_type token_type;
                   return token::T_INTEGER;
               }
 
+[0-9]+(\.[0-9][0-9]?) {
+                  yylval->tDecimalValue = atof(yytext);
+                  return token::T_DECIMAL;
+              }
+
+[0-9]+        {
+                  yylval->tIntegerValue = atoi(yytext);
+                  return token::T_INTEGER;
+              }
+
 "+"           {return '+';}
 "-"           {return '-';}
 "*"           {return '*';}
