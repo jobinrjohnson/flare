@@ -5,5 +5,15 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_library(
         ast
         STATIC
-        Node.h Node.cpp
-        ExprNode.cpp ExprNode.h LiteralNode.cpp LiteralNode.h StatementListNode.cpp StatementListNode.h VarDeclNode.cpp VarDeclNode.h VariableDerefNode.cpp VariableDerefNode.h AssignmentNode.cpp AssignmentNode.h IfStatementNode.cpp IfStatementNode.h LogSmtNode.cpp LogSmtNode.h ValuePlaceholderNode.cpp ValuePlaceholderNode.h)
+
+        implementation/Node.cpp Node.h
+        implementation/ExprNode.cpp ExprNode.h
+        implementation/LiteralNode.cpp LiteralNode.h
+        implementation/StatementListNode.cpp StatementListNode.h
+        implementation/VarDeclNode.cpp VarDeclNode.h
+        implementation/VariableDerefNode.cpp VariableDerefNode.h
+        implementation/AssignmentNode.cpp AssignmentNode.h
+        implementation/IfStatementNode.cpp IfStatementNode.h
+        implementation/LogSmtNode.cpp LogSmtNode.h
+        implementation/ValuePlaceholderNode.cpp ValuePlaceholderNode.h
+)

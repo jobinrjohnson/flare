@@ -11,14 +11,14 @@
     #include "location.hh"
     #include <iostream>
 
-    #include"../ast/Node.h"
-    #include"../ast/ExprNode.h"
-    #include"../ast/LiteralNode.h"
-    #include"../ast/StatementListNode.h"
-    #include"../ast/VariableDerefNode.h"
-    #include"../ast/AssignmentNode.h"
-    #include"../ast/IfStatementNode.h"
-    #include"../ast/LogSmtNode.h"
+    #include "ast/Node.h"
+    #include "ast/ExprNode.h"
+    #include "ast/LiteralNode.h"
+    #include "ast/StatementListNode.h"
+    #include "ast/VariableDerefNode.h"
+    #include "ast/AssignmentNode.h"
+    #include "ast/IfStatementNode.h"
+    #include "ast/LogSmtNode.h"
 
 }
 
@@ -129,8 +129,8 @@ variable_declaration:
     array_declaration                   { }
     | KW_LET IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
     | KW_VAR IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
-//    | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
-//    | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
+    | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
+    | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
 ;
 
 array_declaration:
