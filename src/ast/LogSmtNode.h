@@ -11,36 +11,16 @@
 namespace ast {
     class LogSmtNode : public Node {
 
+    protected:
         Node *node;
-
 
     public:
 
-        NodeType getNodeType() {
-            return LOG_NODE;
-        }
+        NodeType getNodeType();
 
-        LogSmtNode(Node *exprNode) {
-            this->node = exprNode;
-        }
+        LogSmtNode(Node *exprNode);
 
-        llvm::Value *codeGen(int depth) {
-            this->printCallStack(depth, "LogSmtNode", __FUNCTION__);
-
-            FunctionType *printfType = FunctionType::get(
-                    Type::getInt32Ty(context),
-                    {Type::getInt8PtrTy(context)},
-                    true
-            );
-            auto calleeFunction = module->getOrInsertFunction("printf", printfType);
-            std::vector<Value *> calleeArgs;
-
-            calleeArgs.push_back(builder.CreateGlobalStringPtr("%d\n", "printfFormat"));
-            calleeArgs.push_back(this->node->codeGen(depth + 1));
-            return builder.CreateCall(calleeFunction, calleeArgs, "printCall");
-
-        }
-
+        llvm::Value *codeGen(int depth);
 
     };
 

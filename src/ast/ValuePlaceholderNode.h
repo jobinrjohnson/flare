@@ -15,19 +15,11 @@ namespace ast {
 
     public:
 
-        NodeType getNodeType() override {
-            return VALUE_PLACEHOLDER_NODE;
-        }
+        NodeType getNodeType() override;
 
-        ValuePlaceholderNode(Value *tempValue) {
-            this->value = tempValue;
-        }
+        ValuePlaceholderNode(Value *tempValue);
 
-
-        llvm::Value *codeGen(int depth) override {
-            this->printCallStack(depth, "ValuePlaceholderNode", __FUNCTION__);
-            return this->value;
-        }
+        llvm::Value *codeGen(int depth) override;
 
     };
 

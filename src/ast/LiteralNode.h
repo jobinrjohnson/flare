@@ -24,37 +24,13 @@ namespace ast {
 
     public:
 
-        NodeType getNodeType() {
-            return LITERAL_NODE;
-        }
+        NodeType getNodeType();
 
-        LiteralNode(int mLiteralValue) {
-            this->nodeValue.iVal = mLiteralValue;
-            this->literalType = INTEGER;
-        }
+        LiteralNode(int mLiteralValue);
 
-        LiteralNode(double mLiteralValue) {
-            this->nodeValue.dVal = mLiteralValue;
-            this->literalType = DOUBLE;
-        }
+        LiteralNode(double mLiteralValue);
 
-        llvm::Value *codeGen(int depth) {
-
-            this->printCallStack(depth, "LiteralNode", __FUNCTION__);
-
-            switch (this->literalType) {
-
-                case INTEGER:
-                    return llvm::ConstantInt::get(context, APInt(32, this->nodeValue.iVal));
-                case DOUBLE:
-                    std::cout << this->nodeValue.dVal << "====";
-                    return ConstantFP::get(Type::getDoubleTy(context), this->nodeValue.dVal);
-                default:
-                    throw "Not handled"; // TODO throw errors properly
-
-            }
-
-        }
+        llvm::Value *codeGen(int depth);
 
 
     };

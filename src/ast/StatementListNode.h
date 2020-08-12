@@ -19,32 +19,15 @@ namespace ast {
 
     public:
 
-        NodeType getNodeType() {
-            return STATEMENT_LIST_NODE;
-        }
+        NodeType getNodeType();
 
-        StatementListNode() {}
+        StatementListNode();
 
-        StatementListNode(Node *node) {
-            this->statements.push_back(node);
-        }
+        StatementListNode(Node *node);
 
-        void push(Node *node) {
-            this->statements.push_back(node);
-        }
+        void push(Node *node);
 
-
-        llvm::Value *codeGen(int depth) {
-
-            this->printCallStack(depth,"StatementListNode", __FUNCTION__);
-
-            Value *finalValue = nullptr;
-            for (auto const &value:this->statements) {
-                finalValue = value->codeGen(depth+1);
-            }
-
-            return finalValue;
-        }
+        llvm::Value *codeGen(int depth);
 
     };
 

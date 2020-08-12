@@ -13,31 +13,17 @@ namespace ast {
     class AssignmentNode : public Node {
 
     protected:
+
         std::string varName;
         Node *expression;
 
     public:
 
-        NodeType getNodeType() {
-            return ASSIGNMENT_NODE;
-        }
+        NodeType getNodeType();
 
+        AssignmentNode(char *name, Node *node);
 
-        AssignmentNode(char *name, Node *node) {
-            this->varName = name;
-            this->expression = node;
-        }
-
-        llvm::Value *codeGen(int depth) {
-
-            this->printCallStack(depth, "AssignmentNode", __FUNCTION__);
-
-            auto variable = module->getGlobalVariable(this->varName);
-            Value *value = this->expression->codeGen(depth + 1);
-            return builder.CreateStore(value, variable);
-
-        }
-
+        llvm::Value *codeGen(int depth);
 
     };
 
