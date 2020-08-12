@@ -80,8 +80,15 @@ typedef lang::Parser::token_type token_type;
 "-"           {return '-';}
 "*"           {return '*';}
 "/"           {return '/';}
+"%"           {return '%';}
 "="           {return '=';}
 "<"           {return '<';}
+">"           {return '>';}
+"!"           {return '!';}
+">="          { return token::TOK_GTE; }
+"<="          { return token::TOK_LTE; }
+"=="          { return token::TOK_EQUALITY; }
+"!="          { return token::TOK_NEQUALITY; }
 
 "{"           {return '{';}
 "}"           {return '}';}

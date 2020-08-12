@@ -76,9 +76,10 @@
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
 %token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG
+%token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 
 %left '+' '-'
-%left '*' '/' 
+%left '*' '/' '%'
 
 %%
 
@@ -153,12 +154,21 @@ expr:
                                         auto derefrence = new ast::VariableDerefNode($1, $3);
                                         $$ = new ast::ExprNode(OperatorType::VAR_DE_REF, derefrence);
                                     }
+    | '(' expr ')'                  { $$ = new ast::ExprNode(OperatorType::GROUPED, $2); }
+    | '+' expr                      { $$ = new ast::ExprNode(OperatorType::UNARY_PLUS, $2); }
+    | '-' expr                      { $$ = new ast::ExprNode(OperatorType::UNARY_MINUS, $2); }
     | expr '+' expr                 { $$ = new ast::ExprNode(OperatorType::PLUS, $1, $3); }
     | expr '-' expr                 { $$ = new ast::ExprNode(OperatorType::MINUS, $1, $3); }
     | expr '*' expr                 { $$ = new ast::ExprNode(OperatorType::MUL, $1, $3); }
     | expr '/' expr                 { $$ = new ast::ExprNode(OperatorType::DIV, $1, $3); }
-    | expr '%' expr                 { $$ = new ast::ExprNode(OperatorType::MODE, $1, $3); }
+    | expr '%' expr                 { $$ = new ast::ExprNode(OperatorType::MODULO_DIV, $1, $3); }
     | expr '<' expr                 { $$ = new ast::ExprNode(OperatorType::LESS_THAN, $1, $3); }
+    | expr '>' expr                 { $$ = new ast::ExprNode(OperatorType::GREATER_THAN, $1, $3); }
+    | expr TOK_LTE expr             { $$ = new ast::ExprNode(OperatorType::LESS_THAN_EQUAL, $1, $3); }
+    | expr TOK_GTE expr             { $$ = new ast::ExprNode(OperatorType::GREATER_THAN_EQUAL, $1, $3); }
+    | expr TOK_EQUALITY expr        { $$ = new ast::ExprNode(OperatorType::EQUALITY, $1, $3); }
+    | expr TOK_NEQUALITY expr       { $$ = new ast::ExprNode(OperatorType::NOT_EQUALITY, $1, $3); }
+    | '!' expr                      { $$ = new ast::ExprNode(OperatorType::NOT, $2); }
 ;
 
 

@@ -12,21 +12,32 @@ enum OperatorType {
     MINUS,
     MUL,
     DIV,
-    MODE,
     SCALAR,
     VAR_DE_REF,
     GREATER_THAN,
     LESS_THAN,
-    EQUALITY
+    GREATER_THAN_EQUAL,
+    LESS_THAN_EQUAL,
+    EQUALITY,
+    NOT_EQUALITY,
+    NOT,
+    GROUPED,
+    UNARY_PLUS,
+    UNARY_MINUS,
+    MODULO_DIV
 };
 
 namespace ast {
     class ExprNode : public Node {
 
-    private:
+    protected:
 
         std::vector<Node *> operands;
         OperatorType opr;
+
+        Value *codeGenBinaryExpr(int depth);
+
+        Value *codeGenUnaryExpr(int depth);
 
     public:
 
