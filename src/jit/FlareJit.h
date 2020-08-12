@@ -5,33 +5,36 @@
 #ifndef FLARE_FLAREJIT_H
 #define FLARE_FLAREJIT_H
 
-#include "llvm/ExecutionEngine/GenericValue.h"
-#include "llvm/ExecutionEngine/Interpreter.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/IRBuilder.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Module.h"
-#include "llvm/Support/ManagedStatic.h"
-#include "llvm/Support/TargetSelect.h"
-#include "llvm/Support/raw_ostream.h"
 
 //namespace jit {
 
+#include <llvm/IR/Module.h>
+#include <llvm/ExecutionEngine/GenericValue.h>
+#include <llvm/ExecutionEngine/ExecutionEngine.h>
+
 using namespace llvm;
-//    using namespace llvm::orc;
 
 class FlareJit {
+
+protected:
+
+    std::unique_ptr<Module> module;
+
+    std::vector<GenericValue> execArgs;
+
+    ExecutionEngine *EE;
+
 
 public:
 
 
-    FlareJit() {
+    explicit FlareJit(std::unique_ptr<Module> &module);
 
+    void initialize();
 
-    }
+    void setArg(GenericValue arg);
 
+    int execute();
 
 };
 
