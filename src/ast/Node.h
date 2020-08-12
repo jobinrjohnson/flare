@@ -19,17 +19,6 @@
 #include "llvm/IR/Verifier.h"
 
 
-#include "llvm/ExecutionEngine/Interpreter.h"
-#include "llvm/ExecutionEngine/GenericValue.h"
-#include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/IRBuilder.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/Support/ManagedStatic.h"
-#include "llvm/Support/TargetSelect.h"
-#include "llvm/Support/raw_ostream.h"
-
-
 using namespace llvm;
 
 extern llvm::LLVMContext context;
@@ -37,7 +26,6 @@ extern llvm::IRBuilder<> builder;
 extern std::unique_ptr<llvm::Module> module;
 
 enum NodeType {
-    NODE,
     ASSIGNMENT_NODE,
     EXPR_NODE,
     LITERAL_NODE,
@@ -52,10 +40,6 @@ enum NodeType {
 namespace ast {
 
     class Node {
-
-    private:
-
-        int nodeType;
 
     public:
 

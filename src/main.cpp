@@ -1,11 +1,18 @@
 #include "lang/driver.h"
+#include "ast/Node.h"
+#include "jit/FlareJit.h"
 
+using namespace llvm;
 
 int main() {
     lang::Driver driver;
-    // driver.parse();
     std::string fileName = "../../samples/1.program";
     driver.parseFile(fileName);
 
-    return 0;
+    // Execute JIT
+    FlareJit jit(module);
+    jit.initialize();
+    jit.execute();
+
+    return jit.getExitCode();
 }

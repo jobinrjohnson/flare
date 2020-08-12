@@ -24,17 +24,24 @@ protected:
 
     ExecutionEngine *EE;
 
+    Function *execStartFunction;
+
+    int exitCode = -1;
 
 public:
 
 
     explicit FlareJit(std::unique_ptr<Module> &module);
 
+    ~FlareJit();
+
     void initialize();
 
     void setArg(GenericValue arg);
 
     int execute();
+
+    int getExitCode();
 
 };
 
