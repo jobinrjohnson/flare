@@ -28,20 +28,7 @@ namespace ast {
 
         std::vector<llvm::Constant *> initList;
 
-        int i = 100;
-
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-        initList.push_back(ConstantInt::get(Type::getInt32Ty(context), i++));
-
-        llvm::ArrayType *array = llvm::ArrayType::get(Type::getInt32Ty(context), 10);
+        llvm::ArrayType *array = llvm::ArrayType::get(Type::getInt32Ty(context), 100); // TODO Properly initialize array
         llvm::Constant *initializer = llvm::ConstantArray::get(array, initList);
 
         llvm::Value *unitInitList = new llvm::GlobalVariable(*module,

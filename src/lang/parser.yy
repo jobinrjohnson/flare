@@ -140,7 +140,8 @@ array_declaration:
 
 
 assignment_expr:
-    IDENTIFIER '=' expr                 { $$ = new ast::AssignmentNode($1, $3); free($1); }
+    IDENTIFIER '=' expr                         { $$ = new ast::AssignmentNode($1, $3); free($1); }
+    | IDENTIFIER '[' expr ']' '=' expr          { $$ = new ast::AssignmentNode($1, $3, $6); free($1); }
 ;
 
 

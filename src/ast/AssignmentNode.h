@@ -15,13 +15,18 @@ namespace ast {
     protected:
 
         std::string varName;
+
         Node *expression;
+
+        Node *index;
 
     public:
 
         NodeType getNodeType();
 
         AssignmentNode(char *name, Node *node);
+
+        AssignmentNode(char *name, Node *indexNode, Node *exprNode);
 
         llvm::Value *codeGen(int depth);
 
