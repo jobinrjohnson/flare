@@ -1,12 +1,9 @@
 {
     let b = 10
-    let c[]
-    c[0] = 20
-    if( (b%2) == 0){
-        log(1)
+    let c = 10.822
+
+    if(b<c){
+        log(b)
     }
-    if(b <= 10){
-        log(2)
-    }
-    log(c[0])
+
 }

@@ -44,15 +44,15 @@ namespace ast {
 
     Value *VarDeclNode::codeGenBuiltInTy(int depth) {
 
+        Value *value = this->initialValue->codeGen(depth + 1);
         llvm::GlobalVariable *gvar = new llvm::GlobalVariable(
                 *module,
-                llvm::Type::getInt32Ty(context),
+                value->getType(),
                 false,
                 llvm::GlobalValue::CommonLinkage,
                 0,
                 this->variableName);
 
-        Value *value = this->initialValue->codeGen(depth + 1);
         gvar->setInitializer(dyn_cast<Constant>(value));
 
         return gvar;

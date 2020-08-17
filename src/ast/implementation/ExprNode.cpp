@@ -29,10 +29,28 @@ namespace ast {
         Value *lhs = this->operands[0]->codeGen(depth + 1);
         Value *rhs = this->operands[1]->codeGen(depth + 1);
 
+        std::cout << rhs->getType()->getTypeID() << "]]]][[[[" << lhs->getType()->getTypeID() << "\n\n\n";
+
+        if (rhs->getType()->getTypeID() != lhs->getType()->getTypeID()) {
+
+            if (rhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
+                lhs = builder.CreateSIToFP(lhs, Type::getDoubleTy(context), "convertedFl");
+            }
+            if (lhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
+                rhs = builder.CreateSIToFP(rhs, Type::getDoubleTy(context), "convertedFl");
+            }
+
+        }
+
+
         switch (this->opr) {
             // Arithmetic operators
             case PLUS:
-                value = builder.CreateAdd(lhs, rhs, "mAdd");
+                if (lhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
+                    value = builder.CreateFAdd(lhs, rhs, "mAdd");
+                } else {
+                    value = builder.CreateAdd(lhs, rhs, "mAdd");
+                };
                 break;
             case MINUS:
                 value = builder.CreateSub(lhs, rhs, "mSub");
@@ -51,23 +69,22 @@ namespace ast {
                 break;
                 // Boolean operators
             case LESS_THAN:
-                value = builder.CreateICmpSLT(lhs, rhs, "mLt");
+                if (lhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
+                    value = builder.CreateFCmpOLT(lhs, rhs, "mAdd");
+                } else {
+                    value = builder.CreateICmpSLT(lhs, rhs, "mAdd");
+                };
                 break;
-            case GREATER_THAN:
-                value = builder.CreateICmpSGT(lhs, rhs, "mGt");
-                break;
+            case GREATER_THAN: // TODO remaining
+                return builder.CreateICmpSGT(lhs, rhs, "mGt");
             case GREATER_THAN_EQUAL:
-                value = builder.CreateICmpSGE(lhs, rhs, "mGte");
-                break;
+                return builder.CreateICmpSGE(lhs, rhs, "mGte");
             case LESS_THAN_EQUAL:
-                value = builder.CreateICmpSLE(lhs, rhs, "mLte");
-                break;
+                return builder.CreateICmpSLE(lhs, rhs, "mLte");
             case EQUALITY:
-                value = builder.CreateICmpEQ(lhs, rhs, "mEq");
-                break;
+                return builder.CreateICmpEQ(lhs, rhs, "mEq");
             case NOT_EQUALITY:
-                value = builder.CreateICmpNE(lhs, rhs, "mNeq");
-                break;
+                return builder.CreateICmpNE(lhs, rhs, "mNeq");
             default:
                 throw "Not handled";
         }

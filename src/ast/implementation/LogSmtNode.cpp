@@ -17,6 +17,8 @@ namespace ast {
     llvm::Value *LogSmtNode::codeGen(int depth) {
         this->printCallStack(depth, "LogSmtNode", __FUNCTION__);
 
+        Value *printValue = this->node->codeGen(depth + 1);
+
         FunctionType *printfType = FunctionType::get(
                 Type::getInt32Ty(context),
                 {Type::getInt8PtrTy(context)},
@@ -25,8 +27,26 @@ namespace ast {
         auto calleeFunction = module->getOrInsertFunction("printf", printfType);
         std::vector<Value *> calleeArgs;
 
-        calleeArgs.push_back(builder.CreateGlobalStringPtr("%d\n", "printfFormat"));
-        calleeArgs.push_back(this->node->codeGen(depth + 1));
+        std::string formatter;
+        switch (printValue->getType()->getTypeID()) {
+
+            case llvm::Type::HalfTyID:
+            case llvm::Type::FloatTyID:
+            case llvm::Type::DoubleTyID:
+                formatter = "%f\n";
+                break;
+            case llvm::Type::IntegerTyID:
+                formatter = "%d\n";
+                break;
+
+            default:
+                formatter = "%s\n";
+                break;
+        }
+
+
+        calleeArgs.push_back(builder.CreateGlobalStringPtr(formatter, "printfFormat"));
+        calleeArgs.push_back(printValue);
         return builder.CreateCall(calleeFunction, calleeArgs, "printCall");
 
     }
