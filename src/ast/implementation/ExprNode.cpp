@@ -22,26 +22,54 @@ namespace ast {
         this->operands.push_back(b);
     }
 
-
-    Value *ExprNode::codeGenBinaryExpr(int depth) {
+    Value *ExprNode::codeGenFloatingPointBinaryExpr(int depth, Value *lhs, Value *rhs) {
 
         llvm::Value *value;
-        Value *lhs = this->operands[0]->codeGen(depth + 1);
-        Value *rhs = this->operands[1]->codeGen(depth + 1);
-
-        std::cout << rhs->getType()->getTypeID() << "]]]][[[[" << lhs->getType()->getTypeID() << "\n\n\n";
-
-        if (rhs->getType()->getTypeID() != lhs->getType()->getTypeID()) {
-
-            if (rhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
-                lhs = builder.CreateSIToFP(lhs, Type::getDoubleTy(context), "convertedFl");
-            }
-            if (lhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
-                rhs = builder.CreateSIToFP(rhs, Type::getDoubleTy(context), "convertedFl");
-            }
-
+        switch (this->opr) {
+            // Arithmetic operators
+            case PLUS:
+                value = builder.CreateFAdd(lhs, rhs, "mAdd");
+                break;
+            case MINUS:
+                value = builder.CreateFSub(lhs, rhs, "mSub");
+                break;
+            case MUL:
+                value = builder.CreateFMul(lhs, rhs, "mMul");
+                break;
+            case MODULO_DIV:
+                throw "this cant happen";
+                break;
+            case DIV:
+                value = builder.CreateFDiv(lhs, rhs, "mDiv");
+                break;
+            case UNARY_MINUS:
+                value = builder.CreateFSub(rhs, lhs, "mUmin");
+                break;
+                // Boolean operators
+            case LESS_THAN:
+                value = builder.CreateFCmpOLT(lhs, rhs, "mAdd");
+                break;
+            case GREATER_THAN: // TODO remaining
+                return builder.CreateFCmpOGT(lhs, rhs, "mGt");
+            case GREATER_THAN_EQUAL:
+                value = builder.CreateFCmpOGE(lhs, rhs, "mGte");
+                break;
+            case LESS_THAN_EQUAL:
+                return builder.CreateFCmpOLE(lhs, rhs, "mLte");
+            case EQUALITY:
+                return builder.CreateFCmpOEQ(lhs, rhs, "mEq");
+            case NOT_EQUALITY:
+                return builder.CreateFCmpONE(lhs, rhs, "mNeq");
+            default:
+                throw "Not handled";
         }
+        return value;
+    }
 
+
+    Value *ExprNode::codeGenIntegerBinaryExpr(int depth, Value *lhs, Value *rhs) {
+
+        llvm::Value *value;
 
         switch (this->opr) {
             // Arithmetic operators
@@ -69,16 +97,13 @@ namespace ast {
                 break;
                 // Boolean operators
             case LESS_THAN:
-                if (lhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
-                    value = builder.CreateFCmpOLT(lhs, rhs, "mAdd");
-                } else {
-                    value = builder.CreateICmpSLT(lhs, rhs, "mAdd");
-                };
+                value = builder.CreateICmpSLT(lhs, rhs, "mAdd");
                 break;
             case GREATER_THAN: // TODO remaining
                 return builder.CreateICmpSGT(lhs, rhs, "mGt");
             case GREATER_THAN_EQUAL:
-                return builder.CreateICmpSGE(lhs, rhs, "mGte");
+                value = builder.CreateICmpSGE(lhs, rhs, "mGte");
+                break;
             case LESS_THAN_EQUAL:
                 return builder.CreateICmpSLE(lhs, rhs, "mLte");
             case EQUALITY:
@@ -89,6 +114,29 @@ namespace ast {
                 throw "Not handled";
         }
         return value;
+    }
+
+
+    Value *ExprNode::codeGenBinaryExpr(int depth) {
+
+        Value *lhs = this->operands[0]->codeGen(depth + 1);
+        Value *rhs = this->operands[1]->codeGen(depth + 1);
+
+        if (rhs->getType()->getTypeID() != lhs->getType()->getTypeID()) {
+
+            if (rhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
+                lhs = builder.CreateSIToFP(lhs, Type::getDoubleTy(context), "convertedFl");
+                std::cout << rhs->getType()->getTypeID() << "]]]]-------[[[[" << lhs->getType()->getTypeID()
+                          << "\n\n\n";
+            } else if (lhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
+                rhs = builder.CreateSIToFP(rhs, Type::getDoubleTy(context), "convertedFl");
+                std::cout << rhs->getType()->getTypeID() << "]]]][[[[" << lhs->getType()->getTypeID() << "\n\n\n";
+            }
+
+            return this->codeGenFloatingPointBinaryExpr(depth, lhs, rhs);
+        }
+
+        return this->codeGenIntegerBinaryExpr(depth, lhs, rhs);
     }
 
     Value *ExprNode::codeGenUnaryExpr(int depth) {

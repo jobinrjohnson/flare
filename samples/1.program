@@ -2,8 +2,10 @@
     let b = 10
     let c = 10.822
 
-    if(b<c){
+    if(b>c){
         log(b)
     }
+
+    log(b+c)
 
 }

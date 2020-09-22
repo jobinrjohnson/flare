@@ -39,6 +39,10 @@ namespace ast {
 
         Value *codeGenUnaryExpr(int depth);
 
+        Value *codeGenFloatingPointBinaryExpr(int depth, Value *lhs, Value *rhs);
+
+        Value *codeGenIntegerBinaryExpr(int depth, Value *lhs, Value *rhs);
+
     public:
 
         NodeType getNodeType();
