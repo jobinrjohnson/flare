@@ -49,7 +49,7 @@ namespace ast {
                 *module,
                 value->getType(),
                 false,
-                llvm::GlobalValue::CommonLinkage,
+                llvm::GlobalValue::InternalLinkage,
                 0,
                 this->variableName);
 
