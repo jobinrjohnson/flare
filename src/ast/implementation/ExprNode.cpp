@@ -126,11 +126,8 @@ namespace ast {
 
             if (rhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
                 lhs = builder.CreateSIToFP(lhs, Type::getDoubleTy(context), "convertedFl");
-                std::cout << rhs->getType()->getTypeID() << "]]]]-------[[[[" << lhs->getType()->getTypeID()
-                          << "\n\n\n";
             } else if (lhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
                 rhs = builder.CreateSIToFP(rhs, Type::getDoubleTy(context), "convertedFl");
-                std::cout << rhs->getType()->getTypeID() << "]]]][[[[" << lhs->getType()->getTypeID() << "\n\n\n";
             }
 
             return this->codeGenFloatingPointBinaryExpr(depth, lhs, rhs);
