@@ -27,7 +27,7 @@ namespace ast {
         switch (this->literalType) {
 
             case INTEGER:
-                return llvm::ConstantInt::get(context, APInt(64, this->nodeValue.iVal));
+                return llvm::ConstantInt::get(context, APInt(32, this->nodeValue.iVal));
             case DOUBLE:
                 return ConstantFP::get(Type::getDoubleTy(context), this->nodeValue.dVal);
             default:

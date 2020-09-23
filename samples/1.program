@@ -4,8 +4,11 @@
 
     if(b>c){
         log(b)
+        return b
     }
 
     log(b+c)
+
+    return b
 
 }

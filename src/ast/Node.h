@@ -28,6 +28,7 @@ extern std::unique_ptr<llvm::Module> module;
 enum NodeType {
     ASSIGNMENT_NODE,
     EXPR_NODE,
+    STATEMENT_NODE,
     LITERAL_NODE,
     STATEMENT_LIST_NODE,
     VAR_DECL_NODE,

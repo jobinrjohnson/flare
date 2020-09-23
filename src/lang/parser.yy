@@ -15,6 +15,7 @@
     #include "ast/ExprNode.h"
     #include "ast/LiteralNode.h"
     #include "ast/StatementListNode.h"
+    #include "ast/StatementNode.h"
     #include "ast/VariableDerefNode.h"
     #include "ast/AssignmentNode.h"
     #include "ast/IfStatementNode.h"
@@ -52,6 +53,7 @@
     ast::AssignmentNode *assignmentNode;
     ast::IfStatementNode *ifStatementNode;
     ast::LogSmtNode *logSmtNode;
+    ast::StatementNode *statementNode;
 
     int tIntegerValue;
     double tDecimalValue;
@@ -70,12 +72,13 @@
 %type <assignmentNode> assignment_expr
 %type <ifStatementNode> if_else_if
 %type <logSmtNode> log_statement
+%type <statementNode> return_statement
 
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
-%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG
+%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG KW_RETURN
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 
 %left '+' '-'
@@ -105,10 +108,16 @@ statement:
     | assignment_expr                   { }
     | if_else_if                        { }
     | log_statement                     { }
+    | return_statement                  { }
 ;
 
 log_statement:
     KW_LOG '(' expr ')'                 {  $$ = new ast::LogSmtNode($<node>3);  }
+;
+
+return_statement:
+    // TODO return void
+    KW_RETURN expr                      { $$ = new ast::StatementNode(ast::StatementType::RETURN, $<node>2); }
 ;
 
 
