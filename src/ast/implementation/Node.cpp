@@ -48,7 +48,6 @@ namespace ast {
 
         this->codeGen(0);
 
-        builder.CreateRet(ConstantInt::get(context, APInt(32, 0)));
         llvm::verifyFunction(*function, &(llvm::errs()));
 
 
