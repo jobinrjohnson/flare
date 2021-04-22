@@ -1,14 +1,14 @@
-{
-    let b = 10
-    let c = 10.822
+let b = 10;
+let c = 10.822;
 
-    if(b>c){
-        log(b)
-        return b
-    }
-
-    log(b+c)
-
-    return b
-
+if (b > c) {
+	log(b);
+} else if (c > 20) {
+	log(c);
+} else {
+	log(c + 1);
 }
+
+log(b + c);
+
+return b;

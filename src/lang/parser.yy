@@ -65,6 +65,7 @@
 
 
 %type <statementList> start
+%type <node> statement
 %type <expression> expr
 %type <literal> scalar
 %type <statementList> statements
@@ -87,9 +88,9 @@
 %%
 
 start:
-    '{' statements '}' {
+    statements  {
 
-        $$ = $2;
+        $$ = $1;
         $$->printLLVMir();
 
     }
@@ -109,6 +110,7 @@ statement:
     | if_else_if                        { }
     | log_statement                     { }
     | return_statement                  { }
+    | statement ';'                     { $$ = $1; }
 ;
 
 log_statement:
