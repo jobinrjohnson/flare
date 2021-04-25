@@ -7,7 +7,12 @@ using namespace llvm;
 int main() {
     lang::Driver driver;
     std::string fileName = "../../samples/1.program";
-    driver.parseFile(fileName);
+
+    try {
+        driver.parseFile(fileName);
+    } catch (char const *e) {
+        std::cerr << "Error occurred while parsing : " << e;
+    }
 
     // Execute JIT
     FlareJit jit(module);
