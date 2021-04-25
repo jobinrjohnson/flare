@@ -20,7 +20,12 @@ namespace ast {
     llvm::Value *AssignmentNode::codeGen(int depth) {
         this->printCallStack(depth, "AssignmentNode", __FUNCTION__);
 
-        auto variable = module->getGlobalVariable(this->varName);
+        auto variable = module->getGlobalVariable(this->varName, true);
+
+        if(variable == nullptr){
+            throw "Invalid variable name";
+        }
+
         Value *value = this->expression->codeGen(depth + 1);
 
         if (index != nullptr) {
