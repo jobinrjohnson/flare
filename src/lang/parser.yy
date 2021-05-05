@@ -82,7 +82,7 @@
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
-%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG KW_RETURN KW_FUNCTION
+%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 
 %left '+' '-'
@@ -122,7 +122,7 @@ function_declaration:
 ;
 
 log_statement:
-    KW_LOG '(' expr ')'                 {  $$ = new ast::LogSmtNode($<node>3);  }
+    KW_CONSOLE '.' KW_LOG '(' expr ')'  {  $$ = new ast::LogSmtNode($<node>5);  }
 ;
 
 return_statement:

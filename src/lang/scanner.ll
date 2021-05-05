@@ -57,6 +57,8 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_RETURN;
                 }else if (strcmp("function", yytext) == 0) {
                     return token::KW_FUNCTION;
+                }else if (strcmp("console", yytext) == 0) {
+                    return token::KW_CONSOLE;
                 }
                 yylval->yyText = (char *) malloc(strlen(yytext));
                 strcpy(yylval->yyText, yytext);
@@ -79,6 +81,8 @@ typedef lang::Parser::token_type token_type;
                   yylval->tIntegerValue = atoi(yytext);
                   return token::T_INTEGER;
               }
+
+"."           {return '.';}
 
 "+"           {return '+';}
 "-"           {return '-';}
