@@ -5,10 +5,32 @@
 #ifndef FLARE_CONTEXT_H
 #define FLARE_CONTEXT_H
 
+#include <iostream>
+#include <stack>
+#include <FunctionNode.h>
 
-class Context {
+namespace ast {
+    class Context {
 
-};
+        std::stack<FunctionNode *> functions;
+
+    public:
+
+        int depth = 0;
+
+        Context *nextLevel() {
+            depth++;
+            return this;
+        }
+
+        void pushFunction(FunctionNode *);
+
+        void popFunction();
+
+        FunctionNode *getCurrentFunction();
+
+    };
+}
 
 
 #endif //FLARE_CONTEXT_H
