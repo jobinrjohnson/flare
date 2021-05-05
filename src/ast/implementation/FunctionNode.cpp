@@ -28,7 +28,9 @@ llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
     this->retValue = new AllocaInst(function->getReturnType(), 0, "retVal", this->entryBlock);
     builder.CreateStore(ConstantInt::get(context, APInt(32, 0)), retValue);
     this->statementListNode->codeGen(cxt);
-    builder.CreateBr(this->exitBlock);
+    if (builder.GetInsertBlock()->getTerminator() == nullptr) {
+        builder.CreateBr(this->exitBlock);
+    }
 
     builder.SetInsertPoint(this->exitBlock);
     LoadInst *l = builder.CreateLoad(this->retValue);

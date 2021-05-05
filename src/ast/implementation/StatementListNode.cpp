@@ -29,6 +29,9 @@ namespace ast {
         Value *finalValue = nullptr;
         for (auto const &value:this->statements) {
             finalValue = value->codeGen(cxt);
+            if (builder.GetInsertBlock()->getTerminator() != nullptr) {
+                return finalValue;
+            }
         }
 
         return finalValue;
