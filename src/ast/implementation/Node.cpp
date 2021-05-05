@@ -33,34 +33,8 @@ namespace ast {
     }
 
     void Node::printLLVMir() {
-
         module = std::make_unique<llvm::Module>("FlareTest", context);
-
-        std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(context));
-        llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(context),
-                                                                      argVector, false);
-
-        llvm::Function *function = llvm::Function::Create(functionRetType, llvm::GlobalValue::ExternalLinkage,
-                                                          "main", module.get());
-
-
-        llvm::BasicBlock *basicBlock = llvm::BasicBlock::Create(context, "entry", function);
-        llvm::BasicBlock *exitBlock = llvm::BasicBlock::Create(context, "exit", function);
-
-
-        builder.SetInsertPoint(basicBlock);
-
-        AllocaInst *retValue = new AllocaInst(function->getReturnType(), 0, "retVal", basicBlock);
-        builder.CreateStore(ConstantInt::get(context, APInt(32, 0)), retValue);
         this->codeGen(0);
-        builder.CreateBr(exitBlock);
-
-        builder.SetInsertPoint(exitBlock);
-        LoadInst *l = builder.CreateLoad(retValue);
-        builder.CreateRet(l);
-
-        llvm::verifyFunction(*function, &(llvm::errs()));
-
 
         if (FLARE_DEBUG) {
             std::cout << "========================================\n";

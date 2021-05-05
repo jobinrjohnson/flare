@@ -1,14 +1,8 @@
-let b = 10;
-let c = 10.822;
+function main(){
+    let a = 10;
+    let b = 20;
+    let c = 30;
+    c = a + b;
 
-if (b > c) {
-	log(b);
-} else if (c > 20) {
-	log(c);
-} else {
-	log(c + 1);
+    log(c);
 }
-
-log(b + c);
-
-return b;

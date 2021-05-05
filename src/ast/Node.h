@@ -35,6 +35,7 @@ enum NodeType {
     VAR_DEREF_NODE,
     IF_NODE,
     LOG_NODE,
+    FUNCTION_NODE,
     VALUE_PLACEHOLDER_NODE
 };
 

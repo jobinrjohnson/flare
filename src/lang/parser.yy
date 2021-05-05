@@ -20,6 +20,7 @@
     #include "ast/AssignmentNode.h"
     #include "ast/IfStatementNode.h"
     #include "ast/LogSmtNode.h"
+    #include "ast/FunctionNode.h"
 
 }
 
@@ -54,6 +55,7 @@
     ast::IfStatementNode *ifStatementNode;
     ast::LogSmtNode *logSmtNode;
     ast::StatementNode *statementNode;
+    ast::FunctionNode *functionNode;
 
     int tIntegerValue;
     double tDecimalValue;
@@ -74,12 +76,13 @@
 %type <ifStatementNode> if_else_if
 %type <logSmtNode> log_statement
 %type <statementNode> return_statement
+%type <functionNode> function_declaration
 
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
-%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG KW_RETURN
+%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG KW_RETURN KW_FUNCTION
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 
 %left '+' '-'
@@ -111,6 +114,11 @@ statement:
     | log_statement                     { }
     | return_statement                  { }
     | statement ';'                     { $$ = $1; }
+    | function_declaration              { }
+;
+
+function_declaration:
+    KW_FUNCTION IDENTIFIER '(' ')' '{' statements '}'   { $$ = new ast::FunctionNode($2, $<statementList>6); }
 ;
 
 log_statement:
