@@ -14,6 +14,7 @@ namespace ast {
 
         StatementListNode *statementListNode;
         std::string name;
+        std::map<std::string, Value *> locals;
         bool hasMultipleExits = false;
 
     protected:
@@ -28,13 +29,17 @@ namespace ast {
         Function *function;
         AllocaInst *retValue;
 
-        NodeType getNodeType();
+        NodeType getNodeType() override;
 
         explicit FunctionNode(const char *name, StatementListNode *statements);
 
-        llvm::Value *codeGen(Context *cxt);
+        llvm::Value *codeGen(Context *cxt) override;
 
         void setHasMultipleExits();
+
+        void createLocal(const std::string &, Value *);
+
+        Value *findLocal(const std::string &);
 
     };
 }

@@ -3,6 +3,7 @@
 //
 
 #include "AssignmentNode.h"
+#include "FunctionNode.h"
 
 namespace ast {
 
@@ -20,7 +21,14 @@ namespace ast {
     llvm::Value *AssignmentNode::codeGen(Context *cxt) {
         this->printCallStack(cxt, "AssignmentNode", __FUNCTION__);
 
-        auto variable = module->getGlobalVariable(this->varName, true);
+
+        auto currentFunction = cxt->getCurrentFunction();
+        Value *variable;
+        if (currentFunction != nullptr &&
+            (variable = currentFunction->findLocal(this->varName)) != nullptr) {
+        } else {
+            variable = module->getGlobalVariable(this->varName, true);
+        }
 
         if (variable == nullptr) {
             throw "Invalid variable name";

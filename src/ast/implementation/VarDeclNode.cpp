@@ -3,6 +3,7 @@
 //
 
 #include "VarDeclNode.h"
+#include "FunctionNode.h"
 
 
 namespace ast {
@@ -45,6 +46,14 @@ namespace ast {
     Value *VarDeclNode::codeGenBuiltInTy(Context *cxt) {
 
         Value *value = this->initialValue->codeGen(cxt);
+
+        auto currentFunction = cxt->getCurrentFunction();
+        if (currentFunction != nullptr) {
+            auto localVar = new AllocaInst(value->getType(), 0, this->variableName, builder.GetInsertBlock());
+            currentFunction->createLocal(this->variableName, localVar);
+            return builder.CreateStore(value, localVar);
+        }
+
         llvm::GlobalVariable *gvar = new llvm::GlobalVariable(
                 *module,
                 value->getType(),

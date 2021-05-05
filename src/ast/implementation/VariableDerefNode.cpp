@@ -3,6 +3,7 @@
 //
 
 #include "VariableDerefNode.h"
+#include "FunctionNode.h"
 
 namespace ast {
 
@@ -23,6 +24,13 @@ namespace ast {
 
     llvm::Value *VariableDerefNode::codeGen(Context *cxt) {
         this->printCallStack(cxt, "VariableDerefNode", __FUNCTION__);
+
+        auto currentFunction = cxt->getCurrentFunction();
+        Value *variable;
+        if (!this->isArrayDeReference && currentFunction != nullptr &&
+            (variable = currentFunction->findLocal(this->variableName)) != nullptr) {
+            return builder.CreateLoad(variable);
+        }
 
         auto gVar = module->getNamedGlobal(this->variableName);
         if (!gVar) {

@@ -59,3 +59,15 @@ void ast::FunctionNode::setHasMultipleExits() {
     this->hasMultipleExits = true;
 }
 
+void ast::FunctionNode::createLocal(const std::string& varName, Value *value) {
+    this->locals.insert(std::pair<std::string, Value *>(varName, value));
+}
+
+Value *ast::FunctionNode::findLocal(const std::string& varName) {
+    auto val = this->locals.find(varName);
+    if (val != this->locals.end()) {
+        return val->second;
+    }
+    return nullptr;
+}
+
