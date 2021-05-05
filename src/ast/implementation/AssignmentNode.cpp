@@ -17,19 +17,19 @@ namespace ast {
         this->expression = node;
     }
 
-    llvm::Value *AssignmentNode::codeGen(int depth) {
-        this->printCallStack(depth, "AssignmentNode", __FUNCTION__);
+    llvm::Value *AssignmentNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "AssignmentNode", __FUNCTION__);
 
         auto variable = module->getGlobalVariable(this->varName, true);
 
-        if(variable == nullptr){
+        if (variable == nullptr) {
             throw "Invalid variable name";
         }
 
-        Value *value = this->expression->codeGen(depth + 1);
+        Value *value = this->expression->codeGen(cxt->nextLevel());
 
         if (index != nullptr) {
-            auto indexVal = this->index->codeGen(depth + 1);
+            auto indexVal = this->index->codeGen(cxt->nextLevel());
 
             std::vector<llvm::Value *> ind{
                     llvm::ConstantInt::get(context, llvm::APInt(64, 0, false)),

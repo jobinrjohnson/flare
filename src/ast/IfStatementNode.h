@@ -27,9 +27,9 @@ namespace ast {
 
         void addElseBranch(Node *smt);
 
-        llvm::Value *codegenIfElseIf(int depth);
+        llvm::Value *codegenIfElseIf(Context *);
 
-        llvm::Value *codeGen(int depth) override;
+        llvm::Value *codeGen(Context *cxt) override;
 
     };
 

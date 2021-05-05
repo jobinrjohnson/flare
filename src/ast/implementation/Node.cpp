@@ -10,11 +10,13 @@ std::unique_ptr<llvm::Module> module;
 
 namespace ast {
 
-    void Node::printCallStack(int depth, std::string className, std::string functionName) {
+    void Node::printCallStack(Context *cxt, std::string className, std::string functionName) {
 
         if (!FLARE_DEBUG) {
             return;
         }
+
+        int depth = cxt->depth;
 
         while (depth > 0) {
             if (depth == 1) {
@@ -34,7 +36,10 @@ namespace ast {
 
     void Node::printLLVMir() {
         module = std::make_unique<llvm::Module>("FlareTest", context);
-        this->codeGen(0);
+
+        auto *cxt = new Context();
+        this->codeGen(cxt);
+        free(cxt);
 
         if (FLARE_DEBUG) {
             std::cout << "========================================\n";

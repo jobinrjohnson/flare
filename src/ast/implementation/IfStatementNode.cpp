@@ -34,7 +34,7 @@ namespace ast {
         this->condition.push_back(node);
     }
 
-    llvm::Value *IfStatementNode::codegenIfElseIf(int depth) {
+    llvm::Value *IfStatementNode::codegenIfElseIf(Context *cxt) {
 
         llvm::Function *function = builder.GetInsertBlock()->getParent();
         llvm::BasicBlock *mergeBlock = llvm::BasicBlock::Create(context, "ifCont");
@@ -45,14 +45,14 @@ namespace ast {
             llvm::BasicBlock *thenBlock = llvm::BasicBlock::Create(context, "thenBlk");
 
             builder.CreateCondBr(
-                    this->condition[i]->codeGen(depth + 1),
+                    this->condition[i]->codeGen(cxt->nextLevel()),
                     thenBlock,
                     elseIfBlock
             );
 
             function->getBasicBlockList().push_back(thenBlock);
             builder.SetInsertPoint(thenBlock);
-            this->statementList[i]->codeGen(depth + 1);
+            this->statementList[i]->codeGen(cxt->nextLevel());
             builder.CreateBr(mergeBlock);
 
             function->getBasicBlockList().push_back(elseIfBlock);
@@ -72,8 +72,8 @@ namespace ast {
     }
 
 
-    llvm::Value *IfStatementNode::codeGen(int depth) {
-        this->printCallStack(depth, "IfStatementNode", __FUNCTION__);
-        return this->codegenIfElseIf(depth);
+    llvm::Value *IfStatementNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "IfStatementNode", __FUNCTION__);
+        return this->codegenIfElseIf(cxt);
     }
 }

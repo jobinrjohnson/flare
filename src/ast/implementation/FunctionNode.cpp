@@ -8,9 +8,9 @@ NodeType ast::FunctionNode::getNodeType() {
     return FUNCTION_NODE;
 }
 
-llvm::Value *ast::FunctionNode::codeGen(int depth) {
+llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
 
-    this->printCallStack(depth, "FunctionNode", __FUNCTION__);
+    this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
 
 
     std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(context));
@@ -25,7 +25,7 @@ llvm::Value *ast::FunctionNode::codeGen(int depth) {
     builder.SetInsertPoint(this->entryBlock);
     AllocaInst *retValue = new AllocaInst(function->getReturnType(), 0, "retVal", this->entryBlock);
     builder.CreateStore(ConstantInt::get(context, APInt(32, 0)), retValue);
-    this->statementListNode->codeGen(0);
+    this->statementListNode->codeGen(cxt);
     builder.CreateBr(this->exitBlock);
 
     builder.SetInsertPoint(this->exitBlock);

@@ -22,13 +22,13 @@ namespace ast {
     }
 
 
-    llvm::Value *StatementListNode::codeGen(int depth) {
+    llvm::Value *StatementListNode::codeGen(Context *cxt) {
 
-        this->printCallStack(depth, "StatementListNode", __FUNCTION__);
+        this->printCallStack(cxt, "StatementListNode", __FUNCTION__);
 
         Value *finalValue = nullptr;
         for (auto const &value:this->statements) {
-            finalValue = value->codeGen(depth + 1);
+            finalValue = value->codeGen(cxt);
         }
 
         return finalValue;

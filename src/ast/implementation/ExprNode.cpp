@@ -22,7 +22,7 @@ namespace ast {
         this->operands.push_back(b);
     }
 
-    Value *ExprNode::codeGenFloatingPointBinaryExpr(int depth, Value *lhs, Value *rhs) {
+    Value *ExprNode::codeGenFloatingPointBinaryExpr(Context *cxt, Value *lhs, Value *rhs) {
 
         llvm::Value *value;
         switch (this->opr) {
@@ -67,7 +67,7 @@ namespace ast {
     }
 
 
-    Value *ExprNode::codeGenIntegerBinaryExpr(int depth, Value *lhs, Value *rhs) {
+    Value *ExprNode::codeGenIntegerBinaryExpr(Context *cxt, Value *lhs, Value *rhs) {
 
         llvm::Value *value;
 
@@ -117,10 +117,10 @@ namespace ast {
     }
 
 
-    Value *ExprNode::codeGenBinaryExpr(int depth) {
+    Value *ExprNode::codeGenBinaryExpr(Context *cxt) {
 
-        Value *lhs = this->operands[0]->codeGen(depth + 1);
-        Value *rhs = this->operands[1]->codeGen(depth + 1);
+        Value *lhs = this->operands[0]->codeGen(cxt->nextLevel());
+        Value *rhs = this->operands[1]->codeGen(cxt->nextLevel());
 
         if (rhs->getType()->getTypeID() != lhs->getType()->getTypeID()) {
 
@@ -130,16 +130,16 @@ namespace ast {
                 rhs = builder.CreateSIToFP(rhs, Type::getDoubleTy(context), "convertedFl");
             }
 
-            return this->codeGenFloatingPointBinaryExpr(depth, lhs, rhs);
+            return this->codeGenFloatingPointBinaryExpr(cxt, lhs, rhs);
         }
 
-        return this->codeGenIntegerBinaryExpr(depth, lhs, rhs);
+        return this->codeGenIntegerBinaryExpr(cxt, lhs, rhs);
     }
 
-    Value *ExprNode::codeGenUnaryExpr(int depth) {
+    Value *ExprNode::codeGenUnaryExpr(Context *cxt) {
 
         llvm::Value *value;
-        Value *operand = this->operands[0]->codeGen(depth + 1);
+        Value *operand = this->operands[0]->codeGen(cxt->nextLevel());
 
         switch (this->opr) {
             case VAR_DE_REF:
@@ -150,7 +150,7 @@ namespace ast {
                 break;
             case UNARY_MINUS: {
                 this->operands.push_back(new LiteralNode(0));
-                value = this->codeGenBinaryExpr(depth);
+                value = this->codeGenBinaryExpr(cxt);
                 break;
             }
             case NOT:
@@ -163,9 +163,9 @@ namespace ast {
     }
 
 
-    llvm::Value *ExprNode::codeGen(int depth) {
+    llvm::Value *ExprNode::codeGen(Context *cxt) {
 
-        this->printCallStack(depth, "ExprNode", __FUNCTION__);
+        this->printCallStack(cxt, "ExprNode", __FUNCTION__);
 
         llvm::Value *value;
 
@@ -176,7 +176,7 @@ namespace ast {
             case GROUPED:
             case UNARY_PLUS:
             case UNARY_MINUS:
-                value = this->codeGenUnaryExpr(depth);
+                value = this->codeGenUnaryExpr(cxt);
                 break;
             case PLUS:
             case MINUS:
@@ -189,7 +189,7 @@ namespace ast {
             case NOT_EQUALITY:
             case DIV:
             case MODULO_DIV:
-                value = this->codeGenBinaryExpr(depth);
+                value = this->codeGenBinaryExpr(cxt);
                 break;
             default:
                 throw "Operand not implemented."; // TODO throw proper error.

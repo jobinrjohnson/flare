@@ -30,7 +30,7 @@ namespace ast {
 
         LiteralNode(double mLiteralValue);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
 
     };

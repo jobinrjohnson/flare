@@ -7,12 +7,12 @@
 
 #include <iostream>
 #include <stack>
-#include <FunctionNode.h>
+//#include "../FunctionNode.h"
 
 namespace ast {
     class Context {
 
-        std::stack<FunctionNode *> functions;
+//        std::stack<FunctionNode *> functions;
 
     public:
 
@@ -23,11 +23,11 @@ namespace ast {
             return this;
         }
 
-        void pushFunction(FunctionNode *);
-
-        void popFunction();
-
-        FunctionNode *getCurrentFunction();
+//        void pushFunction(FunctionNode *);
+//
+//        void popFunction();
+//
+//        FunctionNode *getCurrentFunction();
 
     };
 }

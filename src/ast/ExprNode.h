@@ -35,13 +35,13 @@ namespace ast {
         std::vector<Node *> operands;
         OperatorType opr;
 
-        Value *codeGenBinaryExpr(int depth);
+        Value *codeGenBinaryExpr(Context *cxt);
 
-        Value *codeGenUnaryExpr(int depth);
+        Value *codeGenUnaryExpr(Context *cxt);
 
-        Value *codeGenFloatingPointBinaryExpr(int depth, Value *lhs, Value *rhs);
+        Value *codeGenFloatingPointBinaryExpr(Context *cxt, Value *lhs, Value *rhs);
 
-        Value *codeGenIntegerBinaryExpr(int depth, Value *lhs, Value *rhs);
+        Value *codeGenIntegerBinaryExpr(Context *cxt, Value *lhs, Value *rhs);
 
     public:
 
@@ -51,7 +51,7 @@ namespace ast {
 
         ExprNode(OperatorType opr, Node *a, Node *b);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
     };
 

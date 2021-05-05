@@ -29,7 +29,7 @@ namespace ast {
 
         explicit FunctionNode(const char *name, StatementListNode *statements);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
     };
 }

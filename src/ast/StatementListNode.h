@@ -27,7 +27,7 @@ namespace ast {
 
         void push(Node *node);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
     };
 

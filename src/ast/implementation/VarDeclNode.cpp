@@ -42,9 +42,9 @@ namespace ast {
         return unitInitList;
     }
 
-    Value *VarDeclNode::codeGenBuiltInTy(int depth) {
+    Value *VarDeclNode::codeGenBuiltInTy(Context *cxt) {
 
-        Value *value = this->initialValue->codeGen(depth + 1);
+        Value *value = this->initialValue->codeGen(cxt);
         llvm::GlobalVariable *gvar = new llvm::GlobalVariable(
                 *module,
                 value->getType(),
@@ -59,13 +59,13 @@ namespace ast {
     }
 
 
-    llvm::Value *VarDeclNode::codeGen(int depth) {
-        this->printCallStack(depth, "VarDeclNode", __FUNCTION__);
+    llvm::Value *VarDeclNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "VarDeclNode", __FUNCTION__);
 
         if (this->isArray) {
             return this->codeGenArray();
         } else {
-            return this->codeGenBuiltInTy(depth);
+            return this->codeGenBuiltInTy(cxt);
         };
 
     }

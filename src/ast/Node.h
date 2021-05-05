@@ -17,6 +17,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Verifier.h"
+#include "helpers/Context.h"
 
 
 using namespace llvm;
@@ -45,13 +46,13 @@ namespace ast {
 
     public:
 
-        void printCallStack(int depth, std::string className, std::string functionName);
+        void printCallStack(Context *, std::string className, std::string functionName);
 
         void printDebug(std::string str);
 
         void printLLVMir();
 
-        virtual llvm::Value *codeGen(int depth) = 0;
+        virtual llvm::Value *codeGen(Context *) = 0;
 
         virtual NodeType getNodeType() = 0;
 

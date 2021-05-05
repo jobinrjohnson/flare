@@ -4,10 +4,10 @@
 
 #include "StatementNode.h"
 
-llvm::Value *ast::StatementNode::codeGen(int depth) {
+llvm::Value *ast::StatementNode::codeGen(Context *cxt) {
 
     if (this->type == RETURN) {
-        Value *operand = this->operands[0]->codeGen(depth);
+        Value *operand = this->operands[0]->codeGen(cxt);
         builder.CreateRet(operand);
     }
 

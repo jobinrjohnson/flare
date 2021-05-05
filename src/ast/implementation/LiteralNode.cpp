@@ -20,9 +20,9 @@ namespace ast {
         this->literalType = DOUBLE;
     }
 
-    llvm::Value *LiteralNode::codeGen(int depth) {
+    llvm::Value *LiteralNode::codeGen(Context *cxt) {
 
-        this->printCallStack(depth, "LiteralNode", __FUNCTION__);
+        this->printCallStack(cxt, "LiteralNode", __FUNCTION__);
 
         switch (this->literalType) {
 

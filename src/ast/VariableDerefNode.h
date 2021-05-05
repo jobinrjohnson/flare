@@ -25,7 +25,7 @@ namespace ast {
 
         VariableDerefNode(char *mLiteralValue, Node *index);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
 
     };

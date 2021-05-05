@@ -14,10 +14,10 @@ namespace ast {
         this->node = exprNode;
     }
 
-    llvm::Value *LogSmtNode::codeGen(int depth) {
-        this->printCallStack(depth, "LogSmtNode", __FUNCTION__);
+    llvm::Value *LogSmtNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "LogSmtNode", __FUNCTION__);
 
-        Value *printValue = this->node->codeGen(depth + 1);
+        Value *printValue = this->node->codeGen(cxt);
 
         FunctionType *printfType = FunctionType::get(
                 Type::getInt32Ty(context),

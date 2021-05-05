@@ -21,8 +21,8 @@ namespace ast {
         this->isArrayDeReference = true;
     }
 
-    llvm::Value *VariableDerefNode::codeGen(int depth) {
-        this->printCallStack(depth, "VariableDerefNode", __FUNCTION__);
+    llvm::Value *VariableDerefNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "VariableDerefNode", __FUNCTION__);
 
         auto gVar = module->getNamedGlobal(this->variableName);
         if (!gVar) {
@@ -31,7 +31,7 @@ namespace ast {
 
         if (this->isArrayDeReference) {
 
-            auto index = this->arrayIndex->codeGen(depth + 1);
+            auto index = this->arrayIndex->codeGen(cxt);
 
             std::vector<llvm::Value *> ind{
                     llvm::ConstantInt::get(context, llvm::APInt(64, 0, false)),

@@ -19,7 +19,7 @@ namespace ast {
 
         ValuePlaceholderNode(Value *tempValue);
 
-        llvm::Value *codeGen(int depth) override;
+        llvm::Value *codeGen(Context *cxt) override;
 
     };
 

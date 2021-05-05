@@ -20,7 +20,7 @@ namespace ast {
 
         LogSmtNode(Node *exprNode);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
     };
 

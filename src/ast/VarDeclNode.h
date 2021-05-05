@@ -28,9 +28,9 @@ namespace ast {
 
         Value *codeGenArray();
 
-        Value *codeGenBuiltInTy(int depth);
+        Value *codeGenBuiltInTy(Context *);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
     };
 

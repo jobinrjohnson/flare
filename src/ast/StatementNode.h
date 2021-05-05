@@ -27,7 +27,7 @@ namespace ast {
 
         explicit StatementNode(StatementType type, Node *node);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
     };
 

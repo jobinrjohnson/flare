@@ -14,8 +14,8 @@ namespace ast {
         this->value = tempValue;
     }
 
-    llvm::Value *ValuePlaceholderNode::codeGen(int depth) {
-        this->printCallStack(depth, "ValuePlaceholderNode", __FUNCTION__);
+    llvm::Value *ValuePlaceholderNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "ValuePlaceholderNode", __FUNCTION__);
         return this->value;
     }
 

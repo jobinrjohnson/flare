@@ -28,7 +28,7 @@ namespace ast {
 
         AssignmentNode(char *name, Node *indexNode, Node *exprNode);
 
-        llvm::Value *codeGen(int depth);
+        llvm::Value *codeGen(Context *cxt);
 
     };
 
