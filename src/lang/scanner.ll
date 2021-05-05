@@ -59,6 +59,8 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_FUNCTION;
                 }else if (strcmp("console", yytext) == 0) {
                     return token::KW_CONSOLE;
+                }else if (strcmp("while", yytext) == 0) {
+                    return token::KW_WHILE;
                 }
                 yylval->yyText = (char *) malloc(strlen(yytext));
                 strcpy(yylval->yyText, yytext);

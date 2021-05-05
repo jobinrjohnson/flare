@@ -21,6 +21,7 @@
     #include "ast/IfStatementNode.h"
     #include "ast/LogSmtNode.h"
     #include "ast/FunctionNode.h"
+    #include "ast/LoopNode.h"
 
 }
 
@@ -56,6 +57,7 @@
     ast::LogSmtNode *logSmtNode;
     ast::StatementNode *statementNode;
     ast::FunctionNode *functionNode;
+    ast::LoopNode *loopNode;
 
     int tIntegerValue;
     double tDecimalValue;
@@ -77,12 +79,13 @@
 %type <logSmtNode> log_statement
 %type <statementNode> return_statement
 %type <functionNode> function_declaration
+%type <loopNode> loops
 
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
-%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION
+%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 
 %left '+' '-'
@@ -115,6 +118,11 @@ statement:
     | return_statement                  { }
     | statement ';'                     { $$ = $1; }
     | function_declaration              { }
+    | loops                             { }
+;
+
+loops:
+    KW_WHILE '(' expr ')' '{' statements '}'    { $$ = new ast::LoopNode($3, $6);}
 ;
 
 function_declaration:
