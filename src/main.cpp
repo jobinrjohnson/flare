@@ -6,7 +6,7 @@ using namespace llvm;
 
 int main() {
     lang::Driver driver;
-    std::string fileName = "../../samples/1.program";
+    std::string fileName = "../../samples/1.ts";
 
     try {
         driver.parseFile(fileName);
