@@ -12,28 +12,31 @@ llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
 
     this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
 
+    cxt->pushFunction(this);
+
 
     std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(context));
     llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(context),
                                                                   argVector, false);
 
-    llvm::Function *function = llvm::Function::Create(functionRetType, llvm::GlobalValue::ExternalLinkage,
-                                                      this->name, module.get());
+    this->function = llvm::Function::Create(functionRetType, llvm::GlobalValue::ExternalLinkage,
+                                            this->name, module.get());
 
-    this->prepareBlocks(function);
+    this->prepareBlocks();
 
     builder.SetInsertPoint(this->entryBlock);
-    AllocaInst *retValue = new AllocaInst(function->getReturnType(), 0, "retVal", this->entryBlock);
+    this->retValue = new AllocaInst(function->getReturnType(), 0, "retVal", this->entryBlock);
     builder.CreateStore(ConstantInt::get(context, APInt(32, 0)), retValue);
     this->statementListNode->codeGen(cxt);
     builder.CreateBr(this->exitBlock);
 
     builder.SetInsertPoint(this->exitBlock);
-    LoadInst *l = builder.CreateLoad(retValue);
+    LoadInst *l = builder.CreateLoad(this->retValue);
     builder.CreateRet(l);
 
     llvm::verifyFunction(*function, &(llvm::errs()));
 
+    cxt->popFunction();
 
     return nullptr;
 }
@@ -43,10 +46,14 @@ ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statem
     this->statementListNode = statements;
 }
 
-void ast::FunctionNode::prepareBlocks(llvm::Function *function) {
+void ast::FunctionNode::prepareBlocks() {
 
-    this->entryBlock = llvm::BasicBlock::Create(context, "entry", function);
-    this->exitBlock = llvm::BasicBlock::Create(context, "exit", function);
+    this->entryBlock = llvm::BasicBlock::Create(context, "entry", this->function);
+    this->exitBlock = llvm::BasicBlock::Create(context, "exit", this->function);
 
+}
+
+void ast::FunctionNode::setHasMultipleExits() {
+    this->hasMultipleExits = true;
 }
 

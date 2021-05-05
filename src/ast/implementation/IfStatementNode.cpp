@@ -37,12 +37,12 @@ namespace ast {
     llvm::Value *IfStatementNode::codegenIfElseIf(Context *cxt) {
 
         llvm::Function *function = builder.GetInsertBlock()->getParent();
-        llvm::BasicBlock *mergeBlock = llvm::BasicBlock::Create(context, "ifCont");
+        llvm::BasicBlock *mergeBlock = llvm::BasicBlock::Create(context, "merge");
 
         for (unsigned long i = 0; i < this->condition.size(); ++i) {
 
-            llvm::BasicBlock *elseIfBlock = llvm::BasicBlock::Create(context, "ifCont");
-            llvm::BasicBlock *thenBlock = llvm::BasicBlock::Create(context, "thenBlk");
+            llvm::BasicBlock *elseIfBlock = llvm::BasicBlock::Create(context, "elseif");
+            llvm::BasicBlock *thenBlock = llvm::BasicBlock::Create(context, "then");
 
             builder.CreateCondBr(
                     this->condition[i]->codeGen(cxt->nextLevel()),
@@ -53,12 +53,13 @@ namespace ast {
             function->getBasicBlockList().push_back(thenBlock);
             builder.SetInsertPoint(thenBlock);
             this->statementList[i]->codeGen(cxt->nextLevel());
-            builder.CreateBr(mergeBlock);
-
+            if (thenBlock->getTerminator() == nullptr) {
+                builder.CreateBr(mergeBlock);
+            }
             function->getBasicBlockList().push_back(elseIfBlock);
             builder.SetInsertPoint(elseIfBlock);
 
-            if (i == this->condition.size() - 1) {
+            if (i == this->condition.size() - 1 && elseIfBlock->getTerminator() == nullptr) {
                 builder.CreateBr(mergeBlock);
             }
 

@@ -14,22 +14,27 @@ namespace ast {
 
         StatementListNode *statementListNode;
         std::string name;
-
-        llvm::BasicBlock *entryBlock;
-        llvm::BasicBlock *exitBlock;
+        bool hasMultipleExits = false;
 
     protected:
         Node *node;
 
-        void prepareBlocks(llvm::Function *);
+        void prepareBlocks();
 
     public:
+
+        BasicBlock *entryBlock;
+        BasicBlock *exitBlock;
+        Function *function;
+        AllocaInst *retValue;
 
         NodeType getNodeType();
 
         explicit FunctionNode(const char *name, StatementListNode *statements);
 
         llvm::Value *codeGen(Context *cxt);
+
+        void setHasMultipleExits();
 
     };
 }
