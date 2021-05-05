@@ -13,5 +13,8 @@ void ast::Context::popFunction() {
 }
 
 ast::FunctionNode *ast::Context::getCurrentFunction() {
+    if (this->functions.empty()) {
+        return nullptr;
+    }
     return functions.top();
 }

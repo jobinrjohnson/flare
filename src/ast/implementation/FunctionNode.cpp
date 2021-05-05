@@ -8,18 +8,21 @@ NodeType ast::FunctionNode::getNodeType() {
     return FUNCTION_NODE;
 }
 
+llvm::FunctionType *ast::FunctionNode::codeGenSignature(ast::Context *cxt) {
+    std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(context));
+    llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(context),
+                                                                  argVector, false);
+    return functionRetType;
+}
+
 llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
 
     this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
 
     cxt->pushFunction(this);
 
-
-    std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(context));
-    llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(context),
-                                                                  argVector, false);
-
-    this->function = llvm::Function::Create(functionRetType, llvm::GlobalValue::ExternalLinkage,
+    this->function = llvm::Function::Create(this->codeGenSignature(cxt),
+                                            llvm::GlobalValue::ExternalLinkage,
                                             this->name, module.get());
 
     this->prepareBlocks();
@@ -59,15 +62,14 @@ void ast::FunctionNode::setHasMultipleExits() {
     this->hasMultipleExits = true;
 }
 
-void ast::FunctionNode::createLocal(const std::string& varName, Value *value) {
+void ast::FunctionNode::createLocal(const std::string &varName, Value *value) {
     this->locals.insert(std::pair<std::string, Value *>(varName, value));
 }
 
-Value *ast::FunctionNode::findLocal(const std::string& varName) {
+Value *ast::FunctionNode::findLocal(const std::string &varName) {
     auto val = this->locals.find(varName);
     if (val != this->locals.end()) {
         return val->second;
     }
     return nullptr;
 }
-

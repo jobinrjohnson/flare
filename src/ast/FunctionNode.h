@@ -33,6 +33,8 @@ namespace ast {
 
         explicit FunctionNode(const char *name, StatementListNode *statements);
 
+        llvm::FunctionType *codeGenSignature(Context *cxt);
+
         llvm::Value *codeGen(Context *cxt) override;
 
         void setHasMultipleExits();
