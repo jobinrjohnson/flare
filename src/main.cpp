@@ -12,6 +12,7 @@ int main() {
         driver.parseFile(fileName);
     } catch (char const *e) {
         std::cerr << "Error occurred while parsing : " << e;
+        return 1;
     }
 
     // Execute JIT

@@ -138,6 +138,8 @@ namespace lang {
 
 int LangFlexLexer::yylex()
 {
+  // TODO handle this properly
   std::cerr << "call langFlexLexer::yylex()!" << std::endl;
+  throw "Lexer returned some errors";
   return 0;
 }

@@ -193,7 +193,9 @@ scalar:
 
 namespace lang {
     void Parser::error(const location &, const std::string &m) {
+      // TODO handle this properly
       std::cerr << *driver.cursor << ": " << m << std::endl;
       driver.error_ = (driver.error_ == 127 ? 127 : driver.error_ + 1);
+      throw "Some syntax errors";
     }
 } // namespace lang

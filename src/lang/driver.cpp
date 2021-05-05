@@ -15,6 +15,11 @@ namespace lang {
     int Driver::parseFile(std::string &path) {
 
         std::ifstream file(path.c_str(), std::ifstream::in);
+
+        if(!file.is_open()){
+            throw "Some error occurred while opening the file.";
+        }
+
         this->scanner->switch_streams(&file, &std::cerr);
         this->parser->parse();
 
