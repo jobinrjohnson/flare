@@ -15,8 +15,13 @@ namespace ast {
         StatementListNode *statementListNode;
         std::string name;
 
+        llvm::BasicBlock *entryBlock;
+        llvm::BasicBlock *exitBlock;
+
     protected:
         Node *node;
+
+        void prepareBlocks(llvm::Function *);
 
     public:
 
