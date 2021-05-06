@@ -85,8 +85,9 @@
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
-%token TOK_EOF 0 PLUS KW_LET KW_VAR KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE
+%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
+%token KW_INT KW_INT32 KW_INT64 KW_DECIMAL KW_FLOAT KW_DOUBLE
 
 %left '+' '-'
 %left '*' '/' '%'
@@ -154,11 +155,19 @@ if_else_if:
 ;
 
 variable_declaration:
-    array_declaration                   { }
-    | KW_LET IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
-    | KW_VAR IDENTIFIER                 { $$ = new ast::VarDeclNode($2); }
-    | KW_LET IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
-    | KW_VAR IDENTIFIER '=' expr        { $$ = new ast::VarDeclNode($2, $4); free($2); }
+    array_declaration                       { }
+    | KW_LET IDENTIFIER                     { $$ = new ast::VarDeclNode($2); free($2);  }
+    | KW_LET IDENTIFIER ':' type            { $$ = new ast::VarDeclNode($2); free($2); }
+    | variable_declaration '=' expr         { $$->setInitializer($3); }
+;
+
+type:
+    KW_INT              {}
+    | KW_INT32          {}
+    | KW_INT64          {}
+    | KW_DECIMAL        {}
+    | KW_FLOAT          {}
+    | KW_DOUBLE         {}
 ;
 
 array_declaration:

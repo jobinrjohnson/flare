@@ -78,4 +78,12 @@ namespace ast {
         };
 
     }
+
+    VarDeclNode::VarDeclNode(char *name) {
+        this->variableName.assign(name);
+    }
+
+    void VarDeclNode::setInitializer(Node *initial) {
+        this->initialValue = initial;
+    }
 }

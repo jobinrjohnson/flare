@@ -22,9 +22,13 @@ namespace ast {
 
         NodeType getNodeType();
 
-        VarDeclNode(char *name, bool isArray = false);
+        VarDeclNode(char *name);
+
+        VarDeclNode(char *name, bool isArray);
 
         VarDeclNode(char *name, Node *initialValue, bool isArray = false);
+
+        void setInitializer(Node *initial);
 
         Value *codeGenArray();
 

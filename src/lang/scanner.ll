@@ -45,8 +45,6 @@ typedef lang::Parser::token_type token_type;
 
                 if (strcmp("let", yytext) == 0) {
                     return token::KW_LET;
-                } else if (strcmp("var", yytext) == 0) {
-                    return token::KW_VAR;
                 } else if (strcmp("if", yytext) == 0) {
                     return token::KW_IF;
                 } else if (strcmp("else", yytext) == 0) {
@@ -61,6 +59,16 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_CONSOLE;
                 }else if (strcmp("while", yytext) == 0) {
                     return token::KW_WHILE;
+                }else if (strcmp("int", yytext) == 0) {
+                    return token::KW_INT;
+                }else if (strcmp("int32", yytext) == 0) {
+                    return token::KW_INT32;
+                }else if (strcmp("int64", yytext) == 0) {
+                    return token::KW_INT64;
+                }else if (strcmp("double", yytext) == 0) {
+                    return token::KW_DOUBLE;
+                }else if (strcmp("float", yytext) == 0) {
+                    return token::KW_FLOAT;
                 }
                 yylval->yyText = (char *) malloc(strlen(yytext));
                 strcpy(yylval->yyText, yytext);
