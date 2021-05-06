@@ -72,7 +72,7 @@
 %type <node> statement
 %type <expression> expr
 %type <literal> scalar
-%type <statementList> statements
+%type <statementList> optional_block statements
 %type <varDecl> variable_declaration array_declaration
 %type <assignmentNode> assignment_expr
 %type <ifStatementNode> if_else_if
@@ -122,12 +122,17 @@ statement:
     | loops                             { }
 ;
 
+optional_block:
+    statement                           { $$ = new ast::StatementListNode($<node>1); }
+    | '{' statements '}'                { $$ = $2; }
+;
+
 loops:
-    KW_WHILE '(' expr ')' '{' statements '}'    { $$ = new ast::LoopNode($3, $6);}
+    KW_WHILE '(' expr ')' optional_block    { $$ = new ast::LoopNode($3, $5);}
 ;
 
 function_declaration:
-    KW_FUNCTION IDENTIFIER '(' ')' '{' statements '}'   { $$ = new ast::FunctionNode($2, $<statementList>6); }
+    KW_FUNCTION IDENTIFIER '(' ')' optional_block   { $$ = new ast::FunctionNode($2, $<statementList>5); }
 ;
 
 log_statement:
@@ -141,15 +146,15 @@ return_statement:
 
 
 if_else_if:
-    KW_IF '(' expr ')' '{' statements '}'                           {
-        $$ = new ast::IfStatementNode($3, $6);
+    KW_IF '(' expr ')' optional_block                           {
+        $$ = new ast::IfStatementNode($3, $5);
     }
-    | if_else_if KW_ELSE KW_IF '(' expr ')' '{' statements '}'      {
-        $1->addBranch($5, $8);
+    | if_else_if KW_ELSE KW_IF '(' expr ')' optional_block     {
+        $1->addBranch($5, $7);
         $$ = $1;
     }
-    | if_else_if KW_ELSE '{' statements '}'                         {
-        $1->addElseBranch($4);
+    | if_else_if KW_ELSE optional_block                         {
+        $1->addElseBranch($3);
         $$ = $1;
     }
 ;
