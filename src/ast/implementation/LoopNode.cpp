@@ -15,9 +15,9 @@ llvm::Value *ast::LoopNode::codeGen(ast::Context *cxt) {
 
     Function *insertFunction = builder.GetInsertBlock()->getParent();
 
-    BasicBlock *conditionBlock = BasicBlock::Create(context, "condition", insertFunction);
-    BasicBlock *bodyBlock = BasicBlock::Create(context, "body", insertFunction);
-    BasicBlock *mergeBlock = BasicBlock::Create(context, "merge", insertFunction);
+    BasicBlock *conditionBlock = BasicBlock::Create(context, "loopCondition", insertFunction);
+    BasicBlock *bodyBlock = BasicBlock::Create(context, "loopBody", insertFunction);
+    BasicBlock *mergeBlock = BasicBlock::Create(context, "loopMerge", insertFunction);
 
     // TODO improve this implementation
     builder.CreateBr(conditionBlock);
@@ -31,7 +31,7 @@ llvm::Value *ast::LoopNode::codeGen(ast::Context *cxt) {
 
     builder.SetInsertPoint(bodyBlock);
     this->statementList->codeGen(cxt->nextLevel());
-    if (bodyBlock->getTerminator() == nullptr) {
+    if (builder.GetInsertBlock()->getTerminator() == nullptr) {
         builder.CreateBr(conditionBlock);
     }
 
