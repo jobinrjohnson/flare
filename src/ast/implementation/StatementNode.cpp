@@ -10,10 +10,11 @@ llvm::Value *ast::StatementNode::codeGen(Context *cxt) {
     if (this->type == RETURN) {
         Value *operand = this->operands[0]->codeGen(cxt);
 
-        FunctionNode *function = cxt->getCurrentFunction();
-        if (function == nullptr) {
+        Node *functionNode = cxt->getCurrentFunction();
+        if (functionNode == nullptr) {
             throw "return should be inside a function";
         }
+        FunctionNode *function = dynamic_cast<FunctionNode *>(functionNode);
 
         function->setHasMultipleExits();
         builder.CreateStore(operand, function->retValue);

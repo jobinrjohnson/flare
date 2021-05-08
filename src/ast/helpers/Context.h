@@ -7,30 +7,41 @@
 
 #include <iostream>
 #include <stack>
-//#include "../FunctionNode.h"
+#include <vector>
 
 namespace ast {
 
-    class FunctionNode;
+    class Node;
 
     class Context {
 
-        std::stack<FunctionNode *> functions;
+        std::stack<Node *> functions;
+
 
     public:
 
         int depth = 0;
+
+        std::vector<Node *> statementList;
 
         Context *nextLevel() {
             depth++;
             return this;
         }
 
-        void pushFunction(FunctionNode *);
+        void pushStatementList(Node *);
+
+        void popStatementList();
+
+        Node *getCurrentStatementList();
+
+        llvm::Value *findLocal();
+
+        void pushFunction(Node *);
 
         void popFunction();
 
-        FunctionNode *getCurrentFunction();
+        Node *getCurrentFunction();
 
     };
 }

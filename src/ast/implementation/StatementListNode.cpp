@@ -26,15 +26,32 @@ namespace ast {
 
         this->printCallStack(cxt, "StatementListNode", __FUNCTION__);
 
+        cxt->pushStatementList(this);
+
         Value *finalValue = nullptr;
         for (auto const &value:this->statements) {
             finalValue = value->codeGen(cxt);
             if (cxt->getCurrentFunction() != nullptr && builder.GetInsertBlock()->getTerminator() != nullptr) {
-                return finalValue;
+                goto end;
             }
         }
-
+        end:
+        cxt->popStatementList();
         return finalValue;
     }
+
+
+    void ast::StatementListNode::createLocal(const std::string &varName, Value *value) {
+        this->locals.insert(std::pair<std::string, Value *>(varName, value));
+    }
+
+    Value *ast::StatementListNode::findLocal(const std::string &varName) {
+        auto val = this->locals.find(varName);
+        if (val != this->locals.end()) {
+            return val->second;
+        }
+        return nullptr;
+    }
+
 
 }

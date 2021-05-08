@@ -16,6 +16,8 @@ namespace ast {
     private:
         std::vector<Node *> statements;
 
+        std::map<std::string, Value *> locals;
+
 
     public:
 
@@ -28,6 +30,10 @@ namespace ast {
         void push(Node *node);
 
         llvm::Value *codeGen(Context *cxt);
+
+        void createLocal(const std::string &, Value *);
+
+        Value *findLocal(const std::string &);
 
     };
 

@@ -4,6 +4,7 @@
 
 #include "VariableDerefNode.h"
 #include "FunctionNode.h"
+#include "helpers/VariableHelper.h"
 
 namespace ast {
 
@@ -25,16 +26,10 @@ namespace ast {
     llvm::Value *VariableDerefNode::codeGen(Context *cxt) {
         this->printCallStack(cxt, "VariableDerefNode", __FUNCTION__);
 
-        auto currentFunction = cxt->getCurrentFunction();
-        Value *variable;
-        if (!this->isArrayDeReference && currentFunction != nullptr &&
-            (variable = currentFunction->findLocal(this->variableName)) != nullptr) {
-            return builder.CreateLoad(variable);
-        }
 
-        auto gVar = module->getNamedGlobal(this->variableName);
-        if (!gVar) {
-            throw "no global variable declared with the name"; // TODO throw proper error
+        Value *variable = findVariable(cxt, this->variableName);
+        if (variable == nullptr) {
+            throw "no global variable declared in the scope";
         }
 
         if (this->isArrayDeReference) {
@@ -47,7 +42,7 @@ namespace ast {
             };
 
             auto arrayPtrLoad = builder.CreateGEP(
-                    gVar,
+                    variable,
                     ind,
                     "arrayLoad"
             );
@@ -55,8 +50,7 @@ namespace ast {
             return builder.CreateLoad(arrayPtrLoad);
 
         }
-
-        return builder.CreateLoad(gVar, this->variableName);
+        return builder.CreateLoad(variable);
 
     }
 

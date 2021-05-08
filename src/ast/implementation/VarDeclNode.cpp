@@ -2,9 +2,9 @@
 // Created by jobinrjohnson on 7/23/20.
 //
 
+#include <FunctionNode.h>
 #include "VarDeclNode.h"
-#include "FunctionNode.h"
-
+#include "StatementListNode.h"
 
 namespace ast {
 
@@ -47,10 +47,14 @@ namespace ast {
 
         Value *value = this->initialValue->codeGen(cxt);
 
-        auto currentFunction = cxt->getCurrentFunction();
-        if (currentFunction != nullptr) {
+        StatementListNode *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
+        if(currentBlock->findLocal(this->variableName)!= nullptr){
+            throw "Variable already declared in the same block.";
+        }
+
+        if (cxt->getCurrentFunction() != nullptr) {
             auto localVar = new AllocaInst(value->getType(), 0, this->variableName, builder.GetInsertBlock());
-            currentFunction->createLocal(this->variableName, localVar);
+            currentBlock->createLocal(this->variableName, localVar);
             return builder.CreateStore(value, localVar);
         }
 
@@ -63,6 +67,7 @@ namespace ast {
                 this->variableName);
 
         gvar->setInitializer(dyn_cast<Constant>(value));
+        currentBlock->createLocal(this->variableName, gvar);
 
         return gvar;
     }

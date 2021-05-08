@@ -3,7 +3,7 @@
 //
 
 #include "AssignmentNode.h"
-#include "FunctionNode.h"
+#include "helpers/VariableHelper.h"
 
 namespace ast {
 
@@ -22,13 +22,7 @@ namespace ast {
         this->printCallStack(cxt, "AssignmentNode", __FUNCTION__);
 
 
-        auto currentFunction = cxt->getCurrentFunction();
-        Value *variable;
-        if (currentFunction != nullptr &&
-            (variable = currentFunction->findLocal(this->varName)) != nullptr) {
-        } else {
-            variable = module->getGlobalVariable(this->varName, true);
-        }
+        Value *variable = findVariable(cxt, this->varName);
 
         if (variable == nullptr) {
             throw "Invalid variable name";
