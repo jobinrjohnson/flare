@@ -1,7 +1,7 @@
 let b = 90;
 
 function someFunctionName(i, j) {
-    console.log(0);
+    return i + j;
 }
 
 function main() {
@@ -11,8 +11,7 @@ function main() {
     while (i < 10) {
         i = i + 1;
         sum = sum + i;
-        someFunctionName();
+        console.log(someFunctionName(i, sum));
     }
-    console.log(sum);
     return 0;
 }

@@ -62,6 +62,7 @@
     ast::LoopNode *loopNode;
     ast::Parameter *parameter;
     std::vector<ast::Parameter *> *parameterList;
+    std::vector<ast::ExprNode *> *arguments;
 
     int tIntegerValue;
     double tDecimalValue;
@@ -87,6 +88,7 @@
 %type <functionCallNode> function_call
 %type <parameterList> parameter_list
 %type <parameter> parameter
+%type <arguments> arguments
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
@@ -204,8 +206,17 @@ assignment_expr:
     | IDENTIFIER '[' expr ']' '=' expr          { $$ = new ast::AssignmentNode($1, $3, $6); free($1); }
 ;
 
+arguments:
+    expr                                        {
+        $$ = new std::vector<ast::ExprNode *>();
+        $$->push_back($1);
+    }
+    | arguments ',' expr                        { $1->push_back($3); $$=$1; }
+;
+
 function_call:
-    IDENTIFIER '(' ')'              { $$ = new ast::FunctionCallNode($1); }
+    IDENTIFIER '(' ')'                          { $$ = new ast::FunctionCallNode($1); }
+    | IDENTIFIER '(' arguments ')'              { $$ = new ast::FunctionCallNode($1, $3); }
 ;
 
 

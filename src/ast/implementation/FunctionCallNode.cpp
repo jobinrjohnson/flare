@@ -10,8 +10,16 @@ llvm::Value *ast::FunctionCallNode::codeGen(ast::Context *cxt) {
     if (calleeFunction == nullptr) {
         throw "Function not declared in the scope";
     }
-    // TODO handle args
-    return builder.CreateCall(calleeFunction, None, this->functionName);
+    if (argumentList == nullptr) {
+        return builder.CreateCall(calleeFunction, None, this->functionName);
+    }
+
+    std::vector<Value *> calleeArgs;
+    for (ExprNode *element: *(this->argumentList)) {
+        calleeArgs.push_back(element->codeGen(cxt->nextLevel()));
+    }
+
+    return builder.CreateCall(calleeFunction, calleeArgs, this->functionName);
 
 }
 
@@ -21,4 +29,9 @@ NodeType ast::FunctionCallNode::getNodeType() {
 
 ast::FunctionCallNode::FunctionCallNode(std::string functionName) {
     this->functionName = functionName;
+}
+
+ast::FunctionCallNode::FunctionCallNode(std::string functionName, std::vector<ExprNode *> *argumentList) {
+    this->functionName = functionName;
+    this->argumentList = argumentList;
 }
