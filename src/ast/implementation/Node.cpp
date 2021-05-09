@@ -16,16 +16,16 @@ namespace ast {
             return;
         }
 
-        int depth = cxt->depth;
-
-        while (depth > 0) {
-            if (depth == 1) {
-                std::cout << "|__";
-            } else {
-                std::cout << "|  ";
-            };
-            depth--;
-        }
+//        int depth = cxt->depth;
+//
+//        while (depth > 0) {
+//            if (depth == 1) {
+//                std::cout << "|__";
+//            } else {
+//                std::cout << "|  ";
+//            };
+//            depth--;
+//        }
         std::cout << className << "@" << functionName << std::endl;
     }
 

@@ -1,17 +1,18 @@
-let b = 90;
-
-function someFunctionName(i, j) {
-    return i + j;
+function factorial(i) {
+    if (i == 1) {
+        return 1;
+    }
+    return i * factorial(i - 1);
 }
 
 function main() {
-    let sum = 0;
     let i = 0;
 
     while (i < 10) {
         i = i + 1;
-        sum = sum + i;
-        console.log(someFunctionName(i, sum));
+        console.log(0);
+        console.log(i);
+        console.log(factorial(i));
     }
     return 0;
 }
