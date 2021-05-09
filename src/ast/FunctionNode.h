@@ -10,11 +10,22 @@
 #include "StatementListNode.h"
 
 namespace ast {
+
+    class Parameter {
+    public:
+        std::string name;
+
+        explicit Parameter(std::string name) {
+            this->name = name;
+        }
+    };
+
     class FunctionNode : public Node {
 
         StatementListNode *statementListNode;
         std::string name;
         bool hasMultipleExits = false;
+        std::vector<ast::Parameter *> *parameterList;
 
     protected:
         Node *node;
@@ -31,6 +42,9 @@ namespace ast {
         NodeType getNodeType() override;
 
         explicit FunctionNode(const char *name, StatementListNode *statements);
+
+        explicit FunctionNode(const char *name, StatementListNode *statements,
+                              std::vector<ast::Parameter *> *parameterList);
 
         llvm::FunctionType *codeGenSignature(Context *cxt);
 

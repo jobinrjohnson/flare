@@ -92,8 +92,6 @@ typedef lang::Parser::token_type token_type;
                   return token::T_INTEGER;
               }
 
-"."           {return '.';}
-
 "+"           {return '+';}
 "-"           {return '-';}
 "*"           {return '*';}
@@ -119,7 +117,10 @@ typedef lang::Parser::token_type token_type;
 
 
 
+"."           {return '.';}
+","           {return ',';}
 ";"           {return ';';}
+":"           {return ':';}
 
 
 

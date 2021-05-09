@@ -60,6 +60,8 @@
     ast::FunctionNode *functionNode;
     ast::FunctionCallNode *functionCallNode;
     ast::LoopNode *loopNode;
+    ast::Parameter *parameter;
+    std::vector<ast::Parameter *> *parameterList;
 
     int tIntegerValue;
     double tDecimalValue;
@@ -82,7 +84,9 @@
 %type <statementNode> return_statement
 %type <functionNode> function_declaration
 %type <loopNode> loops
-%type<functionCallNode> function_call
+%type <functionCallNode> function_call
+%type <parameterList> parameter_list
+%type <parameter> parameter
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
@@ -135,6 +139,19 @@ loops:
 
 function_declaration:
     KW_FUNCTION IDENTIFIER '(' ')' optional_block   { $$ = new ast::FunctionNode($2, $<statementList>5); }
+    | KW_FUNCTION IDENTIFIER '(' parameter_list ')' optional_block   { $$ = new ast::FunctionNode($2, $<statementList>6, $4); }
+;
+
+parameter:
+    IDENTIFIER                                  { $$ = new ast::Parameter($1); }
+;
+
+parameter_list:
+    parameter                                  {
+        $$ = new std::vector<ast::Parameter *>();
+        $$->push_back($1);
+    }
+    | parameter_list ',' parameter             { $1->push_back($3); $$ = $1; }
 ;
 
 log_statement:

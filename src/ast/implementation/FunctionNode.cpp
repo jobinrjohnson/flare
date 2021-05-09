@@ -9,7 +9,15 @@ NodeType ast::FunctionNode::getNodeType() {
 }
 
 llvm::FunctionType *ast::FunctionNode::codeGenSignature(ast::Context *cxt) {
-    std::vector<llvm::Type *> argVector(0, llvm::Type::getDoubleTy(context));
+    std::vector<llvm::Type *> argVector;
+
+
+    for (Parameter *element: *(this->parameterList)) {
+        // TODO attach type
+        std::cout << element->name << std::endl;
+        argVector.push_back(llvm::Type::getInt32Ty(context));
+    }
+
     llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(context),
                                                                   argVector, false);
     return functionRetType;
@@ -28,8 +36,24 @@ llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
     this->prepareBlocks();
 
     builder.SetInsertPoint(this->entryBlock);
+
+
+    // Prepare parameters add to frame
+    Function::arg_iterator actualArgs = function->arg_begin();
+
+    for (Parameter *element: *(this->parameterList)) {
+        auto localVar = new AllocaInst(Type::getInt32Ty(context), 0, element->name, this->entryBlock);
+        builder.CreateStore(&(*actualArgs), localVar);
+        this->statementListNode->createLocal(element->name, localVar);
+        ++actualArgs;
+    }
+
+
+    // Prepare return value
     this->retValue = new AllocaInst(function->getReturnType(), 0, ".retVal", this->entryBlock);
     builder.CreateStore(ConstantInt::get(context, APInt(32, 0)), retValue);
+
+    // Original Function body.
     this->statementListNode->codeGen(cxt);
     if (builder.GetInsertBlock()->getTerminator() == nullptr) {
         builder.CreateBr(this->exitBlock);
@@ -49,6 +73,7 @@ llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
 ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements) {
     this->name = name;
     this->statementListNode = statements;
+    this->parameterList = new std::vector<ast::Parameter *>();
 }
 
 void ast::FunctionNode::prepareBlocks() {
@@ -60,4 +85,11 @@ void ast::FunctionNode::prepareBlocks() {
 
 void ast::FunctionNode::setHasMultipleExits() {
     this->hasMultipleExits = true;
+}
+
+ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements,
+                                std::vector<ast::Parameter *> *parameterList) {
+    this->name = name;
+    this->statementListNode = statements;
+    this->parameterList = parameterList;
 }

@@ -1,6 +1,6 @@
 let b = 90;
 
-function someFunctionName() {
+function someFunctionName(i, j) {
     console.log(0);
 }
 
