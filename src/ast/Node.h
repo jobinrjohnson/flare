@@ -38,7 +38,8 @@ enum NodeType {
     LOG_NODE,
     FUNCTION_NODE,
     VALUE_PLACEHOLDER_NODE,
-    LOOP_NODE
+    LOOP_NODE,
+    FUNCTION_CALL_NODE
 };
 
 namespace ast {

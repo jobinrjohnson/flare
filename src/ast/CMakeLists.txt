@@ -16,4 +16,4 @@ add_library(
         implementation/IfStatementNode.cpp IfStatementNode.h
         implementation/LogSmtNode.cpp LogSmtNode.h
         implementation/ValuePlaceholderNode.cpp ValuePlaceholderNode.h
-        implementation/StatementNode.cpp StatementNode.h helpers/Context.cpp helpers/Context.h implementation/FunctionNode.cpp FunctionNode.h implementation/LoopNode.cpp LoopNode.h helpers/VariableHelper.h helpers/VariableHelper.cpp)
+        implementation/StatementNode.cpp StatementNode.h helpers/Context.cpp helpers/Context.h implementation/FunctionNode.cpp FunctionNode.h implementation/LoopNode.cpp LoopNode.h helpers/VariableHelper.h helpers/VariableHelper.cpp implementation/FunctionCallNode.cpp FunctionCallNode.h)

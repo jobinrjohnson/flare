@@ -24,7 +24,8 @@ enum OperatorType {
     GROUPED,
     UNARY_PLUS,
     UNARY_MINUS,
-    MODULO_DIV
+    MODULO_DIV,
+    FUNCTION_CALL,
 };
 
 namespace ast {

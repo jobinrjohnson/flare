@@ -21,6 +21,7 @@
     #include "ast/IfStatementNode.h"
     #include "ast/LogSmtNode.h"
     #include "ast/FunctionNode.h"
+    #include "ast/FunctionCallNode.h"
     #include "ast/LoopNode.h"
 
 }
@@ -57,6 +58,7 @@
     ast::LogSmtNode *logSmtNode;
     ast::StatementNode *statementNode;
     ast::FunctionNode *functionNode;
+    ast::FunctionCallNode *functionCallNode;
     ast::LoopNode *loopNode;
 
     int tIntegerValue;
@@ -80,7 +82,7 @@
 %type <statementNode> return_statement
 %type <functionNode> function_declaration
 %type <loopNode> loops
-
+%type<functionCallNode> function_call
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
@@ -185,9 +187,14 @@ assignment_expr:
     | IDENTIFIER '[' expr ']' '=' expr          { $$ = new ast::AssignmentNode($1, $3, $6); free($1); }
 ;
 
+function_call:
+    IDENTIFIER '(' ')'              { $$ = new ast::FunctionCallNode($1); }
+;
+
 
 expr:
     scalar                          { $$ = new ast::ExprNode(OperatorType::SCALAR, $1); }
+    | function_call                 { $$ = new ast::ExprNode(OperatorType::FUNCTION_CALL, $1); }
     | IDENTIFIER                    {
                                         auto derefrence = new ast::VariableDerefNode($1);
                                         $$ = new ast::ExprNode(OperatorType::VAR_DE_REF, derefrence);

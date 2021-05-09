@@ -146,6 +146,7 @@ namespace ast {
             case GROUPED:
             case SCALAR:
             case UNARY_PLUS:
+            case FUNCTION_CALL:
                 value = operand;
                 break;
             case UNARY_MINUS: {
@@ -176,6 +177,7 @@ namespace ast {
             case GROUPED:
             case UNARY_PLUS:
             case UNARY_MINUS:
+            case FUNCTION_CALL:
                 value = this->codeGenUnaryExpr(cxt);
                 break;
             case PLUS:
