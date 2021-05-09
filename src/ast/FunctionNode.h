@@ -8,17 +8,9 @@
 
 #include "Node.h"
 #include "StatementListNode.h"
+#include "helpers/AstConstants.h"
 
 namespace ast {
-
-    class Parameter {
-    public:
-        std::string name;
-
-        explicit Parameter(std::string name) {
-            this->name = name;
-        }
-    };
 
     class FunctionNode : public Node {
 

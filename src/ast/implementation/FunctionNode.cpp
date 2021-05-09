@@ -2,6 +2,7 @@
 // Created by jobinrjohnson on 05/05/21.
 //
 
+#include <helpers/VariableHelper.h>
 #include "FunctionNode.h"
 
 NodeType ast::FunctionNode::getNodeType() {
@@ -13,9 +14,8 @@ llvm::FunctionType *ast::FunctionNode::codeGenSignature(ast::Context *cxt) {
 
 
     for (Parameter *element: *(this->parameterList)) {
-        // TODO attach type
-        std::cout << element->name << std::endl;
-        argVector.push_back(llvm::Type::getInt32Ty(context));
+        Type *varType = getLLVMType(element->type->type, context);
+        argVector.push_back(varType);
     }
 
     llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(context),
@@ -42,7 +42,8 @@ llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
     Function::arg_iterator actualArgs = function->arg_begin();
 
     for (Parameter *element: *(this->parameterList)) {
-        auto localVar = new AllocaInst(Type::getInt32Ty(context), 0, element->name, this->entryBlock);
+        Type *varType = getLLVMType(element->type->type, context);
+        auto localVar = new AllocaInst(varType, 0, element->name, this->entryBlock);
         builder.CreateStore(&(*actualArgs), localVar);
         this->statementListNode->createLocal(element->name, localVar);
         ++actualArgs;

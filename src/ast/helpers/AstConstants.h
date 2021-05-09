@@ -22,6 +22,18 @@ namespace ast {
         std::string name; // Valid only if type is other
     } VarType;
 
+
+    class Parameter {
+    public:
+        std::string name;
+        VarType *type;
+
+        explicit Parameter(std::string name, VarType *type) {
+            this->name = name;
+            this->type = type;
+        }
+    };
+
 }
 
 #endif //FLARE_ASTCONSTANTS_H

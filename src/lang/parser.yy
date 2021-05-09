@@ -148,7 +148,7 @@ function_declaration:
 ;
 
 parameter:
-    IDENTIFIER                                  { $$ = new ast::Parameter($1); }
+    IDENTIFIER ':' var_type                    { $$ = new ast::Parameter($1, $3); }
 ;
 
 parameter_list:
