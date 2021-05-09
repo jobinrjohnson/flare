@@ -3,6 +3,7 @@
 //
 
 #include <FunctionNode.h>
+#include <helpers/VariableHelper.h>
 #include "VarDeclNode.h"
 #include "StatementListNode.h"
 
@@ -46,14 +47,20 @@ namespace ast {
     Value *VarDeclNode::codeGenBuiltInTy(Context *cxt) {
 
         Value *value = this->initialValue->codeGen(cxt);
+        Type *variableType;
+        if (this->type == nullptr) {
+            variableType = value->getType();
+        } else {
+            variableType = getLLVMType(this->type->type, context);
+        }
 
         StatementListNode *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
-        if(currentBlock->findLocal(this->variableName)!= nullptr){
+        if (currentBlock->findLocal(this->variableName) != nullptr) {
             throw "Variable already declared in the same block.";
         }
 
         if (cxt->getCurrentFunction() != nullptr) {
-            auto localVar = new AllocaInst(value->getType(), 0, this->variableName, builder.GetInsertBlock());
+            auto localVar = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
             currentBlock->createLocal(this->variableName, localVar);
             return builder.CreateStore(value, localVar);
         }
@@ -90,5 +97,10 @@ namespace ast {
 
     void VarDeclNode::setInitializer(Node *initial) {
         this->initialValue = initial;
+    }
+
+    VarDeclNode::VarDeclNode(char *name, VarType *type) {
+        this->variableName = name;
+        this->type = type;
     }
 }

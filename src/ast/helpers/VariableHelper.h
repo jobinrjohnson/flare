@@ -7,9 +7,12 @@
 
 #include <llvm/IR/Value.h>
 #include "Context.h"
+#include "AstConstants.h"
 
 namespace ast {
     llvm::Value *findVariable(Context *cxt, std::string name);
+
+    llvm::Type *getLLVMType(ast::VariableType type, llvm::LLVMContext &context);
 }
 
 

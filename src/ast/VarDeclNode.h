@@ -8,6 +8,7 @@
 
 #include "Node.h"
 #include "LiteralNode.h"
+#include "helpers/AstConstants.h"
 
 namespace ast {
 
@@ -16,6 +17,7 @@ namespace ast {
     protected:
         std::string variableName;
         Node *initialValue;
+        VarType *type = nullptr;
         bool isArray = false;
 
     public:
@@ -27,6 +29,8 @@ namespace ast {
         VarDeclNode(char *name, bool isArray);
 
         VarDeclNode(char *name, Node *initialValue, bool isArray = false);
+
+        VarDeclNode(char *name, VarType *type);
 
         void setInitializer(Node *initial);
 

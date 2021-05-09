@@ -19,4 +19,25 @@ namespace ast {
         }
         return nullptr;
     }
+
+    llvm::Type *getLLVMType(ast::VariableType type, llvm::LLVMContext &context) {
+        switch (type) {
+            case VARTYPE_INT:
+                return llvm::Type::getInt64Ty(context);
+            case VARTYPE_INT_32:
+                return llvm::Type::getInt32Ty(context);
+            case VARTYPE_INT_64:
+                return llvm::Type::getInt64Ty(context);
+            case VARTYPE_FLOAT:
+                break;
+            case VARTYPE_DOUBLE:
+                break;
+            case VARTYPE_NUMBER:
+                break;
+            case OTHER:
+                break;
+        }
+        throw "Type not found";
+    }
+
 }

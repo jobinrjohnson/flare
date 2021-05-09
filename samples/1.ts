@@ -1,4 +1,4 @@
-function factorial(i) {
+function factorial(i: int32) {
     if (i == 1) {
         return 1;
     }
@@ -6,7 +6,7 @@ function factorial(i) {
 }
 
 function main() {
-    let i = 0;
+    let i: int32 = 0;
 
     while (i < 10) {
         i = i + 1;

@@ -23,6 +23,7 @@
     #include "ast/FunctionNode.h"
     #include "ast/FunctionCallNode.h"
     #include "ast/LoopNode.h"
+    #include "ast/helpers/AstConstants.h"
 
 }
 
@@ -63,6 +64,7 @@
     ast::Parameter *parameter;
     std::vector<ast::Parameter *> *parameterList;
     std::vector<ast::ExprNode *> *arguments;
+    ast::VarType *varType;
 
     int tIntegerValue;
     double tDecimalValue;
@@ -89,13 +91,14 @@
 %type <parameterList> parameter_list
 %type <parameter> parameter
 %type <arguments> arguments
+%type <varType> var_type
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
 %token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
-%token KW_INT KW_INT32 KW_INT64 KW_DECIMAL KW_FLOAT KW_DOUBLE
+%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE
 
 %left '+' '-'
 %left '*' '/' '%'
@@ -183,17 +186,17 @@ if_else_if:
 variable_declaration:
     array_declaration                       { }
     | KW_LET IDENTIFIER                     { $$ = new ast::VarDeclNode($2); free($2);  }
-    | KW_LET IDENTIFIER ':' type            { $$ = new ast::VarDeclNode($2); free($2); }
+    | KW_LET IDENTIFIER ':' var_type        { $$ = new ast::VarDeclNode($2, $4); free($2); }
     | variable_declaration '=' expr         { $$->setInitializer($3); }
 ;
 
-type:
-    KW_INT              {}
-    | KW_INT32          {}
-    | KW_INT64          {}
-    | KW_DECIMAL        {}
-    | KW_FLOAT          {}
-    | KW_DOUBLE         {}
+var_type:
+    KW_INT              { $$ = new ast::VarType; $$->type = ast::VARTYPE_INT; }
+    | KW_INT32          { $$ = new ast::VarType; $$->type = ast::VARTYPE_INT_32; }
+    | KW_INT64          { $$ = new ast::VarType; $$->type = ast::VARTYPE_INT_64; }
+    | KW_NUMBER        { $$ = new ast::VarType; $$->type = ast::VARTYPE_NUMBER; }
+    | KW_FLOAT          { $$ = new ast::VarType; $$->type = ast::VARTYPE_FLOAT; }
+    | KW_DOUBLE         { $$ = new ast::VarType; $$->type = ast::VARTYPE_DOUBLE; }
 ;
 
 array_declaration:

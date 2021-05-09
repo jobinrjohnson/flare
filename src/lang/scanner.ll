@@ -63,6 +63,8 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_INT;
                 }else if (strcmp("int32", yytext) == 0) {
                     return token::KW_INT32;
+                }else if (strcmp("number", yytext) == 0) {
+                    return token::KW_NUMBER;
                 }else if (strcmp("int64", yytext) == 0) {
                     return token::KW_INT64;
                 }else if (strcmp("double", yytext) == 0) {
