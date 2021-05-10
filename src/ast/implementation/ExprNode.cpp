@@ -4,6 +4,7 @@
 
 #include <LiteralNode.h>
 #include "ExprNode.h"
+#include "helpers/VariableHelper.h"
 
 namespace ast {
 
@@ -119,21 +120,18 @@ namespace ast {
 
     Value *ExprNode::codeGenBinaryExpr(Context *cxt) {
 
-        Value *lhs = this->operands[0]->codeGen(cxt->nextLevel());
-        Value *rhs = this->operands[1]->codeGen(cxt->nextLevel());
-
-        if (rhs->getType()->getTypeID() != lhs->getType()->getTypeID()) {
-
-            if (rhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
-                lhs = builder.CreateSIToFP(lhs, Type::getDoubleTy(context), "convertedFl");
-            } else if (lhs->getType()->getTypeID() == llvm::Type::DoubleTyID) {
-                rhs = builder.CreateSIToFP(rhs, Type::getDoubleTy(context), "convertedFl");
-            }
-
-            return this->codeGenFloatingPointBinaryExpr(cxt, lhs, rhs);
+        std::vector<Value *> *ops = new std::vector<Value *>{
+                this->operands[0]->codeGen(cxt->nextLevel()), // LHS
+                this->operands[1]->codeGen(cxt->nextLevel()) // RHS
+        };
+        typePromote(ops, context, builder);
+        // TODO free
+        // TODO other types
+        if ((*ops)[0]->getType()->getTypeID() == llvm::Type::IntegerTyID) {
+            return this->codeGenIntegerBinaryExpr(cxt, (*ops)[0], (*ops)[1]);
+        } else {
+            return this->codeGenFloatingPointBinaryExpr(cxt, (*ops)[0], (*ops)[1]);
         }
-
-        return this->codeGenIntegerBinaryExpr(cxt, lhs, rhs);
     }
 
     Value *ExprNode::codeGenUnaryExpr(Context *cxt) {

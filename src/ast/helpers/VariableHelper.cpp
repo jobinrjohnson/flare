@@ -23,21 +23,86 @@ namespace ast {
     llvm::Type *getLLVMType(ast::VariableType type, llvm::LLVMContext &context) {
         switch (type) {
             case VARTYPE_INT:
+            case VARTYPE_INT_64:
                 return llvm::Type::getInt64Ty(context);
             case VARTYPE_INT_32:
                 return llvm::Type::getInt32Ty(context);
-            case VARTYPE_INT_64:
-                return llvm::Type::getInt64Ty(context);
             case VARTYPE_FLOAT:
-                break;
+                return llvm::Type::getFloatTy(context);
             case VARTYPE_DOUBLE:
-                break;
             case VARTYPE_NUMBER:
-                break;
+                return llvm::Type::getDoubleTy(context);
             case OTHER:
                 break;
         }
         throw "Type not found";
+    }
+
+    void typePromote(std::vector<llvm::Value *> *ops, llvm::LLVMContext &context, llvm::IRBuilder<> &builder) {
+
+        enum CastTo {
+            PR_TY_INT_32, PR_TY_INT_64, PR_TY_FLOAT, PR_TY_DOUBLE
+        };
+        CastTo to = PR_TY_INT_32;
+
+        // Find the correct cast to
+        auto i = ops->begin();
+        while (i < ops->end()) {
+            llvm::Value *value = (*i);
+            Type *varType = value->getType();
+            if (varType->isIntegerTy(32) && to < PR_TY_INT_32) {
+                to = PR_TY_INT_32;
+            } else if (varType->isIntegerTy(64) && to < PR_TY_INT_64) {
+                to = PR_TY_INT_64;
+            } else if (varType->isFloatTy() && to < PR_TY_FLOAT) {
+                to = PR_TY_FLOAT;
+            } else if (varType->isDoubleTy() && to < PR_TY_DOUBLE) {
+                to = PR_TY_DOUBLE;
+            }
+            i++;
+        }
+        i = ops->begin();
+        // TODO sign
+        while (i < ops->end()) {
+            llvm::Value *value = (*i);
+            Type *varType = value->getType();
+            switch (to) {
+                case PR_TY_INT_32: {
+                    if (varType->isIntegerTy(64)) {
+                        (*i) = builder.CreateIntCast(value, getLLVMType(VARTYPE_INT_32, context), true);
+                    } else if (varType->isFloatTy() || varType->isDoubleTy()) {
+                        (*i) = builder.CreateFPToSI(value, getLLVMType(VARTYPE_INT_32, context));
+                    }
+                    break;
+                }
+                case PR_TY_INT_64: {
+                    if (varType->isIntegerTy(32)) {
+                        (*i) = builder.CreateIntCast(value, getLLVMType(VARTYPE_INT_64, context), true);
+                    } else if (varType->isFloatTy() || varType->isDoubleTy()) {
+                        (*i) = builder.CreateFPToSI(value, getLLVMType(VARTYPE_INT_64, context));
+                    }
+                    break;
+                }
+                case PR_TY_FLOAT: {
+                    if (varType->isIntegerTy()) {
+                        (*i) = builder.CreateSIToFP(value, getLLVMType(VARTYPE_FLOAT, context));
+                    } else if (varType->isDoubleTy()) {
+                        (*i) = builder.CreateFPCast(value, getLLVMType(VARTYPE_FLOAT, context));
+                    }
+                    break;
+                }
+                case PR_TY_DOUBLE: {
+                    if (varType->isIntegerTy()) {
+                        (*i) = builder.CreateSIToFP(value, getLLVMType(VARTYPE_DOUBLE, context));
+                    } else if (varType->isFloatTy()) {
+                        (*i) = builder.CreateFPCast(value, getLLVMType(VARTYPE_DOUBLE, context));
+                    }
+                    break;
+                }
+            }
+            i++;
+        }
+
     }
 
 }
