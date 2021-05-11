@@ -4,9 +4,15 @@
 
 using namespace llvm;
 
-int main() {
+int main(int argc, char **argv) {
     lang::Driver driver;
     std::string fileName = "../../samples/1.ts";
+
+    if (argc > 1) {
+        fileName = argv[1];
+    } else {
+        std::clog << "No file name supplied. Since it is a debug build a default test program will be executed.\n";
+    }
 
     try {
         driver.parseFile(fileName);
