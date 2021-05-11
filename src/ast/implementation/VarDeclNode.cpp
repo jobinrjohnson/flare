@@ -61,7 +61,12 @@ namespace ast {
         if (cxt->getCurrentFunction() != nullptr) {
             auto localVar = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
             currentBlock->createLocal(this->variableName, localVar);
+
+            if (this->type != nullptr && value->getType() != variableType) {
+                value = castTo(value, this->type);
+            }
             return builder.CreateStore(value, localVar);
+
         }
 
         llvm::GlobalVariable *gvar = new llvm::GlobalVariable(

@@ -17,6 +17,10 @@ namespace ast {
         OTHER
     };
 
+    enum CastTo {
+        PR_TY_INT_32, PR_TY_INT_64, PR_TY_FLOAT, PR_TY_DOUBLE
+    };
+
     typedef struct {
         VariableType type;
         std::string name; // Valid only if type is other

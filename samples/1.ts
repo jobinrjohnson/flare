@@ -1,8 +1,10 @@
 function main() {
-    let i: int32 = 0;
-    let j:double = 1.0;
+    let i: double = 1;
+    let j: int = i;
 
-    console.log(i+j);
+    let m = i + j;
+
+    console.log(i + j);
 
     return 0;
 }

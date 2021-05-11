@@ -16,6 +16,10 @@ namespace ast {
     llvm::Type *getLLVMType(ast::VariableType type, llvm::LLVMContext &context);
 
     void typePromote(std::vector<llvm::Value *> *ops, llvm::LLVMContext &context, llvm::IRBuilder<> &builder);
+
+    llvm::Value *castTo(llvm::Value *value, CastTo to);
+
+    llvm::Value *castTo(llvm::Value *value, VarType *to);
 }
 
 
