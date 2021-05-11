@@ -143,8 +143,8 @@ loops:
 ;
 
 function_declaration:
-    KW_FUNCTION IDENTIFIER '(' ')' optional_block   { $$ = new ast::FunctionNode($2, $<statementList>5); }
-    | KW_FUNCTION IDENTIFIER '(' parameter_list ')' optional_block   { $$ = new ast::FunctionNode($2, $<statementList>6, $4); }
+    KW_FUNCTION IDENTIFIER '(' ')' ':' var_type optional_block   { $$ = new ast::FunctionNode($2, $<statementList>7, $6); }
+    | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type optional_block   { $$ = new ast::FunctionNode($2, $<statementList>8, $7, $4); }
 ;
 
 parameter:

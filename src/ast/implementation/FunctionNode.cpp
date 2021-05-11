@@ -18,7 +18,7 @@ llvm::FunctionType *ast::FunctionNode::codeGenSignature(ast::Context *cxt) {
         argVector.push_back(varType);
     }
 
-    llvm::FunctionType *functionRetType = llvm::FunctionType::get(llvm::Type::getInt32Ty(context),
+    llvm::FunctionType *functionRetType = llvm::FunctionType::get(getLLVMType(this->type->type, context),
                                                                   argVector, false);
     return functionRetType;
 }
@@ -52,7 +52,7 @@ llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
 
     // Prepare return value
     this->retValue = new AllocaInst(function->getReturnType(), 0, ".retVal", this->entryBlock);
-    builder.CreateStore(ConstantInt::get(context, APInt(32, 0)), retValue);
+//    builder.CreateStore(ConstantInt::get(context, APInt(32, 0)), retValue);
 
     // Original Function body.
     this->statementListNode->codeGen(cxt);
@@ -71,10 +71,11 @@ llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
     return nullptr;
 }
 
-ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements) {
+ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements, VarType *type) {
     this->name = name;
     this->statementListNode = statements;
     this->parameterList = new std::vector<ast::Parameter *>();
+    this->type = type;
 }
 
 void ast::FunctionNode::prepareBlocks() {
@@ -88,9 +89,10 @@ void ast::FunctionNode::setHasMultipleExits() {
     this->hasMultipleExits = true;
 }
 
-ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements,
+ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements, VarType *type,
                                 std::vector<ast::Parameter *> *parameterList) {
     this->name = name;
     this->statementListNode = statements;
     this->parameterList = parameterList;
+    this->type = type;
 }

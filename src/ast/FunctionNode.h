@@ -30,12 +30,13 @@ namespace ast {
         BasicBlock *exitBlock;
         Function *function;
         AllocaInst *retValue;
+        VarType *type = nullptr;
 
         NodeType getNodeType() override;
 
-        explicit FunctionNode(const char *name, StatementListNode *statements);
+        explicit FunctionNode(const char *name, StatementListNode *statements, VarType *type);
 
-        explicit FunctionNode(const char *name, StatementListNode *statements,
+        explicit FunctionNode(const char *name, StatementListNode *statements, VarType *type,
                               std::vector<ast::Parameter *> *parameterList);
 
         llvm::FunctionType *codeGenSignature(Context *cxt);

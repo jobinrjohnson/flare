@@ -1,4 +1,4 @@
-function main() {
+function main() : double {
     let i: double = 1;
     let j: int = i;
 

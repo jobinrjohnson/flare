@@ -2,6 +2,7 @@
 // Created by jobinrjohnson on 9/23/20.
 //
 
+#include <helpers/VariableHelper.h>
 #include "StatementNode.h"
 #include "FunctionNode.h"
 
@@ -17,6 +18,12 @@ llvm::Value *ast::StatementNode::codeGen(Context *cxt) {
         FunctionNode *function = dynamic_cast<FunctionNode *>(functionNode);
 
         function->setHasMultipleExits();
+
+        // TODO move to assignment node
+        if (function->function->getReturnType() != operand->getType()) {
+            operand = castTo(operand, function->type);
+        }
+
         builder.CreateStore(operand, function->retValue);
         return builder.CreateBr(function->exitBlock);
 
