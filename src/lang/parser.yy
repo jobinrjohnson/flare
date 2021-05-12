@@ -68,6 +68,7 @@
     std::vector<ast::ExprNode *> *arguments;
     ast::VarType *varType;
     ast::ClassDeclNode *classDeclNode;
+    std::vector<ast::Node *> *nodeList;
 
     int tIntegerValue;
     double tDecimalValue;
@@ -79,7 +80,7 @@
 
 
 %type <statementList> start
-%type <node> statement class_contents class_content
+%type <node> statement class_content
 %type <expression> expr
 %type <literal> scalar
 %type <statementList> optional_block statements
@@ -96,6 +97,7 @@
 %type <arguments> arguments
 %type <varType> var_type
 %type <classDeclNode> class_decl
+%type <nodeList> class_contents
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
@@ -144,16 +146,21 @@ optional_block:
 ;
 
 class_content:
-    function_declaration                { $$ = $1; }
+    function_declaration                {}
     | variable_declaration              {}
+    |                                   {}
 ;
 
 class_contents:
-    class_contents class_content        {}
+    class_content                     {
+        $$ = new std::vector<ast::Node *>();
+        $$->push_back($1);
+    }
+    | class_contents class_content        { $1->push_back($2); $$ = $1; }
 ;
 
 class_decl:
-    KW_CLASS IDENTIFIER '{' class_contents '}'      { $$ = new ClassDeclNode($2); }
+    KW_CLASS IDENTIFIER '{' class_contents '}'      { $$ = new ast::ClassDeclNode($2, $4); free($4); }
 ;
 
 loops:
