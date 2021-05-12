@@ -67,6 +67,8 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_NUMBER;
                 }else if (strcmp("int64", yytext) == 0) {
                     return token::KW_INT64;
+                }else if (strcmp("bigint", yytext) == 0) {
+                    return token::KW_BIGINT;
                 }else if (strcmp("double", yytext) == 0) {
                     return token::KW_DOUBLE;
                 }else if (strcmp("float", yytext) == 0) {

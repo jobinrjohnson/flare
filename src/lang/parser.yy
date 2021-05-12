@@ -98,7 +98,7 @@
 %token <tDecimalValue> T_DECIMAL
 %token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
-%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE
+%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT
 
 %left '+' '-'
 %left '*' '/' '%'
@@ -194,7 +194,8 @@ var_type:
     KW_INT              { $$ = new ast::VarType; $$->type = ast::VARTYPE_INT; }
     | KW_INT32          { $$ = new ast::VarType; $$->type = ast::VARTYPE_INT_32; }
     | KW_INT64          { $$ = new ast::VarType; $$->type = ast::VARTYPE_INT_64; }
-    | KW_NUMBER        { $$ = new ast::VarType; $$->type = ast::VARTYPE_NUMBER; }
+    | KW_BIGINT         { $$ = new ast::VarType; $$->type = ast::VARTYPE_INT_64; }
+    | KW_NUMBER         { $$ = new ast::VarType; $$->type = ast::VARTYPE_NUMBER; }
     | KW_FLOAT          { $$ = new ast::VarType; $$->type = ast::VARTYPE_FLOAT; }
     | KW_DOUBLE         { $$ = new ast::VarType; $$->type = ast::VARTYPE_DOUBLE; }
 ;

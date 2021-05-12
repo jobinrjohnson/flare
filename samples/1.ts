@@ -1,10 +1,13 @@
-function main() : double {
-    let i: double = 1;
-    let j: int = i;
+function factorial(i: bigint): bigint {
+    if (i == 1) {
+        return 1;
+    }
+    return i + factorial(i - 1);
+}
 
-    let m = i + j;
-
-    console.log(i + j);
+function main(): int {
+    let x: bigint = 12;
+    console.log(factorial(x));
 
     return 0;
 }

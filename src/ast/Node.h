@@ -5,7 +5,7 @@
 #ifndef FLARE_NODE_H
 #define FLARE_NODE_H
 
-#define FLARE_DEBUG false
+#define FLARE_DEBUG true
 
 #include <iostream>
 
