@@ -11,6 +11,8 @@
     #include "location.hh"
     #include <iostream>
 
+    #include "ast/helpers/AstConstants.h"
+
     #include "ast/Node.h"
     #include "ast/ExprNode.h"
     #include "ast/LiteralNode.h"
@@ -23,7 +25,7 @@
     #include "ast/FunctionNode.h"
     #include "ast/FunctionCallNode.h"
     #include "ast/LoopNode.h"
-    #include "ast/helpers/AstConstants.h"
+    #include "ast/ClassDeclNode.h"
 
 }
 
@@ -65,6 +67,7 @@
     std::vector<ast::Parameter *> *parameterList;
     std::vector<ast::ExprNode *> *arguments;
     ast::VarType *varType;
+    ast::ClassDeclNode *classDeclNode;
 
     int tIntegerValue;
     double tDecimalValue;
@@ -76,7 +79,7 @@
 
 
 %type <statementList> start
-%type <node> statement
+%type <node> statement class_contents class_content
 %type <expression> expr
 %type <literal> scalar
 %type <statementList> optional_block statements
@@ -92,11 +95,12 @@
 %type <parameter> parameter
 %type <arguments> arguments
 %type <varType> var_type
+%type <classDeclNode> class_decl
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
-%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE
+%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 %token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT
 
@@ -131,11 +135,25 @@ statement:
     | statement ';'                     { $$ = $1; }
     | function_declaration              { }
     | loops                             { }
+    | class_decl                        { }
 ;
 
 optional_block:
     statement                           { $$ = new ast::StatementListNode($<node>1); }
     | '{' statements '}'                { $$ = $2; }
+;
+
+class_content:
+    function_declaration                { $$ = $1; }
+    | variable_declaration              {}
+;
+
+class_contents:
+    class_contents class_content        {}
+;
+
+class_decl:
+    KW_CLASS IDENTIFIER '{' class_contents '}'      { $$ = new ClassDeclNode($2); }
 ;
 
 loops:

@@ -73,6 +73,8 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_DOUBLE;
                 }else if (strcmp("float", yytext) == 0) {
                     return token::KW_FLOAT;
+                }else if (strcmp("class", yytext) == 0) {
+                    return token::KW_CLASS;
                 }
                 yylval->yyText = (char *) malloc(strlen(yytext));
                 strcpy(yylval->yyText, yytext);
