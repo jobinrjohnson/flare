@@ -5,6 +5,7 @@
 #include <LiteralNode.h>
 #include "ExprNode.h"
 #include "helpers/VariableHelper.h"
+#include "helpers/AstConstants.h"
 
 namespace ast {
 
@@ -90,9 +91,16 @@ namespace ast {
             case MODULO_DIV:
                 value = builder.CreateSRem(lhs, rhs, "mMod");
                 break;
-            case DIV:
+            case DIV: {
+                if (!(lhs->getType()->isDoubleTy() || lhs->getType()->isFloatTy())) {
+                    lhs = castTo(lhs, PR_TY_FLOAT);
+                }
+                if (!(rhs->getType()->isDoubleTy() || rhs->getType()->isFloatTy())) {
+                    rhs = castTo(rhs, PR_TY_FLOAT);
+                }
                 value = builder.CreateFDiv(lhs, rhs, "mDiv");
                 break;
+            }
             case UNARY_MINUS:
                 value = builder.CreateSub(rhs, lhs, "mUmin");
                 break;

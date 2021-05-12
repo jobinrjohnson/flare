@@ -1,13 +1,7 @@
-function factorial(i: bigint): bigint {
-    if (i == 1) {
-        return 1;
-    }
-    return i + factorial(i - 1);
-}
-
 function main(): int {
-    let x: bigint = 12;
-    console.log(factorial(x));
+    let x: double = 12;
+    let m = x/2;
+    console.log(m);
 
     return 0;
 }
