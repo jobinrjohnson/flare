@@ -21,6 +21,10 @@ namespace lang {
         }
 
         this->scanner->switch_streams(&file, &std::cerr);
+
+        // TODO use proper init
+        cursor->lines();
+
         this->parser->parse();
 
         this->scanner->setDebug(true);

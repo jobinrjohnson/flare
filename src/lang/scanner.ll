@@ -93,11 +93,6 @@ typedef lang::Parser::token_type token_type;
                   return token::T_DECIMAL;
               }
 
-[0-9]+        {
-                  yylval->tIntegerValue = atoi(yytext);
-                  return token::T_INTEGER;
-              }
-
 "+"           {return '+';}
 "-"           {return '-';}
 "*"           {return '*';}
@@ -135,9 +130,10 @@ typedef lang::Parser::token_type token_type;
 
 [\n\r]+         {
                     STEP();
-                    // LINE(yyleng); //return token::TOK_EOF;
-                    // return '\n';
+                    LINE(1);
                 }
+
+"//".*          { /* Comment do nothing */ }
 
 .             {
                 std::cerr << *driver.cursor << " Unexpected token : "
