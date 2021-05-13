@@ -23,7 +23,7 @@ llvm::Value *ast::FunctionCallNode::codeGen(ast::Context *cxt) {
 
 }
 
-NodeType ast::FunctionCallNode::getNodeType() {
+ast::NodeType ast::FunctionCallNode::getNodeType() {
     return FUNCTION_CALL_NODE;
 }
 

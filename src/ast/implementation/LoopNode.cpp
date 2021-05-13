@@ -40,6 +40,6 @@ llvm::Value *ast::LoopNode::codeGen(ast::Context *cxt) {
     return nullptr;
 }
 
-NodeType ast::LoopNode::getNodeType() {
+ast::NodeType ast::LoopNode::getNodeType() {
     return LOOP_NODE;
 }

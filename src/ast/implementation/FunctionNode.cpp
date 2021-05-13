@@ -5,7 +5,7 @@
 #include <helpers/VariableHelper.h>
 #include "FunctionNode.h"
 
-NodeType ast::FunctionNode::getNodeType() {
+ast::NodeType ast::FunctionNode::getNodeType() {
     return FUNCTION_NODE;
 }
 

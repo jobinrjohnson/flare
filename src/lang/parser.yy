@@ -11,7 +11,7 @@
     #include "location.hh"
     #include <iostream>
 
-    #include "ast/helpers/AstConstants.h"
+    #include "ast/constants/AstConstants.h"
 
     #include "ast/Node.h"
     #include "ast/ExprNode.h"

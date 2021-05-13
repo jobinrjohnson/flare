@@ -7,6 +7,23 @@
 
 namespace ast {
 
+    enum NodeType {
+        ASSIGNMENT_NODE,
+        EXPR_NODE,
+        STATEMENT_NODE,
+        LITERAL_NODE,
+        STATEMENT_LIST_NODE,
+        VAR_DECL_NODE,
+        VAR_DEREF_NODE,
+        IF_NODE,
+        LOG_NODE,
+        FUNCTION_NODE,
+        VALUE_PLACEHOLDER_NODE,
+        LOOP_NODE,
+        FUNCTION_CALL_NODE,
+        CLASS_DECL_NODE
+    };
+
     enum VariableType {
         VARTYPE_INT_32,
         VARTYPE_INT_64,

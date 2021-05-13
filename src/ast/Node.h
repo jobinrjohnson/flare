@@ -18,6 +18,7 @@
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Verifier.h"
 #include "helpers/Context.h"
+#include "constants/AstConstants.h"
 
 
 using namespace llvm;
@@ -25,22 +26,6 @@ using namespace llvm;
 extern llvm::LLVMContext context;
 extern llvm::IRBuilder<> builder;
 extern std::unique_ptr<llvm::Module> module;
-
-enum NodeType {
-    ASSIGNMENT_NODE,
-    EXPR_NODE,
-    STATEMENT_NODE,
-    LITERAL_NODE,
-    STATEMENT_LIST_NODE,
-    VAR_DECL_NODE,
-    VAR_DEREF_NODE,
-    IF_NODE,
-    LOG_NODE,
-    FUNCTION_NODE,
-    VALUE_PLACEHOLDER_NODE,
-    LOOP_NODE,
-    FUNCTION_CALL_NODE
-};
 
 namespace ast {
 

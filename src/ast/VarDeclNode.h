@@ -8,7 +8,7 @@
 
 #include "Node.h"
 #include "LiteralNode.h"
-#include "helpers/AstConstants.h"
+#include "constants/AstConstants.h"
 
 namespace ast {
 

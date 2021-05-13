@@ -5,7 +5,7 @@
 #include <LiteralNode.h>
 #include "ExprNode.h"
 #include "helpers/VariableHelper.h"
-#include "helpers/AstConstants.h"
+#include "constants/AstConstants.h"
 
 namespace ast {
 

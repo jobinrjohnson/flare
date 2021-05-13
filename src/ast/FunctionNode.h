@@ -8,7 +8,7 @@
 
 #include "Node.h"
 #include "StatementListNode.h"
-#include "helpers/AstConstants.h"
+#include "constants/AstConstants.h"
 
 namespace ast {
 

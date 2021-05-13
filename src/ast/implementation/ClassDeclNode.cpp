@@ -5,8 +5,8 @@
 #include <helpers/VariableHelper.h>
 #include "ClassDeclNode.h"
 
-NodeType ast::ClassDeclNode::getNodeType() {
-    return EXPR_NODE;
+ast::NodeType ast::ClassDeclNode::getNodeType() {
+    return CLASS_DECL_NODE;
 }
 
 
