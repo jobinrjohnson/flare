@@ -32,6 +32,7 @@ ast::ClassDeclNode::ClassDeclNode(const char *name, std::vector<ast::Node *> *no
     for (Node *ele:(*nodeList)) {
         FunctionNode *functionNode = nullptr;
         if ((functionNode = dynamic_cast<FunctionNode *>(ele)) != nullptr) {
+            functionNode->setClass(this);
             this->functions.push_back(functionNode);
             continue;
         }

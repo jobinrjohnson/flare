@@ -40,7 +40,7 @@ namespace ast {
 
     typedef struct {
         VariableType type;
-        std::string name; // Valid only if type is other
+        std::string name; // Valid only if returnType is other
     } VarType;
 
 

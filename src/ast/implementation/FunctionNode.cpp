@@ -18,7 +18,7 @@ llvm::FunctionType *ast::FunctionNode::codeGenSignature(ast::Context *cxt) {
         argVector.push_back(varType);
     }
 
-    llvm::FunctionType *functionRetType = llvm::FunctionType::get(getLLVMType(this->type->type, context),
+    llvm::FunctionType *functionRetType = llvm::FunctionType::get(getLLVMType(this->returnType->type, context),
                                                                   argVector, false);
     return functionRetType;
 }
@@ -75,7 +75,7 @@ ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statem
     this->name = name;
     this->statementListNode = statements;
     this->parameterList = new std::vector<ast::Parameter *>();
-    this->type = type;
+    this->setReturnType(type);
 }
 
 void ast::FunctionNode::prepareBlocks() {
@@ -94,5 +94,5 @@ ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statem
     this->name = name;
     this->statementListNode = statements;
     this->parameterList = parameterList;
-    this->type = type;
+    this->setReturnType(type);
 }

@@ -99,7 +99,7 @@ namespace ast {
                 break;
         }
 
-        throw "Unable to cast to specified type;";
+        throw "Unable to cast to specified returnType;";
 
     }
 

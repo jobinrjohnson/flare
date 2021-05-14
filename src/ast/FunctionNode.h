@@ -14,13 +14,24 @@ namespace ast {
 
     class FunctionNode : public Node {
 
-        StatementListNode *statementListNode;
+    protected:
+        // Name of the function
         std::string name;
-        bool hasMultipleExits = false;
+
+        // List of parameters
         std::vector<ast::Parameter *> *parameterList;
 
-    protected:
-        Node *node;
+        // Function body
+        StatementListNode *statementListNode;
+
+        // The class node only if the function belongs to a class
+        Node *classNode = nullptr;
+
+        // If the node has multiple exits
+        bool hasMultipleExits = false;
+
+        // Return returnType of the function
+        VarType *returnType = nullptr;
 
         void prepareBlocks();
 
@@ -30,7 +41,6 @@ namespace ast {
         BasicBlock *exitBlock;
         Function *function;
         AllocaInst *retValue;
-        VarType *type = nullptr;
 
         NodeType getNodeType() override;
 
@@ -44,6 +54,38 @@ namespace ast {
         llvm::Value *codeGen(Context *cxt) override;
 
         void setHasMultipleExits();
+
+        // Returns the function return type
+        inline VarType *getReturnType() {
+            if (this->returnType == nullptr) {
+                throw "Return type of the function is not defined";
+            }
+            return this->returnType;
+        }
+
+        // Sets the function return type
+        inline void setReturnType(VarType *type) {
+            this->returnType = type;
+        }
+
+        // Sets the class for the function. if it is a part of a class
+        inline void setClass(Node *classNodePointer) {
+            this->classNode = classNodePointer;
+        }
+
+        // Return if the function is a class function or not
+        inline bool isClassFunction() {
+            return this->classNode != nullptr;
+        }
+
+        ~FunctionNode() {
+            free(this->statementListNode);
+            free(this->classNode);
+            for (auto ele : *(this->parameterList)) {
+                free(ele);
+            }
+            free(this->parameterList);
+        }
 
     };
 }

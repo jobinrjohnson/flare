@@ -21,7 +21,7 @@ llvm::Value *ast::StatementNode::codeGen(Context *cxt) {
 
         // TODO move to assignment node
         if (function->function->getReturnType() != operand->getType()) {
-            operand = castTo(operand, function->type);
+            operand = castTo(operand, function->getReturnType());
         }
 
         builder.CreateStore(operand, function->retValue);
