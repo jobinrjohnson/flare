@@ -141,13 +141,13 @@ namespace ast {
                 // it just inside the entry block.
                 this->exitBlock = BasicBlock::Create(context, "exit", this->function);
                 // Prepare return value
+                // Insert it just before the entry block terminator
                 this->retValue = new AllocaInst(
                         function->getReturnType(),
                         0,
-                        ".retVal"
+                        ".retVal",
+                        this->entryBlock->getTerminator()
                 );
-                // Insert it just before the entry block terminator
-                this->retValue->insertBefore(this->entryBlock->getTerminator());
             }
             builder.CreateStore(returnValue, this->retValue);
             return builder.CreateBr(this->exitBlock);
