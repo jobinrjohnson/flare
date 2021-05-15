@@ -5,94 +5,154 @@
 #include <helpers/VariableHelper.h>
 #include "FunctionNode.h"
 
-ast::NodeType ast::FunctionNode::getNodeType() {
-    return FUNCTION_NODE;
-}
+namespace ast {
 
-llvm::FunctionType *ast::FunctionNode::codeGenSignature(ast::Context *cxt) {
-    std::vector<llvm::Type *> argVector;
+    // Generate the function prototype
+    llvm::FunctionType *ast::FunctionNode::codeGenSignature(ast::Context *cxt) {
+        std::vector<llvm::Type *> argVector;
 
+        // Fill in the parameter list
+        if (this->parameterList != nullptr) {
+            for (Parameter *element: *(this->parameterList)) {
+                Type *varType = getLLVMType(element->type->type, context);
+                argVector.push_back(varType);
+            }
+        }
 
-    for (Parameter *element: *(this->parameterList)) {
-        Type *varType = getLLVMType(element->type->type, context);
-        argVector.push_back(varType);
+        return FunctionType::get(
+                getLLVMType(this->returnType->type, context),
+                argVector,
+                false
+        );
     }
 
-    llvm::FunctionType *functionRetType = llvm::FunctionType::get(getLLVMType(this->returnType->type, context),
-                                                                  argVector, false);
-    return functionRetType;
-}
+    llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
 
-llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
 
-    this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
+        cxt->pushFunction(this);
 
-    cxt->pushFunction(this);
+        this->function = Function::Create(
+                this->codeGenSignature(cxt),
+                GlobalValue::ExternalLinkage,
+                this->name, module.get()
+        );
 
-    this->function = llvm::Function::Create(this->codeGenSignature(cxt),
-                                            llvm::GlobalValue::ExternalLinkage,
-                                            this->name, module.get());
+        // Start inserting to the function entry block
+        this->entryBlock = BasicBlock::Create(context, "entry", this->function);
+        builder.SetInsertPoint(this->entryBlock);
 
-    this->prepareBlocks();
+        // Prepare parameters add to frame
+        // copy arguments to the frame so that it can be accessed within the function
+        if (this->parameterList != nullptr) {
+            Function::arg_iterator actualArgs = function->arg_begin();
+            for (Parameter *element: *(this->parameterList)) {
+                Type *varType = getLLVMType(element->type->type, context);
+                auto localVar = new AllocaInst(varType, 0, element->name, this->entryBlock);
+                builder.CreateStore(&(*actualArgs), localVar);
+                this->statementListNode->createLocal(element->name, localVar);
+                ++actualArgs;
+            }
+        }
 
-    builder.SetInsertPoint(this->entryBlock);
+        // Original Function body.
+        this->statementListNode->codeGen(cxt);
 
+        // The function exit part
+        this->codeGenExit(cxt);
 
-    // Prepare parameters add to frame
-    Function::arg_iterator actualArgs = function->arg_begin();
+        // TODO handle this properly.
+        llvm::verifyFunction(*function, &(llvm::errs()));
 
-    for (Parameter *element: *(this->parameterList)) {
-        Type *varType = getLLVMType(element->type->type, context);
-        auto localVar = new AllocaInst(varType, 0, element->name, this->entryBlock);
-        builder.CreateStore(&(*actualArgs), localVar);
-        this->statementListNode->createLocal(element->name, localVar);
-        ++actualArgs;
+        cxt->popFunction();
+
+        return nullptr;
     }
 
 
-    // Prepare return value
-    this->retValue = new AllocaInst(function->getReturnType(), 0, ".retVal", this->entryBlock);
-//    builder.CreateStore(ConstantInt::get(context, APInt(32, 0)), retValue);
+    llvm::Value *FunctionNode::codeGenExit(Context *cxt) {
 
-    // Original Function body.
-    this->statementListNode->codeGen(cxt);
-    if (builder.GetInsertBlock()->getTerminator() == nullptr) {
-        builder.CreateBr(this->exitBlock);
+        // If there is no terminator
+        if (builder.GetInsertBlock()->getTerminator() == nullptr) {
+
+            if (this->exitBlock != nullptr) {
+                // If there is an exit block branch to it if there is no terminator
+                builder.CreateBr(this->exitBlock);
+            } else {
+                // If there is none we have to validate the return types and throw proper error
+                // TODO handle this part.
+            }
+        }
+
+        if (this->exitBlock != nullptr) {
+            // TODO handle no return value defined.
+            builder.SetInsertPoint(this->exitBlock);
+            Value *returnValue = builder.CreateLoad(this->retValue);
+            builder.CreateRet(returnValue);
+        }
+
+        return this->function;
     }
 
-    builder.SetInsertPoint(this->exitBlock);
-    LoadInst *l = builder.CreateLoad(this->retValue);
-    builder.CreateRet(l);
+    ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements, VarType *type) {
+        this->name = name;
+        this->statementListNode = statements;
+        this->setReturnType(type);
+    }
 
-    llvm::verifyFunction(*function, &(llvm::errs()));
+    ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements, VarType *type,
+                                    std::vector<ast::Parameter *> *parameterList) {
+        this->name = name;
+        this->statementListNode = statements;
+        this->parameterList = parameterList;
+        this->setReturnType(type);
+    }
 
-    cxt->popFunction();
+    FunctionNode::~FunctionNode() {
+        free(this->statementListNode);
+        free(this->classNode);
+        for (auto ele : *(this->parameterList)) {
+            free(ele);
+        }
+        free(this->parameterList);
+    }
 
-    return nullptr;
-}
+    Value *FunctionNode::setFunctionReturn(Value *returnValue) {
 
-ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements, VarType *type) {
-    this->name = name;
-    this->statementListNode = statements;
-    this->parameterList = new std::vector<ast::Parameter *>();
-    this->setReturnType(type);
-}
+        // TODO move to assignment node
+        if (this->function->getReturnType() != returnValue->getType()) {
+            returnValue = castTo(returnValue, this->getReturnType());
+        }
 
-void ast::FunctionNode::prepareBlocks() {
+        if (builder.GetInsertBlock() == this->entryBlock) {
 
-    this->entryBlock = llvm::BasicBlock::Create(context, "entry", this->function);
-    this->exitBlock = llvm::BasicBlock::Create(context, "exit", this->function);
+            // If the current block is insert block. this means this the only exit point
+            // from the function. So we return the value in the current block ie, the entry block
+            // and exit right away
+            return builder.CreateRet(returnValue);
+        } else {
 
-}
+            // This means the function has branches so we need to have an exit block
+            // and branch to the the exit block after storing the return value to the return
+            // value variable.
+            if (this->exitBlock == nullptr) {
 
-void ast::FunctionNode::setHasMultipleExits() {
-    this->hasMultipleExits = true;
-}
+                // If exit block is not defined create exit block. Create a return block and place
+                // it just inside the entry block.
+                this->exitBlock = BasicBlock::Create(context, "exit", this->function);
+                // Prepare return value
+                this->retValue = new AllocaInst(
+                        function->getReturnType(),
+                        0,
+                        ".retVal"
+                );
+                // Insert it just before the entry block terminator
+                this->retValue->insertBefore(this->entryBlock->getTerminator());
+            }
+            builder.CreateStore(returnValue, this->retValue);
+            return builder.CreateBr(this->exitBlock);
+        }
 
-ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements, VarType *type,
-                                std::vector<ast::Parameter *> *parameterList) {
-    this->name = name;
-    this->statementListNode = statements;
-    this->parameterList = parameterList;
-    this->setReturnType(type);
+    }
+
 }

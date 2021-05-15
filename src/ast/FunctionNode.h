@@ -27,33 +27,59 @@ namespace ast {
         // The class node only if the function belongs to a class
         Node *classNode = nullptr;
 
+        // LLVM function reference
+        Function *function;
+
         // If the node has multiple exits
         bool hasMultipleExits = false;
 
         // Return returnType of the function
         VarType *returnType = nullptr;
 
-        void prepareBlocks();
+        // Function entry block
+        BasicBlock *entryBlock;
+
+        // Function exit block. Only defined in the case of functions with multiple branches.
+        BasicBlock *exitBlock;
+
+        // Function return value stack variable. Only defined in the
+        // case of functions with multiple branches.
+        AllocaInst *retValue;
+
+
+        // Codegen for function signature
+        llvm::FunctionType *codeGenSignature(Context *cxt);
+
+        // Codegen for the exit block
+        llvm::Value *codeGenExit(Context *cxt);
 
     public:
 
-        BasicBlock *entryBlock;
-        BasicBlock *exitBlock;
-        Function *function;
-        AllocaInst *retValue;
 
-        NodeType getNodeType() override;
+        inline NodeType getNodeType() override {
+            return FUNCTION_NODE;
+        }
 
-        explicit FunctionNode(const char *name, StatementListNode *statements, VarType *type);
+        // function without parameter
+        explicit FunctionNode(
+                const char *name,
+                StatementListNode *statements,
+                VarType *type
+        );
 
-        explicit FunctionNode(const char *name, StatementListNode *statements, VarType *type,
-                              std::vector<ast::Parameter *> *parameterList);
+        // function with parameter list
+        explicit FunctionNode(
+                const char *name,
+                StatementListNode *statements,
+                VarType *type,
+                std::vector<ast::Parameter *> *parameterList
+        );
 
-        llvm::FunctionType *codeGenSignature(Context *cxt);
-
+        // Node:codegen override
         llvm::Value *codeGen(Context *cxt) override;
 
-        void setHasMultipleExits();
+        // Generates code for the return value.
+        Value *setFunctionReturn(Value *returnValue);
 
         // Returns the function return type
         inline VarType *getReturnType() {
@@ -78,14 +104,8 @@ namespace ast {
             return this->classNode != nullptr;
         }
 
-        ~FunctionNode() {
-            free(this->statementListNode);
-            free(this->classNode);
-            for (auto ele : *(this->parameterList)) {
-                free(ele);
-            }
-            free(this->parameterList);
-        }
+        // Destructor
+        ~FunctionNode();
 
     };
 }

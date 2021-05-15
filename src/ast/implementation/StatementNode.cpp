@@ -15,17 +15,8 @@ llvm::Value *ast::StatementNode::codeGen(Context *cxt) {
         if (functionNode == nullptr) {
             throw "return should be inside a function";
         }
-        FunctionNode *function = dynamic_cast<FunctionNode *>(functionNode);
-
-        function->setHasMultipleExits();
-
-        // TODO move to assignment node
-        if (function->function->getReturnType() != operand->getType()) {
-            operand = castTo(operand, function->getReturnType());
-        }
-
-        builder.CreateStore(operand, function->retValue);
-        return builder.CreateBr(function->exitBlock);
+        return dynamic_cast<FunctionNode *>(functionNode)
+                ->setFunctionReturn(operand);
 
     }
 
