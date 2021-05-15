@@ -8,8 +8,8 @@
 namespace ast {
 
     // Generate the function prototype
-    llvm::FunctionType *ast::FunctionNode::codeGenSignature(ast::Context *cxt) {
-        std::vector<llvm::Type *> argVector;
+    FunctionType *FunctionNode::codeGenSignature(Context *cxt) {
+        std::vector<Type *> argVector;
 
         // Fill in the parameter list
         if (this->parameterList != nullptr) {
@@ -26,7 +26,7 @@ namespace ast {
         );
     }
 
-    llvm::Value *ast::FunctionNode::codeGen(Context *cxt) {
+    Value *FunctionNode::codeGen(Context *cxt) {
 
         this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
 
@@ -62,15 +62,15 @@ namespace ast {
         this->codeGenExit(cxt);
 
         // TODO handle this properly.
-        llvm::verifyFunction(*function, &(llvm::errs()));
+        verifyFunction(*function, &(errs()));
 
         cxt->popFunction();
 
-        return nullptr;
+        return this->function;
     }
 
 
-    llvm::Value *FunctionNode::codeGenExit(Context *cxt) {
+    Value *FunctionNode::codeGenExit(Context *cxt) {
 
         // If there is no terminator
         if (builder.GetInsertBlock()->getTerminator() == nullptr) {
@@ -94,14 +94,14 @@ namespace ast {
         return this->function;
     }
 
-    ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements, VarType *type) {
+    FunctionNode::FunctionNode(const char *name, StatementListNode *statements, VarType *type) {
         this->name = name;
         this->statementListNode = statements;
         this->setReturnType(type);
     }
 
-    ast::FunctionNode::FunctionNode(const char *name, ast::StatementListNode *statements, VarType *type,
-                                    std::vector<ast::Parameter *> *parameterList) {
+    FunctionNode::FunctionNode(const char *name, StatementListNode *statements, VarType *type,
+                                    std::vector<Parameter *> *parameterList) {
         this->name = name;
         this->statementListNode = statements;
         this->parameterList = parameterList;

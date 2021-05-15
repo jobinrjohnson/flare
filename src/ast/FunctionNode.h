@@ -19,7 +19,7 @@ namespace ast {
         std::string name;
 
         // List of parameters
-        std::vector<ast::Parameter *> *parameterList;
+        std::vector<Parameter *> *parameterList;
 
         // Function body
         StatementListNode *statementListNode;
@@ -48,10 +48,10 @@ namespace ast {
 
 
         // Codegen for function signature
-        llvm::FunctionType *codeGenSignature(Context *cxt);
+        FunctionType *codeGenSignature(Context *cxt);
 
         // Codegen for the exit block
-        llvm::Value *codeGenExit(Context *cxt);
+        Value *codeGenExit(Context *cxt);
 
     public:
 
@@ -72,11 +72,11 @@ namespace ast {
                 const char *name,
                 StatementListNode *statements,
                 VarType *type,
-                std::vector<ast::Parameter *> *parameterList
+                std::vector<Parameter *> *parameterList
         );
 
         // Node:codegen override
-        llvm::Value *codeGen(Context *cxt) override;
+        Value *codeGen(Context *cxt) override;
 
         // Generates code for the return value.
         Value *setFunctionReturn(Value *returnValue);
