@@ -86,7 +86,7 @@
 %type <statementList> compound_statement statements
 %type <varDecl> variable_declaration array_declaration
 %type <assignmentNode> assignment_expr
-%type <ifStatementNode> if_else_if
+%type <ifStatementNode> if_else_if if_statement
 %type <logSmtNode> log_statement
 %type <statementNode> return_statement
 %type <functionNode> function_declaration
@@ -200,16 +200,16 @@ return_statement:
     KW_RETURN expr                      { $$ = new ast::StatementNode(ast::StatementType::RETURN, $<node>2); }
 ;
 
-
-if_else_if:
+if_statement:
     KW_IF '(' expr ')' statement                           {
         $$ = new ast::IfStatementNode($3, $5);
     }
-    | if_else_if KW_ELSE KW_IF '(' expr ')' statement     {
-        $1->addBranch($5, $7);
-        $$ = $1;
-    }
-    | if_else_if KW_ELSE statement                         {
+    | if_statement KW_ELSE if_statement                                  { $1->addBranch($3); $$ = $1; }
+;
+
+if_else_if:
+    if_statement                                            {}
+    | if_statement KW_ELSE statement                         {
         $1->addElseBranch($3);
         $$ = $1;
     }
