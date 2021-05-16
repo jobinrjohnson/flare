@@ -1,9 +1,8 @@
 function main(): int32 {
-    let arg: int = 10;
+    let arg: int = 3;
 
-    if(arg == 0){
-        return 1;
-    }
+    if(arg == 0)
+        return 0;
 
     return 0;
 }

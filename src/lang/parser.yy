@@ -83,7 +83,7 @@
 %type <node> statement class_content
 %type <expression> expr
 %type <literal> scalar
-%type <statementList> optional_block statements
+%type <statementList> compound_statement statements
 %type <varDecl> variable_declaration array_declaration
 %type <assignmentNode> assignment_expr
 %type <ifStatementNode> if_else_if
@@ -106,8 +106,16 @@
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 %token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT
 
+%precedence '=' 
+%left '|'
+%left '^'
+%left '&'
+%nonassoc TOK_EQUALITY TOK_NEQUALITY
+%nonassoc '<' TOK_LTE '>' TOK_GTE
+%left '.'
 %left '+' '-'
 %left '*' '/' '%'
+%precedence '!'
 
 %%
 
@@ -120,10 +128,9 @@ start:
     }
 ;
 
-
 statements:
-    statement                           { $$ = new ast::StatementListNode($<node>1);  }
-    | statements statement              { $1->push($<node>2); }
+    statements statement             { $1->push($<node>2); $$ = $1; }
+    |                                { $$ = new ast::StatementListNode();  }
 ;
 
 
@@ -138,11 +145,11 @@ statement:
     | function_declaration              { }
     | loops                             { }
     | class_decl                        { }
+    | compound_statement                { }
 ;
 
-optional_block:
-    statement                           { $$ = new ast::StatementListNode($<node>1); }
-    | '{' statements '}'                { $$ = $2; }
+compound_statement:
+    '{' statements '}'                { $$ = $2; }
 ;
 
 class_content:
@@ -164,12 +171,12 @@ class_decl:
 ;
 
 loops:
-    KW_WHILE '(' expr ')' optional_block    { $$ = new ast::LoopNode($3, $5);}
+    KW_WHILE '(' expr ')' compound_statement    { $$ = new ast::LoopNode($3, $5);}
 ;
 
 function_declaration:
-    KW_FUNCTION IDENTIFIER '(' ')' ':' var_type optional_block   { $$ = new ast::FunctionNode($2, $<statementList>7, $6); }
-    | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type optional_block   { $$ = new ast::FunctionNode($2, $<statementList>8, $7, $4); }
+    KW_FUNCTION IDENTIFIER '(' ')' ':' var_type compound_statement   { $$ = new ast::FunctionNode($2, $<statementList>7, $6); }
+    | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type compound_statement   { $$ = new ast::FunctionNode($2, $<statementList>8, $7, $4); }
 ;
 
 parameter:
@@ -195,14 +202,14 @@ return_statement:
 
 
 if_else_if:
-    KW_IF '(' expr ')' optional_block                           {
+    KW_IF '(' expr ')' statement                           {
         $$ = new ast::IfStatementNode($3, $5);
     }
-    | if_else_if KW_ELSE KW_IF '(' expr ')' optional_block     {
+    | if_else_if KW_ELSE KW_IF '(' expr ')' statement     {
         $1->addBranch($5, $7);
         $$ = $1;
     }
-    | if_else_if KW_ELSE optional_block                         {
+    | if_else_if KW_ELSE statement                         {
         $1->addElseBranch($3);
         $$ = $1;
     }
