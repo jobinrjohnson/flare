@@ -5,8 +5,6 @@
 #ifndef FLARE_NODE_H
 #define FLARE_NODE_H
 
-#define FLARE_DEBUG true
-
 #include <iostream>
 
 #include "llvm/ADT/STLExtras.h"

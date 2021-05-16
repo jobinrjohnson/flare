@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -W -Werror -g -Wno-unused-parameter -Wno-redundant-move")
 set(CMAKE_CXX_FLAGS "-O3 -Wall -W -pedantic -Wno-unused-parameter")
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DFLARE_DEBUG")
+
 
 find_package(LLVM REQUIRED CONFIG)
 include_directories(${LLVM_INCLUDE_DIRS})

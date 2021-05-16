@@ -11,7 +11,13 @@ int main(int argc, char **argv) {
     if (argc > 1) {
         fileName = argv[1];
     } else {
+#ifdef FLARE_DEBUG
+        fileName = "../../samples/1.ts";
         std::clog << "No file name supplied. Since it is a debug build a default test program will be executed.\n";
+#else
+        std::cerr << "No file name supplied\n";
+        return 1;
+#endif
     }
 
     try {
@@ -21,12 +27,12 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+#ifdef FLARE_DEBUG
     // Print LLVM IR if debug mode is on
-    if (FLARE_DEBUG) {
-        std::cout << "========================================\n";
-        module->print(llvm::outs(), nullptr);
-        std::cout << "========================================\n\n";
-    }
+    std::cout << "========================================\n";
+    module->print(llvm::outs(), nullptr);
+    std::cout << "========================================\n\n";
+#endif
 
     // Execute JIT
     flare::jit::FlareJit jit(module);

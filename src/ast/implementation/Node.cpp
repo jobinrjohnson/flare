@@ -12,6 +12,10 @@ namespace ast {
 
     void Node::printCallStack(Context *cxt, std::string className, std::string functionName) {
 
+#ifndef FLARE_DEBUG
+        return;
+#endif
+
 //        int depth = cxt->depth;
 //
 //        while (depth > 0) {
