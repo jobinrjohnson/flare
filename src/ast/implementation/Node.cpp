@@ -12,10 +12,6 @@ namespace ast {
 
     void Node::printCallStack(Context *cxt, std::string className, std::string functionName) {
 
-        if (!FLARE_DEBUG) {
-            return;
-        }
-
 //        int depth = cxt->depth;
 //
 //        while (depth > 0) {
@@ -34,19 +30,12 @@ namespace ast {
         std::cout.flush();
     }
 
-    void Node::printLLVMir() {
+    void Node::startCodeGen() {
         module = std::make_unique<llvm::Module>("FlareTest", context);
 
         auto *cxt = new Context();
         this->codeGen(cxt);
         free(cxt);
-
-        if (FLARE_DEBUG) {
-            std::cout << "========================================\n";
-            module->print(llvm::outs(), nullptr);
-            std::cout << "========================================\n\n";
-        }
-
     }
 
 }

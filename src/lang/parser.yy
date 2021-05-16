@@ -123,7 +123,7 @@ start:
     statements  {
 
         $$ = $1;
-        $$->printLLVMir();
+        $$->startCodeGen();
 
     }
 ;

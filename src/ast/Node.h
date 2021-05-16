@@ -37,7 +37,7 @@ namespace ast {
 
         void printDebug(std::string str);
 
-        void printLLVMir();
+        void startCodeGen();
 
         virtual llvm::Value *codeGen(Context *) = 0;
 

@@ -21,6 +21,13 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    // Print LLVM IR if debug mode is on
+    if (FLARE_DEBUG) {
+        std::cout << "========================================\n";
+        module->print(llvm::outs(), nullptr);
+        std::cout << "========================================\n\n";
+    }
+
     // Execute JIT
     flare::jit::FlareJit jit(module);
     jit.initialize();
