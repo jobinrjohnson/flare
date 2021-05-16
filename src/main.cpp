@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     }
 
     // Execute JIT
-    FlareJit jit(module);
+    flare::jit::FlareJit jit(module);
     jit.initialize();
     jit.execute();
 

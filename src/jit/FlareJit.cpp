@@ -8,37 +8,44 @@
 
 #include "FlareJit.h"
 
-FlareJit::FlareJit(std::unique_ptr<Module> &module) {
-    this->module = std::move(module);
-}
 
-FlareJit::~FlareJit() {
-    delete this->EE;
-    llvm_shutdown();
-}
+namespace flare {
+    namespace jit {
 
-void FlareJit::initialize() {
+        FlareJit::FlareJit(std::unique_ptr<Module> &module) {
+            this->module = std::move(module);
+        }
 
-    this->execStartFunction = module->getFunction("main");
+        FlareJit::~FlareJit() {
+            delete this->EE;
+            llvm_shutdown();
+        }
 
-    InitializeNativeTarget();
-    this->EE = EngineBuilder(std::move(module))
-            .create();
-}
+        void FlareJit::initialize() {
 
-void FlareJit::setArg(GenericValue arg) {
-    this->execArgs.push_back(arg);
-}
+            this->execStartFunction = module->getFunction("main");
 
-int FlareJit::execute() {
-    GenericValue gv = this->EE->runFunction(
-            this->execStartFunction,
-            this->execArgs
-    );
-    this->exitCode = (int) gv.IntVal.getZExtValue();
-    return this->exitCode;
-}
+            InitializeNativeTarget();
+            this->EE = EngineBuilder(std::move(module))
+                    .create();
+        }
 
-int FlareJit::getExitCode() {
-    return this->exitCode;
+        void FlareJit::setArg(GenericValue arg) {
+            this->execArgs.push_back(arg);
+        }
+
+        int FlareJit::execute() {
+            GenericValue gv = this->EE->runFunction(
+                    this->execStartFunction,
+                    this->execArgs
+            );
+            this->exitCode = (int) gv.IntVal.getZExtValue();
+            return this->exitCode;
+        }
+
+        int FlareJit::getExitCode() {
+            return this->exitCode;
+        }
+
+    }
 }

@@ -14,36 +14,41 @@
 
 using namespace llvm;
 
-class FlareJit {
+namespace flare {
+    namespace jit {
 
-protected:
+        class FlareJit {
 
-    std::unique_ptr<Module> module;
+        protected:
 
-    std::vector<GenericValue> execArgs;
+            std::unique_ptr<Module> module;
 
-    ExecutionEngine *EE;
+            std::vector<GenericValue> execArgs;
 
-    Function *execStartFunction;
+            ExecutionEngine *EE;
 
-    int exitCode = -1;
+            Function *execStartFunction;
 
-public:
+            int exitCode = -1;
+
+        public:
 
 
-    explicit FlareJit(std::unique_ptr<Module> &module);
+            explicit FlareJit(std::unique_ptr<Module> &module);
 
-    ~FlareJit();
+            ~FlareJit();
 
-    void initialize();
+            void initialize();
 
-    void setArg(GenericValue arg);
+            void setArg(GenericValue arg);
 
-    int execute();
+            int execute();
 
-    int getExitCode();
+            int getExitCode();
 
-};
+        };
+    }
+}
 
 
 //}
