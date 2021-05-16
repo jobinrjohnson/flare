@@ -13,17 +13,17 @@ namespace ast {
 
     class IfStatementNode : public Node {
 
+    public:
         std::vector<Node *> statementList;
         std::vector<Node *> condition;
-
-    public:
-
 
         NodeType getNodeType() override;
 
         IfStatementNode(Node *cond, Node *smt);
 
         void addBranch(Node *cond, Node *smt);
+
+        void addBranch(IfStatementNode *node);
 
         void addElseBranch(Node *smt);
 

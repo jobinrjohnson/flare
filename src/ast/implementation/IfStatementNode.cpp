@@ -77,4 +77,17 @@ namespace ast {
         this->printCallStack(cxt, "IfStatementNode", __FUNCTION__);
         return this->codegenIfElseIf(cxt);
     }
+
+    void IfStatementNode::addBranch(IfStatementNode *node) {
+
+        for (auto element:node->statementList) {
+            this->statementList.push_back(element);
+        }
+        for (auto element:node->condition) {
+            this->condition.push_back(element);
+        }
+
+        free(node);
+
+    }
 }
