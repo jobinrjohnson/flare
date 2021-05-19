@@ -29,7 +29,13 @@ namespace ast {
 
     class Node {
 
+    protected:
+        int lineNumber;
     public:
+
+        void setLineNumber(int lNo) {
+            this->lineNumber = lNo;
+        }
 
         void printCallStack(Context *, std::string className, std::string functionName);
 

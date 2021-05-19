@@ -135,17 +135,17 @@ statements:
 
 
 statement:
-    expr                                { }
-    | variable_declaration              { }
-    | assignment_expr                   { }
-    | if_else_if                        { }
-    | log_statement                     { }
-    | return_statement                  { }
+    expr                                { $$->setLineNumber(driver.cursor->end.line); }
+    | variable_declaration              { $$->setLineNumber(driver.cursor->end.line); }
+    | assignment_expr                   { $$->setLineNumber(driver.cursor->end.line); }
+    | if_else_if                        { $$->setLineNumber(driver.cursor->end.line); }
+    | log_statement                     { $$->setLineNumber(driver.cursor->end.line); }
+    | return_statement                  { $$->setLineNumber(driver.cursor->end.line); }
     | statement ';'                     { $$ = $1; }
-    | function_declaration              { }
-    | loops                             { }
-    | class_decl                        { }
-    | compound_statement                { }
+    | function_declaration              { $$->setLineNumber(driver.cursor->end.line); }
+    | loops                             { $$->setLineNumber(driver.cursor->end.line); }
+    | class_decl                        { $$->setLineNumber(driver.cursor->end.line); }
+    | compound_statement                { $$->setLineNumber(driver.cursor->begin.line); }
 ;
 
 compound_statement:

@@ -1,4 +1,5 @@
 function main(): int32 {
+
     let arg: int = 4;
 
     if (arg == 0)
