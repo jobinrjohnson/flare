@@ -75,6 +75,14 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_FLOAT;
                 }else if (strcmp("class", yytext) == 0) {
                     return token::KW_CLASS;
+                }else if (strcmp("boolean", yytext) == 0) {
+                    return token::KW_BOOLEAN;
+                }else if (strcmp("true", yytext) == 0) {
+                  yylval->tBoolValue = true;
+                  return token::T_BOOLEAN;
+                }else if (strcmp("false", yytext) == 0) {
+                  yylval->tBoolValue = false;
+                  return token::T_BOOLEAN;
                 }
                 yylval->yyText = (char *) malloc(strlen(yytext));
                 strcpy(yylval->yyText, yytext);

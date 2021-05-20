@@ -1,6 +1,12 @@
 function main(): int32 {
 
-    let arg: int = 4;
+    let arg: bigint = 4;
+
+    let b: boolean = false;
+
+    if(!b){
+        return 1;
+    }
 
     if (arg == 0)
         return 0;

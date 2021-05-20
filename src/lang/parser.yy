@@ -71,6 +71,7 @@
     std::vector<ast::Node *> *nodeList;
 
     int tIntegerValue;
+    bool tBoolValue;
     double tDecimalValue;
     char *yyText;
 }
@@ -102,9 +103,10 @@
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
+%token <tBoolValue> T_BOOLEAN
 %token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
-%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT
+%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN
 
 %precedence '=' 
 %left '|'
@@ -230,6 +232,7 @@ var_type:
     | KW_NUMBER         { $$ = new ast::VarType; $$->type = ast::VARTYPE_NUMBER; }
     | KW_FLOAT          { $$ = new ast::VarType; $$->type = ast::VARTYPE_FLOAT; }
     | KW_DOUBLE         { $$ = new ast::VarType; $$->type = ast::VARTYPE_DOUBLE; }
+    | KW_BOOLEAN         { $$ = new ast::VarType; $$->type = ast::VARTYPE_BOOLEAN; }
 ;
 
 array_declaration:
@@ -288,6 +291,7 @@ expr:
 scalar:
     T_INTEGER                         { $$ = new ast::LiteralNode($1); }
     | T_DECIMAL                       { $$ = new ast::LiteralNode($1); }
+    | T_BOOLEAN                       { $$ = new ast::LiteralNode($1); }
 ;
 
 %%

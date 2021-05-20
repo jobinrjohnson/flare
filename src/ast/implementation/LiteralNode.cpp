@@ -20,6 +20,11 @@ namespace ast {
         this->literalType = DOUBLE;
     }
 
+    LiteralNode::LiteralNode(bool mLiteralValue) {
+        this->nodeValue.bVal = mLiteralValue;
+        this->literalType = BOOLEAN;
+    }
+
     llvm::Value *LiteralNode::codeGen(Context *cxt) {
 
         this->printCallStack(cxt, "LiteralNode", __FUNCTION__);
@@ -27,9 +32,11 @@ namespace ast {
         switch (this->literalType) {
 
             case INTEGER:
-                return llvm::ConstantInt::get(context, APInt(32, this->nodeValue.iVal));
+                return llvm::ConstantInt::get(context, APInt(64, this->nodeValue.iVal));
             case DOUBLE:
                 return ConstantFP::get(Type::getDoubleTy(context), this->nodeValue.dVal);
+            case BOOLEAN:
+                return ConstantInt::get(context, APInt(1, this->nodeValue.iVal));
             default:
                 throw "Not handled"; // TODO throw errors properly
 

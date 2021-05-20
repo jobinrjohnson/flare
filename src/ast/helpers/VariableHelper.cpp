@@ -32,7 +32,10 @@ namespace ast {
             case VARTYPE_DOUBLE:
             case VARTYPE_NUMBER:
                 return llvm::Type::getDoubleTy(context);
+            case VARTYPE_BOOLEAN:
+                return llvm::Type::getInt1Ty(context);
             case OTHER:
+                throw "Conversion not defined.";
                 break;
         }
         throw "Type not found";
@@ -75,6 +78,8 @@ namespace ast {
                 }
                 break;
             }
+            case PR_TY_BOOLEAN:
+                throw "Other types cannot be converted to boolean";
         }
 
         return returnVal;
@@ -95,6 +100,9 @@ namespace ast {
             case VARTYPE_DOUBLE:
             case VARTYPE_NUMBER:
                 return castTo(value, PR_TY_DOUBLE);
+            case VARTYPE_BOOLEAN:
+                return castTo(value, PR_TY_BOOLEAN);
+                break;
             case OTHER:
                 break;
         }

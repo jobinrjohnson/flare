@@ -31,11 +31,12 @@ namespace ast {
         VARTYPE_FLOAT,
         VARTYPE_DOUBLE,
         VARTYPE_NUMBER,
+        VARTYPE_BOOLEAN,
         OTHER
     };
 
     enum CastTo {
-        PR_TY_INT_32, PR_TY_INT_64, PR_TY_FLOAT, PR_TY_DOUBLE
+        PR_TY_INT_32, PR_TY_INT_64, PR_TY_FLOAT, PR_TY_DOUBLE, PR_TY_BOOLEAN
     };
 
     typedef struct {
