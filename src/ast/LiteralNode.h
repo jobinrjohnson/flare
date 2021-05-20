@@ -14,13 +14,14 @@ namespace ast {
 
     protected:
         enum LiteralType {
-            INTEGER, DOUBLE, BOOLEAN
+            INTEGER, DOUBLE, BOOLEAN, STRING
         } literalType;
 
         union LValue {
             int iVal;
             double dVal;
             bool bVal;
+            char* sVal;
         } nodeValue;
 
     public:
@@ -30,6 +31,8 @@ namespace ast {
         LiteralNode(int mLiteralValue);
 
         LiteralNode(double mLiteralValue);
+
+        LiteralNode(char* mLiteralValue);
 
         LiteralNode(bool mLiteralValue);
 

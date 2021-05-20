@@ -37,11 +37,19 @@ namespace ast {
                 return ConstantFP::get(Type::getDoubleTy(context), this->nodeValue.dVal);
             case BOOLEAN:
                 return ConstantInt::get(context, APInt(1, this->nodeValue.iVal));
+            case STRING:
+                return builder.CreateGlobalStringPtr(StringRef(this->nodeValue.sVal));
             default:
                 throw "Not handled"; // TODO throw errors properly
 
         }
 
+    }
+
+    LiteralNode::LiteralNode(char *mLiteralValue) {
+        // TODO process string for escape sequence;
+        this->nodeValue.sVal = mLiteralValue;
+        this->literalType = STRING;
     }
 
 }

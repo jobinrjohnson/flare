@@ -130,6 +130,18 @@ typedef lang::Parser::token_type token_type;
 ","           {return ',';}
 ";"           {return ';';}
 ":"           {return ':';}
+\"(\\.|[^"\\])*\"   {
+
+                int len = strlen(yytext);
+                yylval->tStringValue = (char *) malloc(len-2);
+
+                memcpy( yylval->tStringValue, &yytext[1], len-2 );
+                yylval->tStringValue[len-1] = '\0';
+
+                //strcpy(yylval->tStringValue, yytext);
+
+                  return token::T_STRING;
+                  }
 
 
 
