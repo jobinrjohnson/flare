@@ -15,30 +15,55 @@ namespace ast {
     class VarDeclNode : public Node {
 
     protected:
+
+        // Name of the variable
         std::string variableName;
-        Node *initialValue;
+
+        // Initial value AST node
+        Node *initialValue = nullptr;
+
+        // The class node if it is a class member
+        Node *classNode = nullptr;
+
+        // Tpe of the variable
         VarType *type = nullptr;
-        bool isArray = false;
+
+        // Functions
+
+        // Code generation for built in types
+        Value *codeGenBuiltInTy(Context *);
+
+        // Code generation for array types
+        Value *codeGenArray();
 
     public:
 
-        NodeType getNodeType();
+        // Sets the variable initial value
+        inline void setInitialValue(Node *variableInitialValue) {
+            this->initialValue = variableInitialValue;
+        }
 
+        // Sets the variable type
+        inline void setVarType(VarType *variableType) {
+            this->type = variableType;
+        }
+
+        // Sets the class node
+        inline void setClass(Node *variableClassNode) {
+            this->classNode = variableClassNode;
+        }
+
+        // Returns the node types (for debugging)
+        NodeType getNodeType() override;
+
+        // Constructor only name
         VarDeclNode(char *name);
 
-        VarDeclNode(char *name, bool isArray);
-
-        VarDeclNode(char *name, Node *initialValue, bool isArray = false);
-
+        // Constructor name and variable type.
         VarDeclNode(char *name, VarType *type);
 
-        void setInitializer(Node *initial);
-
-        Value *codeGenArray();
-
-        Value *codeGenBuiltInTy(Context *);
-
-        llvm::Value *codeGen(Context *cxt);
+        // Generate code for the node (Post AST function)
+        llvm::Value *codeGen(Context *cxt) override;
 
     };
 

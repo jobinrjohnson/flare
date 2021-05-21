@@ -32,6 +32,7 @@ namespace ast {
         VARTYPE_DOUBLE,
         VARTYPE_NUMBER,
         VARTYPE_BOOLEAN,
+        VARTYPE_ARRAY,
         OTHER
     };
 
@@ -41,6 +42,7 @@ namespace ast {
 
     typedef struct {
         VariableType type;
+        VariableType subType;
         std::string name; // Valid only if returnType is other
     } VarType;
 

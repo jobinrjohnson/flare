@@ -13,18 +13,6 @@ namespace ast {
         return VAR_DECL_NODE;
     }
 
-    VarDeclNode::VarDeclNode(char *name, bool isArray) {
-        this->variableName.assign(name);
-        this->initialValue = new ast::LiteralNode(0);
-        this->isArray = isArray;
-    }
-
-    VarDeclNode::VarDeclNode(char *name, Node *initialValue, bool isArray) {
-        this->variableName = name;
-        this->initialValue = initialValue;
-        this->isArray = isArray;
-    }
-
     Value *VarDeclNode::codeGenArray() {
 
         std::vector<llvm::Constant *> initList;
@@ -87,7 +75,7 @@ namespace ast {
     llvm::Value *VarDeclNode::codeGen(Context *cxt) {
         this->printCallStack(cxt, "VarDeclNode", __FUNCTION__);
 
-        if (this->isArray) {
+        if (this->type->type == VARTYPE_ARRAY) {
             return this->codeGenArray();
         } else {
             return this->codeGenBuiltInTy(cxt);
@@ -99,12 +87,8 @@ namespace ast {
         this->variableName.assign(name);
     }
 
-    void VarDeclNode::setInitializer(Node *initial) {
-        this->initialValue = initial;
-    }
-
     VarDeclNode::VarDeclNode(char *name, VarType *type) {
-        this->variableName = name;
-        this->type = type;
+        this->variableName.assign(name);
+        this->setVarType(type);
     }
 }

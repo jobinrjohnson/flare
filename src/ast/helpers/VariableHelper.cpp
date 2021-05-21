@@ -35,6 +35,7 @@ namespace ast {
             case VARTYPE_BOOLEAN:
                 return llvm::Type::getInt1Ty(context);
             case OTHER:
+            case VARTYPE_ARRAY:
                 throw "Conversion not defined.";
                 break;
         }
@@ -103,6 +104,7 @@ namespace ast {
             case VARTYPE_BOOLEAN:
                 return castTo(value, PR_TY_BOOLEAN);
                 break;
+            case VARTYPE_ARRAY:
             case OTHER:
                 break;
         }

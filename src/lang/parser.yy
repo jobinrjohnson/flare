@@ -223,7 +223,7 @@ variable_declaration:
     array_declaration                       { }
     | KW_LET IDENTIFIER                     { $$ = new ast::VarDeclNode($2); free($2);  }
     | KW_LET IDENTIFIER ':' var_type        { $$ = new ast::VarDeclNode($2, $4); free($2); }
-    | variable_declaration '=' expr         { $$->setInitializer($3); }
+    | variable_declaration '=' expr         { $$->setInitialValue($3); }
 ;
 
 var_type:
@@ -238,7 +238,14 @@ var_type:
 ;
 
 array_declaration:
-    KW_LET IDENTIFIER '[' ']'           { $$ = new ast::VarDeclNode($2, true); }
+    KW_LET IDENTIFIER '[' ']'           {
+            ast::VarType *vType = new ast::VarType{
+                    .type = ast::VARTYPE_ARRAY,
+                    .subType = ast::VARTYPE_INT,
+                    .name = "array"
+            };
+            $$ = new ast::VarDeclNode($2, vType);
+    }
 ;
 
 
