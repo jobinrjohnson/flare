@@ -25,6 +25,9 @@ namespace ast {
         // The class node if it is a class member
         Node *classNode = nullptr;
 
+        // The function node if it is a function
+        Node *functionNode = nullptr;
+
         // Tpe of the variable
         VarType *type = nullptr;
 
@@ -53,6 +56,10 @@ namespace ast {
             this->classNode = variableClassNode;
         }
 
+        inline bool isClassVariable() {
+            return this->classNode != nullptr;
+        }
+
         // Returns the node types (for debugging)
         NodeType getNodeType() override;
 
@@ -64,6 +71,12 @@ namespace ast {
 
         // Generate code for the node (Post AST function)
         llvm::Value *codeGen(Context *cxt) override;
+
+        // Generate code if the node corresponds to a global variable
+        llvm::Value *codeGenGlobalVariable(Context *cxt);
+
+        // Generate code if the node corresponds to a local variable
+        llvm::Value *codeGenLocalVariable(Context *cxt);
 
     };
 

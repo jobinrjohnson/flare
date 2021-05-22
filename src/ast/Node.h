@@ -37,6 +37,8 @@ namespace ast {
             this->lineNumber = lNo;
         }
 
+        void throwSemanticError(std::string error);
+
         void printCallStack(Context *, std::string className, std::string functionName);
 
         void printDebug(std::string str);

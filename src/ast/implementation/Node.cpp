@@ -42,4 +42,8 @@ namespace ast {
         free(cxt);
     }
 
+    void Node::throwSemanticError(std::string error) {
+        throw error;
+    }
+
 }

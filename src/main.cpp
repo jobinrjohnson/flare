@@ -25,6 +25,9 @@ int main(int argc, char **argv) {
     } catch (char const *e) {
         std::cerr << "Error occurred while parsing : " << e;
         return 1;
+    } catch (std::string e) {
+        std::cerr << "Error occurred while parsing : " << e;
+        return 1;
     }
 
 #ifdef FLARE_DEBUG
