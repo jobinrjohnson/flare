@@ -35,6 +35,7 @@ namespace flare::ast {
             case VARTYPE_BOOLEAN:
                 return llvm::Type::getInt1Ty(context);
             case OTHER:
+            case VARTYPE_STRING:
             case VARTYPE_ARRAY:
                 throw "Conversion not defined.";
                 break;
@@ -103,8 +104,8 @@ namespace flare::ast {
                 return castTo(value, PR_TY_DOUBLE);
             case VARTYPE_BOOLEAN:
                 return castTo(value, PR_TY_BOOLEAN);
-                break;
             case VARTYPE_ARRAY:
+            case VARTYPE_STRING:
             case OTHER:
                 break;
         }

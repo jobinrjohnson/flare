@@ -4,4 +4,4 @@ add_library(
 
         FlareException.cpp
         SemanticException.cpp
-)
+        UnimplementedException.cpp UnimplementedException.h)
