@@ -5,7 +5,7 @@
 #ifndef FLARE_ASTCONSTANTS_H
 #define FLARE_ASTCONSTANTS_H
 
-namespace ast {
+namespace flare::ast {
 
     enum NodeType {
         ASSIGNMENT_NODE,

@@ -7,7 +7,7 @@
 
 #include "Node.h"
 
-namespace ast {
+namespace flare::ast {
 
     enum StatementType {
         RETURN

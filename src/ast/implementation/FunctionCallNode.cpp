@@ -4,7 +4,7 @@
 
 #include <ast/FunctionCallNode.h>
 
-llvm::Value *ast::FunctionCallNode::codeGen(ast::Context *cxt) {
+llvm::Value *flare::ast::FunctionCallNode::codeGen(flare::ast::Context *cxt) {
 
     auto calleeFunction = module->getFunction(this->functionName);
     if (calleeFunction == nullptr) {
@@ -23,15 +23,15 @@ llvm::Value *ast::FunctionCallNode::codeGen(ast::Context *cxt) {
 
 }
 
-ast::NodeType ast::FunctionCallNode::getNodeType() {
+flare::ast::NodeType flare::ast::FunctionCallNode::getNodeType() {
     return FUNCTION_CALL_NODE;
 }
 
-ast::FunctionCallNode::FunctionCallNode(std::string functionName) {
+flare::ast::FunctionCallNode::FunctionCallNode(std::string functionName) {
     this->functionName = functionName;
 }
 
-ast::FunctionCallNode::FunctionCallNode(std::string functionName, std::vector<ExprNode *> *argumentList) {
+flare::ast::FunctionCallNode::FunctionCallNode(std::string functionName, std::vector<ExprNode *> *argumentList) {
     this->functionName = functionName;
     this->argumentList = argumentList;
 }

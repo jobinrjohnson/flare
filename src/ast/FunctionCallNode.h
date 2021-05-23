@@ -8,7 +8,7 @@
 #include "Node.h"
 #include "ExprNode.h"
 
-namespace ast {
+namespace flare::ast {
     class FunctionCallNode : public Node {
 
     protected:

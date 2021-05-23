@@ -9,7 +9,7 @@
 #include "Node.h"
 #include "VarDeclNode.h"
 
-namespace ast {
+namespace flare::ast {
 
     class StatementListNode : public Node {
 

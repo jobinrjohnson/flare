@@ -25,7 +25,7 @@ extern llvm::LLVMContext context;
 extern llvm::IRBuilder<> builder;
 extern std::unique_ptr<llvm::Module> module;
 
-namespace ast {
+namespace flare::ast {
 
     class Node {
 

@@ -8,7 +8,7 @@
 #include <ast/LiteralNode.h>
 #include <ast/ExprNode.h>
 
-namespace ast {
+namespace flare::ast {
 
     NodeType ExprNode::getNodeType() {
         return EXPR_NODE;

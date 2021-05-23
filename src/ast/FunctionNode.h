@@ -10,7 +10,7 @@
 #include "StatementListNode.h"
 #include "constants/AstConstants.h"
 
-namespace ast {
+namespace flare::ast {
 
     class FunctionNode : public Node {
 

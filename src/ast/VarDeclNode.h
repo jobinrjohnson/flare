@@ -10,7 +10,7 @@
 #include "LiteralNode.h"
 #include "constants/AstConstants.h"
 
-namespace ast {
+namespace flare::ast {
 
     class VarDeclNode : public Node {
 

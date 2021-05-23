@@ -8,7 +8,7 @@ llvm::LLVMContext context;
 llvm::IRBuilder<> builder(context);
 std::unique_ptr<llvm::Module> module;
 
-namespace ast {
+namespace flare::ast {
 
     void Node::printDebug(std::string str) {
         std::cout << str << "\n\n";

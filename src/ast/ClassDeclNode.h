@@ -8,7 +8,7 @@
 #include "Node.h"
 #include "FunctionNode.h"
 
-namespace ast {
+namespace flare::ast {
 
     class ClassDeclNode : public Node {
 

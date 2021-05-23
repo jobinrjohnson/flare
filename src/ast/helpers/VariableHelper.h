@@ -10,7 +10,7 @@
 #include <ast/helpers/Context.h>
 #include <ast/constants/AstConstants.h>
 
-namespace ast {
+namespace flare::ast {
     llvm::Value *findVariable(Context *cxt, std::string name);
 
     llvm::Type *getLLVMType(ast::VariableType type, llvm::LLVMContext &context);

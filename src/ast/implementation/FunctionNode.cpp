@@ -5,7 +5,7 @@
 #include <ast/helpers/VariableHelper.h>
 #include <ast/FunctionNode.h>
 
-namespace ast {
+namespace flare::ast {
 
     // Generate the function prototype
     FunctionType *FunctionNode::codeGenSignature(Context *cxt) {

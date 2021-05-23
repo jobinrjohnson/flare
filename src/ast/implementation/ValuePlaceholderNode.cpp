@@ -4,7 +4,7 @@
 
 #include <ast/ValuePlaceholderNode.h>
 
-namespace ast {
+namespace flare::ast {
 
     NodeType ValuePlaceholderNode::getNodeType() {
         return VALUE_PLACEHOLDER_NODE;

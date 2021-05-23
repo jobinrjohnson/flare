@@ -4,7 +4,7 @@
 
 #include <ast/LiteralNode.h>
 
-namespace ast {
+namespace flare::ast {
 
     NodeType LiteralNode::getNodeType() {
         return LITERAL_NODE;

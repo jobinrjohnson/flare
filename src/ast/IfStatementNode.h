@@ -9,7 +9,7 @@
 #include "Node.h"
 #include "ValuePlaceholderNode.h"
 
-namespace ast {
+namespace flare::ast {
 
     class IfStatementNode : public Node {
 

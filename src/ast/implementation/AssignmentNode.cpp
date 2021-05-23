@@ -5,7 +5,7 @@
 #include <ast/AssignmentNode.h>
 #include <ast/helpers/VariableHelper.h>
 
-namespace ast {
+namespace flare::ast {
 
     AssignmentNode::AssignmentNode(char *name, Node *indexNode, Node *exprNode) {
         this->varName = name;

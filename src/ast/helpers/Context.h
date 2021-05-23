@@ -11,7 +11,7 @@
 
 #include "llvm/IR/Value.h"
 
-namespace ast {
+namespace flare::ast {
 
     class Node;
 

@@ -6,7 +6,7 @@
 #include <ast/StatementNode.h>
 #include <ast/FunctionNode.h>
 
-llvm::Value *ast::StatementNode::codeGen(Context *cxt) {
+llvm::Value *flare::ast::StatementNode::codeGen(Context *cxt) {
 
     if (this->type == RETURN) {
         Value *operand = this->operands[0]->codeGen(cxt);
@@ -23,7 +23,7 @@ llvm::Value *ast::StatementNode::codeGen(Context *cxt) {
     return nullptr;
 }
 
-ast::StatementNode::StatementNode(ast::StatementType type, Node *node) {
+flare::ast::StatementNode::StatementNode(flare::ast::StatementType type, Node *node) {
     this->type = type;
     this->operands.push_back(node);
 }

@@ -4,7 +4,7 @@
 
 #include <ast/LogSmtNode.h>
 
-namespace ast {
+namespace flare::ast {
 
     NodeType LogSmtNode::getNodeType() {
         return LOG_NODE;

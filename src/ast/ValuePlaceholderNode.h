@@ -7,7 +7,7 @@
 
 #include "Node.h"
 
-namespace ast {
+namespace flare::ast {
 
     class ValuePlaceholderNode : public Node {
 

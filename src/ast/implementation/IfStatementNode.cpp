@@ -4,7 +4,7 @@
 
 #include <ast/IfStatementNode.h>
 
-namespace ast {
+namespace flare::ast {
 
 
     NodeType IfStatementNode::getNodeType() {

@@ -28,7 +28,7 @@ enum OperatorType {
     FUNCTION_CALL,
 };
 
-namespace ast {
+namespace flare::ast {
     class ExprNode : public Node {
 
     protected:

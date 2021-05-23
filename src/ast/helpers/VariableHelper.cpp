@@ -5,7 +5,7 @@
 #include <ast/helpers/VariableHelper.h>
 #include <ast/StatementListNode.h>
 
-namespace ast {
+namespace flare::ast {
     llvm::Value *findVariable(Context *cxt, std::string name) {
         llvm::Value *variable = nullptr;
         std::vector<Node *>::iterator i = cxt->statementList.end();

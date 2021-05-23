@@ -8,7 +8,7 @@
 
 #include "Node.h"
 
-namespace ast {
+namespace flare::ast {
     class VariableDerefNode : public Node {
 
     protected:

@@ -5,12 +5,12 @@
 #include <ast/helpers/VariableHelper.h>
 #include <ast/ClassDeclNode.h>
 
-ast::NodeType ast::ClassDeclNode::getNodeType() {
+flare::ast::NodeType flare::ast::ClassDeclNode::getNodeType() {
     return CLASS_DECL_NODE;
 }
 
 
-llvm::Value *ast::ClassDeclNode::codeGen(ast::Context *cxt) {
+llvm::Value *flare::ast::ClassDeclNode::codeGen(flare::ast::Context *cxt) {
 
     // TODO handle this properly
     auto items = {getLLVMType(VARTYPE_INT_32, context), getLLVMType(VARTYPE_INT_64, context),
@@ -25,7 +25,7 @@ llvm::Value *ast::ClassDeclNode::codeGen(ast::Context *cxt) {
     return nullptr;
 }
 
-ast::ClassDeclNode::ClassDeclNode(const char *name, std::vector<ast::Node *> *nodeList) {
+flare::ast::ClassDeclNode::ClassDeclNode(const char *name, std::vector<flare::ast::Node *> *nodeList) {
 
     this->className = name;
 

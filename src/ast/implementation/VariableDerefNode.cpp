@@ -6,7 +6,7 @@
 
 #include <ast/VariableDerefNode.h>
 
-namespace ast {
+namespace flare::ast {
 
 
     NodeType VariableDerefNode::getNodeType() {

@@ -4,7 +4,7 @@
 
 #include <ast/StatementListNode.h>
 
-namespace ast {
+namespace flare::ast {
 
 
     NodeType StatementListNode::getNodeType() {

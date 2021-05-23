@@ -4,12 +4,12 @@
 
 #include <ast/LoopNode.h>
 
-ast::LoopNode::LoopNode(ast::Node *cond, ast::Node *smt) {
+flare::ast::LoopNode::LoopNode(flare::ast::Node *cond, flare::ast::Node *smt) {
     this->condition = cond;
     this->statementList = smt;
 }
 
-llvm::Value *ast::LoopNode::codeGen(ast::Context *cxt) {
+llvm::Value *flare::ast::LoopNode::codeGen(flare::ast::Context *cxt) {
 
     this->printCallStack(cxt, "LoopNode", __FUNCTION__);
 
@@ -40,6 +40,6 @@ llvm::Value *ast::LoopNode::codeGen(ast::Context *cxt) {
     return nullptr;
 }
 
-ast::NodeType ast::LoopNode::getNodeType() {
+flare::ast::NodeType flare::ast::LoopNode::getNodeType() {
     return LOOP_NODE;
 }
