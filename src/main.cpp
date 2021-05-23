@@ -1,3 +1,4 @@
+#include <exceptions/FlareException.h>
 #include "lang/driver.h"
 #include "ast/Node.h"
 #include "jit/FlareJit.h"
@@ -13,7 +14,8 @@ int main(int argc, char **argv) {
     } else {
 #ifdef FLARE_DEBUG
         fileName = "../../samples/1.ts";
-        std::clog << "No file name supplied. Since it is a debug build a default test program will be executed.\n";
+        std::clog << "No file name supplied. Since it is a debug build a default test program will be executed.\n\n";
+        std::clog.flush();
 #else
         std::cerr << "No file name supplied\n";
         return 1;
@@ -27,6 +29,9 @@ int main(int argc, char **argv) {
         return 1;
     } catch (std::string e) {
         std::cerr << "Error occurred while parsing : " << e;
+        return 1;
+    } catch (flare::exceptions::FlareException *e) {
+        std::cerr << e->getMessage() << "\n\n";
         return 1;
     }
 

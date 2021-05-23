@@ -1,5 +1,5 @@
 let b = 0;
-let c = 1;
+let b = 1;
 
 function main(): int32 {
 

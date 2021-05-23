@@ -3,6 +3,7 @@
 //
 
 #include <helpers/VariableHelper.h>
+#include <exceptions/SemanticException.h>
 #include "VarDeclNode.h"
 #include "StatementListNode.h"
 
@@ -64,9 +65,13 @@ namespace ast {
         if (this->initialValue == nullptr) {
 
             if (this->type == nullptr) {
-                this->throwSemanticError("variable : '"
-                                         + this->variableName
-                                         + "' has no initializer or explicit type definition");
+
+                throw new flare::exceptions::SemanticException("variable : '"
+                                                               + this->variableName
+                                                               + "' has no initializer or explicit type definition",
+                                                               this->lineNumber
+                );
+
             }
 
             // If there is no initial value just return the created variable.
@@ -107,9 +112,13 @@ namespace ast {
 
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
         if (currentBlock != nullptr && currentBlock->findLocal(this->variableName) != nullptr) {
-            this->throwSemanticError("variable with name : '"
-                                     + this->variableName
-                                     + "' already exists in this block");
+
+            throw new flare::exceptions::SemanticException("variable with name : '"
+                                                           + this->variableName
+                                                           + "' already exists in this block",
+                                                           this->lineNumber
+            );
+
         }
 
         // global variable
