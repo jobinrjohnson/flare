@@ -2,7 +2,7 @@
 // Created by jobinrjohnson on 8/8/20.
 //
 
-#include "IfStatementNode.h"
+#include <ast/IfStatementNode.h>
 
 namespace ast {
 

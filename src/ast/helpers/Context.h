@@ -9,6 +9,8 @@
 #include <stack>
 #include <vector>
 
+#include "llvm/IR/Value.h"
+
 namespace ast {
 
     class Node;

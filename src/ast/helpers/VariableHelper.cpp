@@ -2,8 +2,8 @@
 // Created by jobinrjohnson on 08/05/21.
 //
 
-#include "VariableHelper.h"
-#include "StatementListNode.h"
+#include <ast/helpers/VariableHelper.h>
+#include <ast/StatementListNode.h>
 
 namespace ast {
     llvm::Value *findVariable(Context *cxt, std::string name) {

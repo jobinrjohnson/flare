@@ -2,10 +2,10 @@
 // Created by jobinrjohnson on 7/23/20.
 //
 
-#include <helpers/VariableHelper.h>
+#include <ast/helpers/VariableHelper.h>
 #include <exceptions/SemanticException.h>
-#include "VarDeclNode.h"
-#include "StatementListNode.h"
+#include <ast/VarDeclNode.h>
+#include <ast/StatementListNode.h>
 
 namespace ast {
 

@@ -2,7 +2,7 @@
 // Created by jobinrjohnson on 7/22/20.
 //
 
-#include "LiteralNode.h"
+#include <ast/LiteralNode.h>
 
 namespace ast {
 

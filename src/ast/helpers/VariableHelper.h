@@ -7,8 +7,8 @@
 
 #include <llvm/IR/Value.h>
 #include <llvm/IR/IRBuilder.h>
-#include "Context.h"
-#include "constants/AstConstants.h"
+#include <ast/helpers/Context.h>
+#include <ast/constants/AstConstants.h>
 
 namespace ast {
     llvm::Value *findVariable(Context *cxt, std::string name);

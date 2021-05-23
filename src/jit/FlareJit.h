@@ -5,53 +5,44 @@
 #ifndef FLARE_FLAREJIT_H
 #define FLARE_FLAREJIT_H
 
-
-//namespace jit {
-
 #include <llvm/IR/Module.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 
 using namespace llvm;
 
-namespace flare {
-    namespace jit {
+namespace flare::jit {
 
-        class FlareJit {
+    class FlareJit {
 
-        protected:
+    protected:
 
-            std::unique_ptr<Module> module;
+        std::unique_ptr<Module> module;
 
-            std::vector<GenericValue> execArgs;
+        std::vector<GenericValue> execArgs;
 
-            ExecutionEngine *EE;
+        ExecutionEngine *EE;
 
-            Function *execStartFunction;
+        Function *execStartFunction;
 
-            int exitCode = -1;
+        int exitCode = -1;
 
-        public:
+    public:
 
 
-            explicit FlareJit(std::unique_ptr<Module> &module);
+        explicit FlareJit(std::unique_ptr<Module> &module);
 
-            ~FlareJit();
+        ~FlareJit();
 
-            void initialize();
+        void initialize();
 
-            void setArg(GenericValue arg);
+        void setArg(GenericValue arg);
 
-            int execute();
+        int execute();
 
-            int getExitCode();
+        int getExitCode();
 
-        };
-    }
+    };
 }
-
-
-//}
-
 
 #endif //FLARE_FLAREJIT_H

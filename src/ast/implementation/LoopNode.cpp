@@ -2,7 +2,7 @@
 // Created by jobinrjohnson on 05/05/21.
 //
 
-#include "LoopNode.h"
+#include <ast/LoopNode.h>
 
 ast::LoopNode::LoopNode(ast::Node *cond, ast::Node *smt) {
     this->condition = cond;

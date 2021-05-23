@@ -2,9 +2,8 @@
 // Created by jobinrjohnson on 05/05/21.
 //
 
-#include <llvm/IR/Value.h>
-#include "Context.h"
-#include "StatementListNode.h"
+#include <ast/helpers/Context.h>
+#include <ast/StatementListNode.h>
 
 void ast::Context::pushFunction(Node *function) {
     functions.push(function);

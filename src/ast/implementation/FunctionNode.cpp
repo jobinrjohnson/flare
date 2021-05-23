@@ -2,8 +2,8 @@
 // Created by jobinrjohnson on 05/05/21.
 //
 
-#include <helpers/VariableHelper.h>
-#include "FunctionNode.h"
+#include <ast/helpers/VariableHelper.h>
+#include <ast/FunctionNode.h>
 
 namespace ast {
 

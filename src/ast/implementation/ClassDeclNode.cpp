@@ -2,8 +2,8 @@
 // Created by jobinrjohnson on 12/05/21.
 //
 
-#include <helpers/VariableHelper.h>
-#include "ClassDeclNode.h"
+#include <ast/helpers/VariableHelper.h>
+#include <ast/ClassDeclNode.h>
 
 ast::NodeType ast::ClassDeclNode::getNodeType() {
     return CLASS_DECL_NODE;

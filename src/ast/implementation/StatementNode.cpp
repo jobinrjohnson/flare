@@ -2,9 +2,9 @@
 // Created by jobinrjohnson on 9/23/20.
 //
 
-#include <helpers/VariableHelper.h>
-#include "StatementNode.h"
-#include "FunctionNode.h"
+#include <ast/helpers/VariableHelper.h>
+#include <ast/StatementNode.h>
+#include <ast/FunctionNode.h>
 
 llvm::Value *ast::StatementNode::codeGen(Context *cxt) {
 

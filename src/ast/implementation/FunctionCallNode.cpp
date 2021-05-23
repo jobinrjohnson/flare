@@ -2,7 +2,7 @@
 // Created by jobinrjohnson on 08/05/21.
 //
 
-#include "FunctionCallNode.h"
+#include <ast/FunctionCallNode.h>
 
 llvm::Value *ast::FunctionCallNode::codeGen(ast::Context *cxt) {
 

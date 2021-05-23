@@ -37,10 +37,6 @@ namespace ast {
             this->lineNumber = lNo;
         }
 
-        void throwSemanticError(std::string error);
-
-        void printCallStack(Context *, std::string className, std::string functionName);
-
         void printDebug(std::string str);
 
         void startCodeGen();
@@ -48,6 +44,13 @@ namespace ast {
         virtual llvm::Value *codeGen(Context *) = 0;
 
         virtual NodeType getNodeType() = 0;
+
+        inline void printCallStack(Context *, std::string className, std::string functionName) {
+#ifndef FLARE_DEBUG
+            return;
+#endif
+            std::cout << className << "@" << functionName << std::endl;
+        }
 
     };
 

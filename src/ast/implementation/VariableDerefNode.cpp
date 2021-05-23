@@ -2,9 +2,9 @@
 // Created by jobinrjohnson on 8/3/20.
 //
 
-#include "VariableDerefNode.h"
-#include "FunctionNode.h"
-#include "helpers/VariableHelper.h"
+#include <ast/helpers/VariableHelper.h>
+
+#include <ast/VariableDerefNode.h>
 
 namespace ast {
 
