@@ -60,6 +60,8 @@ namespace flare::ast {
             return this->classNode != nullptr;
         }
 
+        llvm::Type* getVariableLLVMType();
+
         // Returns the node types (for debugging)
         NodeType getNodeType() override;
 

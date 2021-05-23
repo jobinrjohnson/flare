@@ -35,6 +35,10 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    std::cerr.flush();
+    std::cout.flush();
+    std::clog.flush();
+
 #ifdef FLARE_DEBUG
     // Print LLVM IR if debug mode is on
     std::cout << "========================================\n";

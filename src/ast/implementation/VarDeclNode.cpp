@@ -63,17 +63,6 @@ namespace flare::ast {
 
         // If there is no initial value specified at the declaration of the variable.
         if (this->initialValue == nullptr) {
-
-            if (this->type == nullptr) {
-
-                throw new flare::exceptions::SemanticException("variable : '"
-                                                               + this->variableName
-                                                               + "' has no initializer or explicit type definition",
-                                                               this->lineNumber
-                );
-
-            }
-
             // If there is no initial value just return the created variable.
             Type *variableType = getLLVMType(this->type->type, context);
             auto localVar = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
@@ -138,5 +127,23 @@ namespace flare::ast {
     VarDeclNode::VarDeclNode(char *name, VarType *type) {
         this->variableName.assign(name);
         this->setVarType(type);
+    }
+
+    llvm::Type *VarDeclNode::getVariableLLVMType() {
+
+        // TODO deal with type from initializer
+
+        if (this->type == nullptr) {
+
+            throw new exceptions::SemanticException("variable : '"
+                                                + this->variableName
+                                                + "' has no initializer or explicit type definition",
+                                                this->lineNumber
+            );
+
+        }
+
+        // If there is no initial value just return the created variable.
+        return getLLVMType(this->type->type, context);
     }
 }

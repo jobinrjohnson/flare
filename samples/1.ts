@@ -1,15 +1,15 @@
-let b = 0;
+class Class {
+    i: int;
+    j: float;
+    k: double;
+    l: boolean;
 
-function main(): int32 {
+    a(m: int, n: float, o: boolean): int {
+        console.log("hello world")
+        return m + 1;
+    };
+}
 
-    let b:int;
-    let a = "hello world.";
-
-    b = 10;
-
-
-    console.log(a);
-    console.log(b);
-
+function main(): int {
     return 0;
 }

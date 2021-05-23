@@ -34,6 +34,8 @@ namespace flare::ast {
                 return llvm::Type::getDoubleTy(context);
             case VARTYPE_BOOLEAN:
                 return llvm::Type::getInt1Ty(context);
+            case VARTYPE_VOID:
+                return llvm::Type::getVoidTy(context);
             case OTHER:
             case VARTYPE_STRING:
             case VARTYPE_ARRAY:
@@ -106,6 +108,7 @@ namespace flare::ast {
                 return castTo(value, PR_TY_BOOLEAN);
             case VARTYPE_ARRAY:
             case VARTYPE_STRING:
+            case VARTYPE_VOID:
             case OTHER:
                 break;
         }

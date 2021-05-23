@@ -90,12 +90,12 @@
 %type <expression> expr
 %type <literal> scalar
 %type <statementList> compound_statement statements
-%type <varDecl> variable_declaration array_declaration
+%type <varDecl> variable_declaration array_declaration class_variable
 %type <assignmentNode> assignment_expr
 %type <ifStatementNode> if_else_if if_statement
 %type <logSmtNode> log_statement
 %type <statementNode> return_statement
-%type <functionNode> function_declaration
+%type <functionNode> function_declaration class_function
 %type <loopNode> loops
 %type <functionCallNode> function_call
 %type <parameterList> parameter_list
@@ -112,7 +112,7 @@
 %token <tStringValue> T_STRING
 %token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
-%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN
+%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID
 
 %precedence '=' 
 %left '|'
@@ -138,7 +138,7 @@ start:
 
 statements:
     statements statement             { $1->push($<node>2); $$ = $1; }
-    |                                { $$ = new StatementListNode();  }
+    | %empty                         { $$ = new StatementListNode();  }
 ;
 
 
@@ -161,15 +161,26 @@ compound_statement:
 ;
 
 class_content:
-    function_declaration                {}
-    | variable_declaration              {}
-    |                                   {}
+    class_function                {}
+    | class_function ';'          {}
+    | class_variable              {}
+    | class_variable ';'          {}
 ;
 
+class_function:
+    IDENTIFIER '(' ')' ':' var_type compound_statement   { $$ = new FunctionNode($1, $<statementList>6, $5); }
+    | IDENTIFIER '(' parameter_list ')' ':' var_type compound_statement   { $$ = new FunctionNode($1, $<statementList>7, $6, $3); }
+;
+
+class_variable:
+    IDENTIFIER ':' var_type           { $$ = new VarDeclNode($1, $3); free($1); }
+    | class_variable '=' expr           { $$->setInitialValue($3); }
+;
+
+
 class_contents:
-    class_content                     {
+    %empty                     {
         $$ = new std::vector<Node *>();
-        $$->push_back($1);
     }
     | class_contents class_content        { $1->push_back($2); $$ = $1; }
 ;
@@ -238,7 +249,8 @@ var_type:
     | KW_NUMBER         { $$ = new VarType; $$->type = VARTYPE_NUMBER; }
     | KW_FLOAT          { $$ = new VarType; $$->type = VARTYPE_FLOAT; }
     | KW_DOUBLE         { $$ = new VarType; $$->type = VARTYPE_DOUBLE; }
-    | KW_BOOLEAN         { $$ = new VarType; $$->type = VARTYPE_BOOLEAN; }
+    | KW_BOOLEAN        { $$ = new VarType; $$->type = VARTYPE_BOOLEAN; }
+    | KW_VOID           { $$ = new VarType; $$->type = VARTYPE_VOID; }
 ;
 
 array_declaration:

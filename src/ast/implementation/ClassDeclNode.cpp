@@ -12,15 +12,19 @@ flare::ast::NodeType flare::ast::ClassDeclNode::getNodeType() {
 
 llvm::Value *flare::ast::ClassDeclNode::codeGen(flare::ast::Context *cxt) {
 
-    // TODO handle this properly
-    auto items = {getLLVMType(VARTYPE_INT_32, context), getLLVMType(VARTYPE_INT_64, context),
-                  getLLVMType(VARTYPE_DOUBLE, context)};
+    // Codegen for class variables
+    std::vector<llvm::Type *> items;
+    for (VarDeclNode *ele:this->vars) {
+        items.push_back(ele->getVariableLLVMType());
+    }
 
+    // Create LLVM type
+    this->LLVMType = StructType::create(context, items, this->className);
 
-    auto type = llvm::StructType::create(context, items, this->className);
-    auto inst = new AllocaInst(type, 0, this->className, builder.GetInsertBlock());
-    builder.CreateLoad(inst);
-
+    // Codegen for class functions
+    for (FunctionNode *ele:this->functions) {
+        ele->codeGen(cxt);
+    }
 
     return nullptr;
 }
@@ -39,9 +43,17 @@ flare::ast::ClassDeclNode::ClassDeclNode(const char *name, std::vector<flare::as
 
         VarDeclNode *varDeclNode = nullptr;
         if ((varDeclNode = dynamic_cast<VarDeclNode *>(ele)) != nullptr) {
+            varDeclNode->setClass(this);
             this->vars.push_back(varDeclNode);
             continue;
         }
     }
 
+}
+
+llvm::StructType *flare::ast::ClassDeclNode::getClassLLVMType() {
+    if (this->LLVMType == nullptr) {
+        throw "LLVM type not defined in the class. Please call codegen";
+    }
+    return this->LLVMType;
 }

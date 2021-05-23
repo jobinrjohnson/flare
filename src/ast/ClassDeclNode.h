@@ -17,6 +17,8 @@ namespace flare::ast {
         std::vector<FunctionNode *> functions;
         std::vector<VarDeclNode *> vars;
 
+        llvm::StructType *LLVMType;
+
     public:
 
 
@@ -25,6 +27,8 @@ namespace flare::ast {
         explicit ClassDeclNode(const char *name, std::vector<ast::Node *> *nodeList);
 
         llvm::Value *codeGen(Context *cxt) override;
+
+        llvm::StructType *getClassLLVMType();
 
     };
 

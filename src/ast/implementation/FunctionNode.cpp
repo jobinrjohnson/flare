@@ -4,12 +4,20 @@
 
 #include <ast/helpers/VariableHelper.h>
 #include <ast/FunctionNode.h>
+#include <ast/ClassDeclNode.h>
+#include <exceptions/SemanticException.h>
 
 namespace flare::ast {
 
     // Generate the function prototype
     FunctionType *FunctionNode::codeGenSignature(Context *cxt) {
         std::vector<Type *> argVector;
+
+        if (this->isClassFunction()) {
+            // If it is a class function add class type as the first parameter
+            auto *cNode = dynamic_cast<ClassDeclNode *>(this->classNode);
+            argVector.push_back(cNode->getClassLLVMType());
+        }
 
         // Fill in the parameter list
         if (this->parameterList != nullptr) {
@@ -30,6 +38,8 @@ namespace flare::ast {
 
         this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
 
+        BasicBlock *currentBlock = builder.GetInsertBlock();
+
         cxt->pushFunction(this);
 
         this->function = Function::Create(
@@ -44,8 +54,18 @@ namespace flare::ast {
 
         // Prepare parameters add to frame
         // copy arguments to the frame so that it can be accessed within the function
+
+        Function::arg_iterator actualArgs = function->arg_begin();
+        if (this->isClassFunction()) {
+            // If it is a class function add class type as the first parameter
+            Type *varType = dynamic_cast<ClassDeclNode *>(this->classNode)->getClassLLVMType();
+            auto localVar = new AllocaInst(varType, 0, "this", this->entryBlock);
+            builder.CreateStore(&(*actualArgs), localVar);
+            this->statementListNode->createLocal("this", localVar);
+            ++actualArgs;
+        }
+
         if (this->parameterList != nullptr) {
-            Function::arg_iterator actualArgs = function->arg_begin();
             for (Parameter *element: *(this->parameterList)) {
                 Type *varType = getLLVMType(element->type->type, context);
                 auto localVar = new AllocaInst(varType, 0, element->name, this->entryBlock);
@@ -66,6 +86,10 @@ namespace flare::ast {
 
         cxt->popFunction();
 
+        if (currentBlock != nullptr) {
+            builder.SetInsertPoint(currentBlock);
+        }
+
         return this->function;
     }
 
@@ -80,7 +104,14 @@ namespace flare::ast {
                 builder.CreateBr(this->exitBlock);
             } else {
                 // If there is none we have to validate the return types and throw proper error
-                // TODO handle this part.
+                if (this->returnType->type == VariableType::VARTYPE_VOID) {
+                    builder.CreateRet(nullptr);
+                } else {
+                    throw new exceptions::SemanticException("Function '"
+                                                            + this->name
+                                                            + "' should return a value",
+                                                            this->lineNumber);
+                }
             }
         }
 
@@ -101,7 +132,7 @@ namespace flare::ast {
     }
 
     FunctionNode::FunctionNode(const char *name, StatementListNode *statements, VarType *type,
-                                    std::vector<Parameter *> *parameterList) {
+                               std::vector<Parameter *> *parameterList) {
         this->name = name;
         this->statementListNode = statements;
         this->parameterList = parameterList;

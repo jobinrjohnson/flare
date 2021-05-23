@@ -34,6 +34,7 @@ namespace flare::ast {
         VARTYPE_BOOLEAN,
         VARTYPE_ARRAY,
         VARTYPE_STRING,
+        VARTYPE_VOID,
         OTHER
     };
 
