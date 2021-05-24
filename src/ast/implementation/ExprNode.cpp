@@ -209,4 +209,25 @@ namespace flare::ast {
 
     }
 
+    Node *ExprNode::getOperandNode() {
+        switch (this->opr) {
+            case VAR_DE_REF:
+            case GROUPED:
+            case SCALAR:
+            case UNARY_PLUS:
+            case UNARY_MINUS:
+            case FUNCTION_CALL:
+                break;
+            default:
+                return nullptr;
+        }
+
+        if (auto *x = dynamic_cast<ExprNode *>(this->operands[0])) {
+            return x->getOperandNode();
+        }
+
+        return this->operands[0];
+
+    }
+
 }
