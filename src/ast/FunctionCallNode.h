@@ -19,6 +19,8 @@ namespace flare::ast {
 
         std::string className;
 
+        std::string objectName;
+
     public:
 
         FunctionCallNode();
@@ -35,6 +37,8 @@ namespace flare::ast {
 
         llvm::Value *codeGenObjectCreate(Context *cxt);
 
+        llvm::Value *codeGenObjectFunction(Context *cxt);
+
         inline void setArgumentList(std::vector<ExprNode *> *args) {
             this->argumentList = args;
         }
@@ -43,8 +47,16 @@ namespace flare::ast {
             this->className = cName;
         }
 
+        inline void setObjectName(std::string oName) {
+            this->objectName = oName;
+        }
+
         inline bool isObjectCreation() {
             return this->className.length() != 0;
+        }
+
+        inline bool isClassFunction() {
+            return this->objectName.length() != 0;
         }
 
     };

@@ -4,15 +4,19 @@ class ClassName {
     k: double;
     l: boolean;
 
-    a(m: int, n: float, o: boolean): int {
-        console.log("hello world")
-        return m + 1;
+    a(): boolean {
+        return false;
     };
 }
 
 function main(): int {
 
     let l = new ClassName();
+    if (l.a()) {
+        console.log("Hello world")
+    } else {
+        console.log("There is no hello world!.")
+    }
 
     return 0;
 }

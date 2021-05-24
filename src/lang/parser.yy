@@ -282,7 +282,7 @@ function_call:
     IDENTIFIER '(' ')'                          { $$ = new FunctionCallNode($1); }
     | IDENTIFIER '(' arguments ')'              { $$ = new FunctionCallNode($1, $3); }
     | KW_NEW IDENTIFIER '(' ')'                 { $$ = new FunctionCallNode(); $$->setClassName($2); }
-//    | IDENTIFIER '.' function_call              { $$ = $3; $$->setObjectName($1); };
+    | IDENTIFIER '.' function_call              { $$ = $3; $$->setObjectName($1); };
 ;
 
 

@@ -5,6 +5,7 @@
 #include <ast/FunctionCallNode.h>
 #include <exceptions/SemanticException.h>
 #include <ast/ClassDeclNode.h>
+#include <ast/helpers/VariableHelper.h>
 
 namespace flare::ast {
 
@@ -30,6 +31,10 @@ namespace flare::ast {
 
         if (this->isObjectCreation()) {
             return this->codeGenObjectCreate(cxt);
+        }
+
+        if (this->isClassFunction()) {
+            return this->codeGenObjectFunction(cxt);
         }
 
         auto calleeFunction = module->getFunction(this->functionName);
@@ -59,5 +64,29 @@ namespace flare::ast {
     }
 
     FunctionCallNode::FunctionCallNode() {}
+
+    llvm::Value *FunctionCallNode::codeGenObjectFunction(Context *cxt) {
+
+
+        Value *variable = findVariable(cxt, this->objectName);
+        if (variable == nullptr) {
+            throw "no global variable declared in the scope";
+        }
+
+        auto calleeFunction = module->getFunction(this->functionName);
+        if (calleeFunction == nullptr) {
+            throw "Function not declared in the scope";
+        }
+
+        std::vector<Value *> calleeArgs;
+        calleeArgs.push_back(builder.CreateLoad(variable));
+        if (this->argumentList != nullptr) {
+            for (ExprNode *element: *(this->argumentList)) {
+                calleeArgs.push_back(element->codeGen(cxt->nextLevel()));
+            }
+        }
+
+        return builder.CreateCall(calleeFunction, calleeArgs, this->functionName);
+    }
 
 }
