@@ -12,3 +12,7 @@ add_executable(
 
 llvm_map_components_to_libnames(llvm_libs core native mcjit interpreter)
 target_link_libraries(flare lang ast jit exceptions ${llvm_libs})
+
+add_custom_command(TARGET flare
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:flare> ../)
