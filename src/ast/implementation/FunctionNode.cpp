@@ -16,7 +16,7 @@ namespace flare::ast {
         if (this->isClassFunction()) {
             // If it is a class function add class type as the first parameter
             auto *cNode = dynamic_cast<ClassDeclNode *>(this->classNode);
-            argVector.push_back(cNode->getClassLLVMType());
+            argVector.push_back(cNode->getClassLLVMPointerType());
         }
 
         // Fill in the parameter list
@@ -58,7 +58,7 @@ namespace flare::ast {
         Function::arg_iterator actualArgs = function->arg_begin();
         if (this->isClassFunction()) {
             // If it is a class function add class type as the first parameter
-            Type *varType = dynamic_cast<ClassDeclNode *>(this->classNode)->getClassLLVMType();
+            Type *varType = dynamic_cast<ClassDeclNode *>(this->classNode)->getClassLLVMPointerType();
             auto localVar = new AllocaInst(varType, 0, "this", this->entryBlock);
             builder.CreateStore(&(*actualArgs), localVar);
             this->statementListNode->createLocal("this", localVar);

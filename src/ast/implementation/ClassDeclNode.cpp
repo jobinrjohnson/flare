@@ -65,8 +65,10 @@ namespace flare::ast {
 
     llvm::Value *ClassDeclNode::codeGenConstructor(Context *cxt) {
 
+        auto *classPtrTy = this->getClassLLVMPointerType();
+
         auto *funcType = FunctionType::get(
-                this->LLVMType,
+                classPtrTy,
                 None,
                 false
         );
@@ -79,12 +81,16 @@ namespace flare::ast {
 
         builder.SetInsertPoint(BasicBlock::Create(context, "entry", this->initFunction));
 
-        auto inst = new AllocaInst(this->LLVMType, 0, this->className + "object", builder.GetInsertBlock());
+        auto inst = new AllocaInst(classPtrTy, 0, this->className + "object", builder.GetInsertBlock());
 
         // TODO init variables
 
         builder.CreateRet(inst);
 
         return nullptr;
+    }
+
+    llvm::PointerType *ClassDeclNode::getClassLLVMPointerType() {
+        return PointerType::get(this->getClassLLVMType(), 0);
     }
 }

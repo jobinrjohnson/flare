@@ -136,9 +136,9 @@ namespace flare::ast {
         if (this->type == nullptr) {
 
             throw new exceptions::SemanticException("variable : '"
-                                                + this->variableName
-                                                + "' has no initializer or explicit type definition",
-                                                this->lineNumber
+                                                    + this->variableName
+                                                    + "' has no initializer or explicit type definition",
+                                                    this->lineNumber
             );
 
         }

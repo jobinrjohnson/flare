@@ -12,7 +12,7 @@ class ClassName {
 
 function main(): int {
 
-    new ClassName();
+    let l = new ClassName();
 
     return 0;
 }

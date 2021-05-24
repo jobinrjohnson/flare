@@ -15,11 +15,14 @@ namespace flare::ast {
         std::string className;
 
         std::vector<FunctionNode *> functions;
+
         std::vector<VarDeclNode *> vars;
 
         llvm::StructType *LLVMType;
 
         llvm::Function *initFunction;
+
+        llvm::StructType *getClassLLVMType();
 
     public:
 
@@ -32,7 +35,7 @@ namespace flare::ast {
 
         llvm::Value *codeGenConstructor(Context *cxt);
 
-        llvm::StructType *getClassLLVMType();
+        llvm::PointerType *getClassLLVMPointerType();
 
         llvm::Function *getInitFunction() {
             return this->initFunction;
