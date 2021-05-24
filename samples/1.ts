@@ -1,4 +1,4 @@
-class Class {
+class ClassName {
     i: int;
     j: float;
     k: double;
@@ -11,5 +11,8 @@ class Class {
 }
 
 function main(): int {
+
+    new ClassName();
+
     return 0;
 }

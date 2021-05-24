@@ -19,6 +19,8 @@ namespace flare::ast {
 
         llvm::StructType *LLVMType;
 
+        llvm::Function *initFunction;
+
     public:
 
 
@@ -28,7 +30,13 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt) override;
 
+        llvm::Value *codeGenConstructor(Context *cxt);
+
         llvm::StructType *getClassLLVMType();
+
+        llvm::Function *getInitFunction() {
+            return this->initFunction;
+        }
 
     };
 

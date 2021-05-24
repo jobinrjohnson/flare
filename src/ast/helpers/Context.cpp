@@ -5,32 +5,51 @@
 #include <ast/helpers/Context.h>
 #include <ast/StatementListNode.h>
 
-void flare::ast::Context::pushFunction(Node *function) {
-    functions.push(function);
-}
+namespace flare::ast {
 
-void flare::ast::Context::popFunction() {
-    functions.pop();
-}
+    void Context::pushFunction(Node *function) {
+        functions.push(function);
+    }
 
-flare::ast::Node *flare::ast::Context::getCurrentFunction() {
-    if (this->functions.empty()) {
+    void Context::popFunction() {
+        functions.pop();
+    }
+
+    Node *Context::getCurrentFunction() {
+        if (this->functions.empty()) {
+            return nullptr;
+        }
+        return functions.top();
+    }
+
+    void Context::pushStatementList(ast::Node *node) {
+        this->statementList.push_back(node);
+    }
+
+    void Context::popStatementList() {
+        this->statementList.pop_back();
+    }
+
+    Node *Context::getCurrentStatementList() {
+        if (this->statementList.empty()) {
+            return nullptr;
+        }
+        return statementList.back();
+    }
+
+    llvm::Value *Context::findLocal() {
         return nullptr;
     }
-    return functions.top();
-}
 
-void flare::ast::Context::pushStatementList(ast::Node *node) {
-    this->statementList.push_back(node);
-}
+    void Context::pushClassDeclaration(std::string name, Node *classDecl) {
+        this->classDeclarations.insert(std::pair<std::string, Node *>(name, classDecl));
+    }
 
-void flare::ast::Context::popStatementList() {
-    this->statementList.pop_back();
-}
-
-flare::ast::Node *flare::ast::Context::getCurrentStatementList() {
-    if (this->statementList.empty()) {
+    Node *Context::findClassDeclaration(std::string name) {
+        auto val = this->classDeclarations.find(name);
+        if (val != this->classDeclarations.end()) {
+            return val->second;
+        }
         return nullptr;
     }
-    return statementList.back();
 }

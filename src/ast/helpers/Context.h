@@ -8,6 +8,7 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include <map>
 
 #include "llvm/IR/Value.h"
 
@@ -19,6 +20,7 @@ namespace flare::ast {
 
         std::stack<Node *> functions;
 
+        std::map<std::string, Node *> classDeclarations;
 
     public:
 
@@ -44,6 +46,11 @@ namespace flare::ast {
         void popFunction();
 
         Node *getCurrentFunction();
+
+
+        void pushClassDeclaration(std::string, Node *);
+
+        Node * findClassDeclaration(std::string);
 
     };
 }

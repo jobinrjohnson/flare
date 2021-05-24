@@ -110,7 +110,7 @@
 %token <tDecimalValue> T_DECIMAL
 %token <tBoolValue> T_BOOLEAN
 %token <tStringValue> T_STRING
-%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS
+%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS KW_NEW
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 %token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID
 
@@ -281,6 +281,8 @@ arguments:
 function_call:
     IDENTIFIER '(' ')'                          { $$ = new FunctionCallNode($1); }
     | IDENTIFIER '(' arguments ')'              { $$ = new FunctionCallNode($1, $3); }
+    | KW_NEW IDENTIFIER '(' ')'                 { $$ = new FunctionCallNode(); $$->setClassName($2); }
+//    | IDENTIFIER '.' function_call              { $$ = $3; $$->setObjectName($1); };
 ;
 
 

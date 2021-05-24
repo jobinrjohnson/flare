@@ -75,6 +75,8 @@ typedef lang::Parser::token_type token_type;
                     return token::KW_FLOAT;
                 }else if (strcmp("class", yytext) == 0) {
                     return token::KW_CLASS;
+                }else if (strcmp("new", yytext) == 0) {
+                    return token::KW_NEW;
                 }else if (strcmp("boolean", yytext) == 0) {
                     return token::KW_BOOLEAN;
                 }else if (strcmp("void", yytext) == 0) {
