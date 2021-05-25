@@ -4,6 +4,7 @@
 
 #include <ast/AssignmentNode.h>
 #include <ast/helpers/VariableHelper.h>
+#include <ast/VarDeclNode.h>
 
 namespace flare::ast {
 
@@ -21,13 +22,13 @@ namespace flare::ast {
     llvm::Value *AssignmentNode::codeGen(Context *cxt) {
         this->printCallStack(cxt, "AssignmentNode", __FUNCTION__);
 
+        Node *vNode = cxt->findVariable(this->varName);
 
-        Value *variable = findVariable(cxt, this->varName);
-
-        if (variable == nullptr) {
+        if (vNode == nullptr) {
             throw "Invalid variable name";
         }
 
+        auto *variable = dynamic_cast<VarDeclNode *>(vNode);
         Value *value = this->expression->codeGen(cxt->nextLevel());
 
         if (index != nullptr) {
@@ -39,7 +40,7 @@ namespace flare::ast {
             };
 
             auto arrayPtrLoad = builder.CreateGEP(
-                    variable,
+                    variable->getLLVMVarRef(),
                     ind,
                     "arrayLoad"
             );
@@ -47,7 +48,7 @@ namespace flare::ast {
             return builder.CreateStore(value, arrayPtrLoad);
         }
 
-        return builder.CreateStore(value, variable);
+        return builder.CreateStore(value, variable->getLLVMVarRef());
     }
 
     NodeType AssignmentNode::getNodeType() {

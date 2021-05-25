@@ -16,7 +16,7 @@ namespace flare::ast {
     private:
         std::vector<Node *> statements;
 
-        std::map<std::string, Value *> locals;
+        std::map<std::string, VarDeclNode *> locals;
 
 
     public:
@@ -31,9 +31,9 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt);
 
-        void createLocal(const std::string &, Value *);
+        void createLocal(const std::string &, VarDeclNode *);
 
-        Value *findLocal(const std::string &);
+        VarDeclNode *findLocal(const std::string &);
 
     };
 

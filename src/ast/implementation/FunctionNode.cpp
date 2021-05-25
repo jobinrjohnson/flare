@@ -6,6 +6,7 @@
 #include <ast/FunctionNode.h>
 #include <ast/ClassDeclNode.h>
 #include <exceptions/SemanticException.h>
+#include <ast/EmptyNode.h>
 
 namespace flare::ast {
 
@@ -57,20 +58,28 @@ namespace flare::ast {
 
         Function::arg_iterator actualArgs = function->arg_begin();
         if (this->isClassFunction()) {
-            // If it is a class function add class type as the first parameter
-            Type *varType = dynamic_cast<ClassDeclNode *>(this->classNode)->getClassLLVMPointerType();
-            auto localVar = new AllocaInst(varType, 0, "this", this->entryBlock);
-            builder.CreateStore(&(*actualArgs), localVar);
-            this->statementListNode->createLocal("this", localVar);
+
+            auto *vType = new VarType{
+                    .type = VariableType::VARTYPE_OBJECT,
+                    .typeRef = new TypeReference{
+                            .node = this->classNode
+                    }
+            };
+
+            auto *varDeclNode = new VarDeclNode("this", vType);
+            varDeclNode->setInitialValue(new EmptyNode(&(*actualArgs)));
+            varDeclNode->setLineNumber(this->lineNumber);
+            varDeclNode->codeGen(cxt);
+
             ++actualArgs;
         }
 
         if (this->parameterList != nullptr) {
             for (Parameter *element: *(this->parameterList)) {
-                Type *varType = getLLVMType(element->type->type, context);
-                auto localVar = new AllocaInst(varType, 0, element->name, this->entryBlock);
-                builder.CreateStore(&(*actualArgs), localVar);
-                this->statementListNode->createLocal(element->name, localVar);
+                auto *varDeclNode = new VarDeclNode(element->name.c_str(), element->type);
+                varDeclNode->setInitialValue(new EmptyNode(&(*actualArgs)));
+                varDeclNode->setLineNumber(this->lineNumber);
+                varDeclNode->codeGen(cxt);
                 ++actualArgs;
             }
         }

@@ -44,6 +44,7 @@ namespace flare::ast {
                 return builder.CreateGlobalStringPtr(StringRef(this->nodeValue.sVal));
             case VariableType::VARTYPE_ARRAY:
             case VariableType::VARTYPE_VOID:
+            case VariableType::VARTYPE_OBJECT:
             case VariableType::OTHER:
                 break;
         }

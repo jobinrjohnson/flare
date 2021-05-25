@@ -68,10 +68,11 @@ namespace flare::ast {
     llvm::Value *FunctionCallNode::codeGenObjectFunction(Context *cxt) {
 
 
-        Value *variable = findVariable(cxt, this->objectName);
-        if (variable == nullptr) {
+        Node *vNode = cxt->findVariable(this->objectName);
+        if (vNode == nullptr) {
             throw "no global variable declared in the scope";
         }
+        auto *variable = dynamic_cast<VarDeclNode *>(vNode);
 
         auto calleeFunction = module->getFunction(this->functionName);
         if (calleeFunction == nullptr) {
@@ -79,7 +80,7 @@ namespace flare::ast {
         }
 
         std::vector<Value *> calleeArgs;
-        calleeArgs.push_back(builder.CreateLoad(variable));
+        calleeArgs.push_back(builder.CreateLoad(variable->getLLVMVarRef()));
         if (this->argumentList != nullptr) {
             for (ExprNode *element: *(this->argumentList)) {
                 calleeArgs.push_back(element->codeGen(cxt->nextLevel()));

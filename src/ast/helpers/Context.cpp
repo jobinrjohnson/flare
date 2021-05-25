@@ -52,4 +52,18 @@ namespace flare::ast {
         }
         return nullptr;
     }
+
+    Node *Context::findVariable(std::string name) {
+        VarDeclNode *variable = nullptr;
+        std::vector<Node *>::iterator i = this->statementList.end();
+        while (i != this->statementList.begin()) {
+            --i;
+            StatementListNode *node = dynamic_cast<StatementListNode *>(*i);
+            variable = node->findLocal(name);
+            if (variable != nullptr) {
+                return variable;
+            }
+        }
+        return nullptr;
+    }
 }

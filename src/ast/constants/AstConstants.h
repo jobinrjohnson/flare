@@ -7,6 +7,8 @@
 
 namespace flare::ast {
 
+    class Node;
+
     enum NodeType {
         ASSIGNMENT_NODE,
         EXPR_NODE,
@@ -21,7 +23,8 @@ namespace flare::ast {
         VALUE_PLACEHOLDER_NODE,
         LOOP_NODE,
         FUNCTION_CALL_NODE,
-        CLASS_DECL_NODE
+        CLASS_DECL_NODE,
+        EMPTY_NODE
     };
 
     enum VariableType {
@@ -35,6 +38,7 @@ namespace flare::ast {
         VARTYPE_ARRAY,
         VARTYPE_STRING,
         VARTYPE_VOID,
+        VARTYPE_OBJECT,
         OTHER
     };
 
@@ -42,10 +46,15 @@ namespace flare::ast {
         PR_TY_INT_32, PR_TY_INT_64, PR_TY_FLOAT, PR_TY_DOUBLE, PR_TY_BOOLEAN
     };
 
+    union TypeReference {
+        std::string name; // Valid only if returnType is other
+        Node *node;
+    };
+
     typedef struct {
         VariableType type;
-        VariableType subType;
-        std::string name; // Valid only if returnType is other
+        VariableType subType = OTHER;
+        TypeReference *typeRef;
     } VarType;
 
 

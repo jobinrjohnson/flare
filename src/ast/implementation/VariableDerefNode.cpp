@@ -5,6 +5,7 @@
 #include <ast/helpers/VariableHelper.h>
 
 #include <ast/VariableDerefNode.h>
+#include <ast/VarDeclNode.h>
 
 namespace flare::ast {
 
@@ -27,10 +28,12 @@ namespace flare::ast {
         this->printCallStack(cxt, "VariableDerefNode", __FUNCTION__);
 
 
-        Value *variable = findVariable(cxt, this->variableName);
-        if (variable == nullptr) {
+        Node *vNode = cxt->findVariable(this->variableName);
+        if (vNode == nullptr) {
             throw "no global variable declared in the scope";
         }
+
+        auto *variable = dynamic_cast<VarDeclNode *>(vNode);
 
         if (this->isArrayDeReference) {
 
@@ -42,7 +45,7 @@ namespace flare::ast {
             };
 
             auto arrayPtrLoad = builder.CreateGEP(
-                    variable,
+                    variable->getLLVMVarRef(),
                     ind,
                     "arrayLoad"
             );
@@ -50,7 +53,7 @@ namespace flare::ast {
             return builder.CreateLoad(arrayPtrLoad);
 
         }
-        return builder.CreateLoad(variable);
+        return builder.CreateLoad(variable->getLLVMVarRef());
 
     }
 

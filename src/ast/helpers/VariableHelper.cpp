@@ -6,19 +6,6 @@
 #include <ast/StatementListNode.h>
 
 namespace flare::ast {
-    llvm::Value *findVariable(Context *cxt, std::string name) {
-        llvm::Value *variable = nullptr;
-        std::vector<Node *>::iterator i = cxt->statementList.end();
-        while (i != cxt->statementList.begin()) {
-            --i;
-            StatementListNode *node = dynamic_cast<StatementListNode *>(*i);
-            variable = node->findLocal(name);
-            if (variable != nullptr) {
-                return variable;
-            }
-        }
-        return nullptr;
-    }
 
     llvm::Type *getLLVMType(ast::VariableType type, llvm::LLVMContext &context) {
         switch (type) {
@@ -39,6 +26,7 @@ namespace flare::ast {
             case OTHER:
             case VARTYPE_STRING:
             case VARTYPE_ARRAY:
+            case VARTYPE_OBJECT:
                 throw "Conversion not defined.";
                 break;
         }
@@ -109,6 +97,7 @@ namespace flare::ast {
             case VARTYPE_ARRAY:
             case VARTYPE_STRING:
             case VARTYPE_VOID:
+            case VARTYPE_OBJECT:
             case OTHER:
                 break;
         }

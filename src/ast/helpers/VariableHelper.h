@@ -11,7 +11,6 @@
 #include <ast/constants/AstConstants.h>
 
 namespace flare::ast {
-    llvm::Value *findVariable(Context *cxt, std::string name);
 
     llvm::Type *getLLVMType(ast::VariableType type, llvm::LLVMContext &context);
 

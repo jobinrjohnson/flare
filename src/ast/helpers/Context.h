@@ -47,6 +47,7 @@ namespace flare::ast {
 
         Node *getCurrentFunction();
 
+        Node *findVariable(std::string name);
 
         void pushClassDeclaration(std::string, Node *);
 

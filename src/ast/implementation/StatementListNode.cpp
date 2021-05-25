@@ -41,11 +41,11 @@ namespace flare::ast {
     }
 
 
-    void ast::StatementListNode::createLocal(const std::string &varName, Value *value) {
-        this->locals.insert(std::pair<std::string, Value *>(varName, value));
+    void ast::StatementListNode::createLocal(const std::string &varName, VarDeclNode *value) {
+        this->locals.insert(std::pair<std::string, VarDeclNode *>(varName, value));
     }
 
-    Value *ast::StatementListNode::findLocal(const std::string &varName) {
+    VarDeclNode *ast::StatementListNode::findLocal(const std::string &varName) {
         auto val = this->locals.find(varName);
         if (val != this->locals.end()) {
             return val->second;

@@ -4,7 +4,8 @@ class ClassName {
     k: double;
     l: boolean;
 
-    a(): boolean {
+    a(m:int): boolean {
+        console.log(m);
         return false;
     };
 }

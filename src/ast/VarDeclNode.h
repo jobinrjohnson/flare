@@ -31,6 +31,9 @@ namespace flare::ast {
         // Tpe of the variable
         VarType *type = nullptr;
 
+        // LLVM Variable reference
+        Value *llvmVarRef;
+
         // Functions
 
         // Code generation for built in types
@@ -60,7 +63,12 @@ namespace flare::ast {
             return this->classNode != nullptr;
         }
 
-        llvm::Type* getVariableLLVMType();
+        // Returns the LLVM variable reference
+        inline Value *getLLVMVarRef() {
+            return this->llvmVarRef;
+        }
+
+        llvm::Type *getVariableLLVMType();
 
         // Returns the node types (for debugging)
         NodeType getNodeType() override;
@@ -69,7 +77,7 @@ namespace flare::ast {
         VarDeclNode(char *name);
 
         // Constructor name and variable type.
-        VarDeclNode(char *name, VarType *type);
+        VarDeclNode(const char *name, VarType *type);
 
         // Generate code for the node (Post AST function)
         llvm::Value *codeGen(Context *cxt) override;

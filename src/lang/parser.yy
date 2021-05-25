@@ -258,7 +258,7 @@ array_declaration:
             VarType *vType = new VarType{
                     .type = VARTYPE_ARRAY,
                     .subType = VARTYPE_INT,
-                    .name = "array"
+                    .typeRef = new TypeReference("array")
             };
             $$ = new VarDeclNode($2, vType);
     }
