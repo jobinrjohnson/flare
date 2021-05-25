@@ -73,8 +73,18 @@ namespace flare::ast {
             throw "no global variable declared in the scope";
         }
         auto *variable = dynamic_cast<VarDeclNode *>(vNode);
+        VarType *varType = variable->getVariableType();
 
-        auto calleeFunction = module->getFunction(this->functionName);
+        if (varType->type != VariableType::VARTYPE_OBJECT || varType->typeRef->node == nullptr) {
+            throw new exceptions::SemanticException("Function '"
+                                                    + this->functionName
+                                                    + "' is not a class method",
+                                                    this->lineNumber);
+        }
+
+        ClassDeclNode *cnode = dynamic_cast<ClassDeclNode *>(varType->typeRef->node);
+
+        auto calleeFunction = module->getFunction(cnode->getQualifiedClassName() + "::" + this->functionName);
         if (calleeFunction == nullptr) {
             throw "Function not declared in the scope";
         }

@@ -22,6 +22,8 @@ namespace flare::ast {
 
         std::map<std::string, Node *> classDeclarations;
 
+        std::map<llvm::Type *, Node *> customTypesAvail;
+
     public:
 
         int depth = 0;
@@ -51,7 +53,12 @@ namespace flare::ast {
 
         void pushClassDeclaration(std::string, Node *);
 
-        Node * findClassDeclaration(std::string);
+        Node *findClassDeclaration(std::string);
+
+        void addType(llvm::Type *type, Node *);
+
+        Node * getType(llvm::Type *type);
+
 
     };
 }

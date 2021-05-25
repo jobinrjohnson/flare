@@ -79,6 +79,24 @@ namespace flare::ast {
             variableType = this->getVariableLLVMType();
         } else {
             variableType = initializerValue->getType();
+
+            if (initializerValue->getType()->isPointerTy()) {
+
+                auto *pointer = static_cast<PointerType *>(initializerValue->getType());
+
+                auto node = cxt->getType(pointer->getElementType());
+                if (node == nullptr) {
+                    throw "type not found add more impl";
+                }
+
+                this->type = new VarType{
+                        .type = VariableType::VARTYPE_OBJECT,
+                        .typeRef = new TypeReference{
+                                .node = node
+                        }
+                };
+            }
+
         }
 
         this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());

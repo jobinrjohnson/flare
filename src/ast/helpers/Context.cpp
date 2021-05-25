@@ -66,4 +66,16 @@ namespace flare::ast {
         }
         return nullptr;
     }
+
+    void Context::addType(llvm::Type *type, Node *node) {
+        this->customTypesAvail.insert(std::pair<llvm::Type *, Node *>(type, node));
+    }
+
+    Node *Context::getType(llvm::Type *type) {
+        auto val = this->customTypesAvail.find(type);
+        if (val != this->customTypesAvail.end()) {
+            return val->second;
+        }
+        return nullptr;
+    }
 }

@@ -29,6 +29,8 @@ namespace flare::ast {
             ele->codeGen(cxt);
         }
 
+        cxt->addType(this->LLVMType, this);
+
         cxt->pushClassDeclaration(this->getQualifiedClassName(), this);
 
         return nullptr;

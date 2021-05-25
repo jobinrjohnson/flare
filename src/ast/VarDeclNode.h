@@ -68,6 +68,10 @@ namespace flare::ast {
             return this->llvmVarRef;
         }
 
+        inline VarType *getVariableType() {
+            return this->type;
+        }
+
         llvm::Type *getVariableLLVMType();
 
         // Returns the node types (for debugging)

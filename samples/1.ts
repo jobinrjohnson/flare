@@ -9,6 +9,7 @@ class ClassName {
     }
 
     a(m:int): boolean {
+        console.log(this.b());
         return false;
     };
 }
@@ -16,6 +17,7 @@ class ClassName {
 function main(): int {
 
     let l = new ClassName();
+    l.a(0);
     // if (l.a()) {
     //     console.log("Hello world")
     // } else {
