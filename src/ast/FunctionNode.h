@@ -104,6 +104,8 @@ namespace flare::ast {
             return this->classNode != nullptr;
         }
 
+        std::string getQualifiedFunctionName();
+
         // Destructor
         ~FunctionNode();
 

@@ -41,6 +41,8 @@ namespace flare::ast {
             return this->initFunction;
         }
 
+        std::string getQualifiedClassName();
+
     };
 
 

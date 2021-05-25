@@ -45,7 +45,7 @@ namespace flare::ast {
         this->function = Function::Create(
                 this->codeGenSignature(cxt),
                 GlobalValue::ExternalLinkage,
-                this->name, module.get()
+                this->getQualifiedFunctionName(), module.get()
         );
 
         // Start inserting to the function entry block
@@ -108,7 +108,7 @@ namespace flare::ast {
                     builder.CreateRet(nullptr);
                 } else {
                     throw new exceptions::SemanticException("Function '"
-                                                            + this->name
+                                                            + this->getQualifiedFunctionName()
                                                             + "' should return a value",
                                                             this->lineNumber);
                 }
@@ -184,6 +184,17 @@ namespace flare::ast {
             return builder.CreateBr(this->exitBlock);
         }
 
+    }
+
+    std::string FunctionNode::getQualifiedFunctionName() {
+
+        if (this->isClassFunction()) {
+            return dynamic_cast<ClassDeclNode *>(this->classNode)
+                           ->getQualifiedClassName() +
+                   "::" + this->name;
+        }
+
+        return this->name;
     }
 
 }

@@ -23,7 +23,7 @@ namespace flare::ast {
         auto *cNode = dynamic_cast<ClassDeclNode *>(node);
         auto *function = cNode->getInitFunction();
 
-        return builder.CreateCall(function, None, this->className + ".init");
+        return builder.CreateCall(function, None, this->className + "::.init");
 
     }
 

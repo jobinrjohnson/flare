@@ -20,7 +20,7 @@ namespace flare::ast {
         }
 
         // Create LLVM type
-        this->LLVMType = StructType::create(context, items, this->className);
+        this->LLVMType = StructType::create(context, items, this->getQualifiedClassName());
 
         this->codeGenConstructor(cxt);
 
@@ -29,7 +29,7 @@ namespace flare::ast {
             ele->codeGen(cxt);
         }
 
-        cxt->pushClassDeclaration(this->className, this);
+        cxt->pushClassDeclaration(this->getQualifiedClassName(), this);
 
         return nullptr;
     }
@@ -76,12 +76,12 @@ namespace flare::ast {
         this->initFunction = Function::Create(
                 funcType,
                 GlobalValue::ExternalLinkage,
-                this->className + ".init", module.get()
+                this->getQualifiedClassName() + "::.init", module.get()
         );
 
         builder.SetInsertPoint(BasicBlock::Create(context, "entry", this->initFunction));
 
-        auto inst = new AllocaInst(classPtrTy, 0, this->className + "object", builder.GetInsertBlock());
+        auto inst = new AllocaInst(classPtrTy, 0, this->getQualifiedClassName() + "object", builder.GetInsertBlock());
 
         // TODO init variables
 
@@ -92,5 +92,9 @@ namespace flare::ast {
 
     llvm::PointerType *ClassDeclNode::getClassLLVMPointerType() {
         return PointerType::get(this->getClassLLVMType(), 0);
+    }
+
+    std::string ClassDeclNode::getQualifiedClassName() {
+        return this->className;
     }
 }
