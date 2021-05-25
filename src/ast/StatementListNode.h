@@ -29,6 +29,8 @@ namespace flare::ast {
 
         void push(Node *node);
 
+        void pushFirst(Node *node);
+
         llvm::Value *codeGen(Context *cxt);
 
         void createLocal(const std::string &, VarDeclNode *);

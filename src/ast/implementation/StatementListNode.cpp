@@ -53,5 +53,9 @@ namespace flare::ast {
         return nullptr;
     }
 
+    void StatementListNode::pushFirst(Node *node) {
+        this->statements.insert(this->statements.begin(), node);
+    }
+
 
 }

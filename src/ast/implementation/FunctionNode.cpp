@@ -69,7 +69,7 @@ namespace flare::ast {
             auto *varDeclNode = new VarDeclNode("this", vType);
             varDeclNode->setInitialValue(new EmptyNode(&(*actualArgs)));
             varDeclNode->setLineNumber(this->lineNumber);
-            varDeclNode->codeGen(cxt);
+            this->statementListNode->pushFirst(varDeclNode);
 
             ++actualArgs;
         }
@@ -79,7 +79,7 @@ namespace flare::ast {
                 auto *varDeclNode = new VarDeclNode(element->name.c_str(), element->type);
                 varDeclNode->setInitialValue(new EmptyNode(&(*actualArgs)));
                 varDeclNode->setLineNumber(this->lineNumber);
-                varDeclNode->codeGen(cxt);
+                this->statementListNode->pushFirst(varDeclNode);
                 ++actualArgs;
             }
         }
