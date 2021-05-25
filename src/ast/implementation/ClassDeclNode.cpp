@@ -88,7 +88,7 @@ namespace flare::ast {
 
         // TODO init variables
 
-        builder.CreateRet(inst);
+        builder.CreateRet(builder.CreateLoad(inst));
 
         return nullptr;
     }

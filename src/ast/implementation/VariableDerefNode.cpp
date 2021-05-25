@@ -50,7 +50,8 @@ namespace flare::ast {
             auto classNode = dynamic_cast<ClassDeclNode *>(vType->typeRef->node);
 
             auto *load = builder.CreateLoad(varDecl->getLLVMVarRef());
-            return builder.CreateStructGEP(load, classNode->getVariableIndex(this->variableName));
+            auto *itemPointer = builder.CreateStructGEP(load, classNode->getVariableIndex(this->variableName));
+            return builder.CreateLoad(itemPointer);
 
         }
 
