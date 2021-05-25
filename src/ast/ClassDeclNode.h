@@ -37,6 +37,8 @@ namespace flare::ast {
 
         llvm::PointerType *getClassLLVMPointerType();
 
+        unsigned int getVariableIndex(std::string name);
+
         llvm::Function *getInitFunction() {
             return this->initFunction;
         }

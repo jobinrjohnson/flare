@@ -4,6 +4,7 @@
 
 #include <ast/helpers/VariableHelper.h>
 #include <ast/ClassDeclNode.h>
+#include <exceptions/SemanticException.h>
 
 namespace flare::ast {
 
@@ -98,5 +99,22 @@ namespace flare::ast {
 
     std::string ClassDeclNode::getQualifiedClassName() {
         return this->className;
+    }
+
+    unsigned int ClassDeclNode::getVariableIndex(std::string name) {
+
+        int i = 0;
+        for (VarDeclNode *ele:this->vars) {
+            if (ele->getVariableName().compare(name) == 0) {
+                return i;
+            }
+            i++;
+        }
+        // TODO this should be previous function line number
+        throw new exceptions::SemanticException(
+                "No member named '" + name + "' for the class '" + this->className + "'",
+                this->lineNumber
+        );
+
     }
 }

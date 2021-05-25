@@ -68,6 +68,11 @@ namespace flare::ast {
             return this->llvmVarRef;
         }
 
+        // Returns the variable name
+        inline std::string getVariableName() {
+            return this->variableName;
+        }
+
         inline VarType *getVariableType() {
             return this->type;
         }

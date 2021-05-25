@@ -68,6 +68,7 @@
     FunctionCallNode *functionCallNode;
     LoopNode *loopNode;
     Parameter *parameter;
+    VariableDerefNode *variableDerefNode;
     std::vector<Parameter *> *parameterList;
     std::vector<ExprNode *> *arguments;
     VarType *varType;
@@ -104,13 +105,14 @@
 %type <varType> var_type
 %type <classDeclNode> class_decl
 %type <nodeList> class_contents
+%type <variableDerefNode> var_deref
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
 %token <tDecimalValue> T_DECIMAL
 %token <tBoolValue> T_BOOLEAN
 %token <tStringValue> T_STRING
-%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS KW_NEW
+%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS KW_NEW KW_THIS
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 %token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID
 
@@ -283,20 +285,14 @@ function_call:
     | IDENTIFIER '(' arguments ')'              { $$ = new FunctionCallNode($1, $3); }
     | KW_NEW IDENTIFIER '(' ')'                 { $$ = new FunctionCallNode(); $$->setClassName($2); }
     | IDENTIFIER '.' function_call              { $$ = $3; $$->setObjectName($1); };
+    | KW_THIS '.' function_call                 { $$ = $3; $$->setObjectName("this"); };
 ;
 
 
 expr:
     scalar                          { $$ = new ExprNode(OperatorType::SCALAR, $1); }
     | function_call                 { $$ = new ExprNode(OperatorType::FUNCTION_CALL, $1); }
-    | IDENTIFIER                    {
-                                        auto derefrence = new VariableDerefNode($1);
-                                        $$ = new ExprNode(OperatorType::VAR_DE_REF, derefrence);
-                                    }
-    | IDENTIFIER '[' expr ']'       {
-                                        auto derefrence = new VariableDerefNode($1, $3);
-                                        $$ = new ExprNode(OperatorType::VAR_DE_REF, derefrence);
-                                    }
+    | var_deref                     { $$ = new ExprNode(OperatorType::VAR_DE_REF, $1); }
     | '(' expr ')'                  { $$ = new ExprNode(OperatorType::GROUPED, $2); }
     | '+' expr                      { $$ = new ExprNode(OperatorType::UNARY_PLUS, $2); }
     | '-' expr                      { $$ = new ExprNode(OperatorType::UNARY_MINUS, $2); }
@@ -312,6 +308,13 @@ expr:
     | expr TOK_EQUALITY expr        { $$ = new ExprNode(OperatorType::EQUALITY, $1, $3); }
     | expr TOK_NEQUALITY expr       { $$ = new ExprNode(OperatorType::NOT_EQUALITY, $1, $3); }
     | '!' expr                      { $$ = new ExprNode(OperatorType::NOT, $2); }
+;
+
+var_deref:
+    IDENTIFIER                      { $$ = new VariableDerefNode($1); }
+    | KW_THIS '.' IDENTIFIER        { $$ = new VariableDerefNode($3, "this"); }
+    | IDENTIFIER '[' expr ']'       { $$ = new VariableDerefNode($1, $3); }
+
 ;
 
 

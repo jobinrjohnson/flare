@@ -8,7 +8,8 @@ class ClassName {
         return 1;
     }
 
-    a(m:int): boolean {
+    a(m: int): boolean {
+        console.log(this.l);
         console.log(this.b());
         return false;
     };
@@ -17,12 +18,12 @@ class ClassName {
 function main(): int {
 
     let l = new ClassName();
-    l.a(0);
-    // if (l.a()) {
-    //     console.log("Hello world")
-    // } else {
-    //     console.log("There is no hello world!.")
-    // }
+
+    if (l.a(0)) {
+        console.log("Hello world")
+    } else {
+        console.log("There is no hello world!.")
+    }
 
     return 0;
 }

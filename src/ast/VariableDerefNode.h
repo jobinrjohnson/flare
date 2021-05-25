@@ -15,6 +15,7 @@ namespace flare::ast {
 
         bool isArrayDeReference = false;
         std::string variableName;
+        std::string base;
         Node *arrayIndex;
 
     public:
@@ -22,6 +23,8 @@ namespace flare::ast {
         NodeType getNodeType();
 
         VariableDerefNode(char *mLiteralValue);
+
+        VariableDerefNode(const char *mLiteralValue, const char *base);
 
         VariableDerefNode(char *mLiteralValue, Node *index);
 
