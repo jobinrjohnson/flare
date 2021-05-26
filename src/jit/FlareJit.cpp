@@ -16,7 +16,6 @@ namespace flare::jit {
     }
 
     FlareJit::~FlareJit() {
-        delete this->EE;
         llvm_shutdown();
     }
 

@@ -8,6 +8,8 @@
 
 #include <scanner.h>
 #include <parser.hh>
+#include <sstream>
+#include <iomanip>
 
 #define STEP()                                                                 \
   do {                                                                         \
@@ -91,20 +93,69 @@ int filterKwOrId(
 
 }
 
+char getEscapeSequence(char escChar) {
+
+    switch (escChar) {
+        case 'b':
+            return '\b'; // backspace (U+0008 BACKSPACE)
+        case 'n':
+            return '\n'; // line feed (U+000A LINE FEED)
+        case 'r' :
+            return '\r';  // carriage return (U+000D CARRIAGE RETURN)
+        case 't' :
+            return '\t';  // horizontal tab (U+0009 CHARACTER TABULATION)
+        case '\'' :
+            return '\'';  // single quote (U+0027 APOSTROPHE)
+        case '"' :
+            return '\"';  // double quote (U+0022 QUOTATION MARK)
+        case '\\' :
+            return '\\';  // backslash (U+005C REVERSE SOLIDUS)
+    }
+
+    // TODO cal proper terminators
+    throw "Invalid escape sequence \\" + std::string(1, escChar);
+}
+
 int processString(
         lang::Parser::semantic_type *yylval,
         const char *yytext,
         lang::Driver &driver
 ) {
 
+    std::string word;
+
+    bool escapeStart = false;
+
     int len = strlen(yytext);
-    yylval->tStringValue = (char *) malloc(len - 2);
+    for (int i = 0; i < len; i++) {
 
-    // TODO handle escape sequences
+        if ((i == 0 || i >= len - 1) && yytext[i] == '"') {
+            continue;
+        }
 
-    memcpy(yylval->tStringValue, &yytext[1], len - 2);
-    yylval->tStringValue[len - 1] = '\0';
+        if (escapeStart) {
+            if (yytext[i] == '\0') {
+                break;
+            }
+            word.append(1, getEscapeSequence(yytext[i]));
+            escapeStart = false;
+            continue;
+        }
 
+        if (yytext[i] == '\\') {
+            escapeStart = true;
+            continue;
+        }
+
+        word.append(1, yytext[i]);
+    }
+
+    yylval->tStringValue = (char *) malloc(word.length() + 1);
+    if (word.length() > 0) {
+        strcpy(yylval->tStringValue, word.c_str());
+    } else {
+        yylval->tStringValue[0] = '\0';
+    }
     return token::T_STRING;
 
 }
