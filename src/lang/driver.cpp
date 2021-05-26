@@ -16,7 +16,7 @@ namespace lang {
 
         std::ifstream file(path.c_str(), std::ifstream::in);
 
-        if(!file.is_open()){
+        if (!file.is_open()) {
             throw "Some error occurred while opening the file.";
         }
 
@@ -37,6 +37,22 @@ namespace lang {
         delete parser;
         delete scanner;
         delete cursor;
+    }
+
+    void Driver::stepCursor() {
+        this->cursor->step();
+    }
+
+    location *Driver::getCursor() {
+        return this->cursor;
+    }
+
+    int Driver::getError() {
+        return this->error_;
+    }
+
+    void Driver::setError(int err) {
+        this->error_ = err;
     }
 
 } // namespace lang

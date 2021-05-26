@@ -3,26 +3,7 @@
 #include "parser.hh"
 #include "scanner.h"
 #include "driver.h"
-
-
-#define STEP()                                                                 \
-  do {                                                                         \
-    driver.cursor->step();                                                     \
-  } while (0)
-
-#define COL(Col) driver.cursor->columns(Col)
-
-#define LINE(Line)                                                             \
-  do {                                                                         \
-    driver.cursor->lines(Line);                                                \
-  } while (0)
-
-#define YY_USER_ACTION COL(yyleng);
-
-typedef lang::Parser::token token;
-typedef lang::Parser::token_type token_type;
-
-#define yyterminate() return token::TOK_EOF
+#include "scanner-helper.h"
 
 %}
 
@@ -41,133 +22,63 @@ typedef lang::Parser::token_type token_type;
   STEP();
 %}
 
-[a-zA-Z_]([a-zA-Z_]|[0-9])* {
+[a-zA-Z_]([a-zA-Z_]|[0-9])*             { return filterKwOrId(yylval, yytext, driver); }
 
-                if (strcmp("let", yytext) == 0) {
-                    return token::KW_LET;
-                } else if (strcmp("if", yytext) == 0) {
-                    return token::KW_IF;
-                } else if (strcmp("else", yytext) == 0) {
-                    return token::KW_ELSE;
-                }else if (strcmp("log", yytext) == 0) {
-                    return token::KW_LOG;
-                }else if (strcmp("return", yytext) == 0) {
-                    return token::KW_RETURN;
-                }else if (strcmp("function", yytext) == 0) {
-                    return token::KW_FUNCTION;
-                }else if (strcmp("console", yytext) == 0) {
-                    return token::KW_CONSOLE;
-                }else if (strcmp("while", yytext) == 0) {
-                    return token::KW_WHILE;
-                }else if (strcmp("int", yytext) == 0) {
-                    return token::KW_INT;
-                }else if (strcmp("int32", yytext) == 0) {
-                    return token::KW_INT32;
-                }else if (strcmp("number", yytext) == 0) {
-                    return token::KW_NUMBER;
-                }else if (strcmp("int64", yytext) == 0) {
-                    return token::KW_INT64;
-                }else if (strcmp("bigint", yytext) == 0) {
-                    return token::KW_BIGINT;
-                }else if (strcmp("double", yytext) == 0) {
-                    return token::KW_DOUBLE;
-                }else if (strcmp("float", yytext) == 0) {
-                    return token::KW_FLOAT;
-                }else if (strcmp("class", yytext) == 0) {
-                    return token::KW_CLASS;
-                }else if (strcmp("new", yytext) == 0) {
-                    return token::KW_NEW;
-                }else if (strcmp("boolean", yytext) == 0) {
-                    return token::KW_BOOLEAN;
-                }else if (strcmp("void", yytext) == 0) {
-                    return token::KW_VOID;
-                }else if (strcmp("this", yytext) == 0) {
-                    return token::KW_THIS;
-                }else if (strcmp("true", yytext) == 0) {
-                  yylval->tBoolValue = true;
-                  return token::T_BOOLEAN;
-                }else if (strcmp("false", yytext) == 0) {
-                  yylval->tBoolValue = false;
-                  return token::T_BOOLEAN;
-                }
-                yylval->yyText = (char *) malloc(strlen(yytext));
-                strcpy(yylval->yyText, yytext);
+[0-9]+                                  {
+                                            yylval->tIntegerValue = atoi(yytext);
+                                            return token::T_INTEGER;
+                                        }
 
-                return token::IDENTIFIER;
+[0-9]+(\.[0-9][0-9]?)                   {
+                                            yylval->tDecimalValue = atof(yytext);
+                                            return token::T_DECIMAL;
+                                        }
 
-              }
+"+"                                     { return '+'; }
+"-"                                     { return '-'; }
+"*"                                     { return '*'; }
+"/"                                     { return '/'; }
+"%"                                     { return '%'; }
+"="                                     { return '='; }
+"<"                                     { return '<'; }
+">"                                     { return '>'; }
+"!"                                     { return '!'; }
+">="                                    { return token::TOK_GTE; }
+"<="                                    { return token::TOK_LTE; }
+"=="                                    { return token::TOK_EQUALITY; }
+"!="                                    { return token::TOK_NEQUALITY; }
 
-[0-9]+        {
-                  yylval->tIntegerValue = atoi(yytext);
-                  return token::T_INTEGER;
-              }
+"{"                                     { return '{'; }
+"}"                                     { return '}'; }
 
-[0-9]+(\.[0-9][0-9]?) {
-                  yylval->tDecimalValue = atof(yytext);
-                  return token::T_DECIMAL;
-              }
+"("                                     { return '('; }
+")"                                     { return ')'; }
 
-"+"           {return '+';}
-"-"           {return '-';}
-"*"           {return '*';}
-"/"           {return '/';}
-"%"           {return '%';}
-"="           {return '=';}
-"<"           {return '<';}
-">"           {return '>';}
-"!"           {return '!';}
-">="          { return token::TOK_GTE; }
-"<="          { return token::TOK_LTE; }
-"=="          { return token::TOK_EQUALITY; }
-"!="          { return token::TOK_NEQUALITY; }
-
-"{"           {return '{';}
-"}"           {return '}';}
-
-"("           {return '(';}
-")"           {return ')';}
-
-"["           {return '[';}
-"]"           {return ']';}
+"["                                     { return '['; }
+"]"                                     { return ']'; }
 
 
 
-"."           {return '.';}
-","           {return ',';}
-";"           {return ';';}
-":"           {return ':';}
-\"(\\.|[^"\\])*\"   {
+"."                                     { return '.'; }
+","                                     { return ','; }
+";"                                     { return ';'; }
+":"                                     { return ':'; }
 
-                int len = strlen(yytext);
-                yylval->tStringValue = (char *) malloc(len-2);
-
-                memcpy( yylval->tStringValue, &yytext[1], len-2 );
-                yylval->tStringValue[len-1] = '\0';
-
-                //strcpy(yylval->tStringValue, yytext);
-
-                  return token::T_STRING;
-                  }
+\"(\\.|[^"\\])*\"                       { return processString(yylval, yytext, driver); }
 
 
 
 
-[ \t]+       STEP();
+[ \t]+                                  STEP();
 
-[\n\r]+         {
-                    STEP();
-                    LINE(1);
-                }
+[\n\r]+                                 {
+                                            STEP();
+                                            LINE(1);
+                                        }
 
-"//".*          { /* Comment do nothing */ }
+"//".*                                  { /* Comment do nothing */ }
 
-.             {
-                std::cerr << *driver.cursor << " Unexpected token : "
-                                              << *yytext << std::endl;
-                driver.error_ = (driver.error_ == 127 ? 127
-                                : driver.error_ + 1);
-                STEP ();
-              }
+.                                       { processUnexpected(yylval, yytext, driver); }
 
 %%
 

@@ -26,6 +26,14 @@ namespace lang {
 
         int parseFile(std::string &path);
 
+        void stepCursor();
+
+        location * getCursor();
+
+        int getError();
+
+        void setError(int);
+
     private:
         Scanner *scanner;
         Parser *parser;
