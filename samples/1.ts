@@ -1,5 +1,5 @@
 function main(): int {
-    console.log("\n\tabc");
+    console.log("Hello\n\nWorld!");
 
     return 0;
 }

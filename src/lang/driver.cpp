@@ -27,7 +27,9 @@ namespace lang {
 
         this->parser->parse();
 
+#ifdef FLARE_DEBUG
         this->scanner->setDebug(true);
+#endif
 
         file.close();
         return 0;
@@ -53,6 +55,25 @@ namespace lang {
 
     void Driver::setError(int err) {
         this->error_ = err;
+    }
+
+    int Driver::parseInputStream(std::istream &stream) {
+
+        if (stream.bad()) {
+            throw "Some error occurred while opening the stream.";
+        }
+
+        this->scanner->switch_streams(&stream, &std::cerr);
+
+        // TODO use proper init
+        cursor->lines();
+
+        this->parser->parse();
+
+#ifdef FLARE_DEBUG
+        this->scanner->setDebug(true);
+#endif
+        return 0;
     }
 
 } // namespace lang

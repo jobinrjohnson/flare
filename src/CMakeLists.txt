@@ -8,7 +8,7 @@ add_subdirectory(exceptions)
 add_executable(
         flare
         main.cpp
-)
+        flare.cpp flare.h)
 
 llvm_map_components_to_libnames(llvm_libs core native mcjit interpreter)
 target_link_libraries(flare lang ast jit exceptions ${llvm_libs})

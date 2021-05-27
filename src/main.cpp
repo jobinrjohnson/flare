@@ -1,13 +1,8 @@
-#include <exceptions/FlareException.h>
-#include "lang/driver.h"
-#include "ast/Node.h"
-#include "jit/FlareJit.h"
-
-using namespace llvm;
+#include <flare.h>
 
 int main(int argc, char **argv) {
     lang::Driver driver;
-    std::string fileName = "../../samples/1.ts";
+    std::string fileName;
 
     if (argc > 1) {
         fileName = argv[1];
@@ -22,34 +17,26 @@ int main(int argc, char **argv) {
 #endif
     }
 
-    try {
-        driver.parseFile(fileName);
-    } catch (char const *e) {
-        std::cerr << "Error occurred while parsing : " << e;
-        return 1;
-    } catch (std::string e) {
-        std::cerr << "Error occurred while parsing : " << e;
-        return 1;
-    } catch (flare::exceptions::FlareException *e) {
-        std::cerr << e->getMessage() << "\n\n";
+
+    std::ifstream file(fileName.c_str(), std::ifstream::in);
+
+    if (!file.is_open()) {
+        std::cerr << "Some error occurred while opening the file.";
         return 1;
     }
 
-    std::cerr.flush();
-    std::cout.flush();
-    std::clog.flush();
+
+    flare::Flare f;
+    f.setInputStream(file);
 
 #ifdef FLARE_DEBUG
     // Print LLVM IR if debug mode is on
     std::cout << "========================================\n";
-    module->print(llvm::outs(), nullptr);
+    f.printLLVMIR();
     std::cout << "========================================\n\n";
 #endif
 
-    // Execute JIT
-    flare::jit::FlareJit jit(module);
-    jit.initialize();
-    jit.execute();
+    f.executeJit();
+    return f.getExitCode();
 
-    return jit.getExitCode();
 }

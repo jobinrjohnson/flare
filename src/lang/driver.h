@@ -26,6 +26,8 @@ namespace lang {
 
         int parseFile(std::string &path);
 
+        int parseInputStream(std::istream &stream);
+
         void stepCursor();
 
         location * getCursor();
