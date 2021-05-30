@@ -36,7 +36,7 @@ namespace flare::ast {
                 formatter = "%f\n";
                 break;
             case llvm::Type::IntegerTyID:
-                formatter = "%d\n";
+                formatter = "%ld\n";
                 break;
 
             default:
