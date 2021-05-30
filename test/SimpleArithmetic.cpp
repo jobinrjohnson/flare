@@ -25,6 +25,11 @@ int main() {
     // Execute
     flare::Flare f;
     f.setInputStream(ss);
+    f.parseStream();
+    f.codeGenAst();
+
+    f.printLLVMIR();
+
     f.executeJit();
 
     // Assert

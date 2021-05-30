@@ -12,29 +12,6 @@ namespace lang {
             : scanner(new Scanner()), parser(new Parser(*this)),
               cursor(new location()) {}
 
-    int Driver::parseFile(std::string &path) {
-
-        std::ifstream file(path.c_str(), std::ifstream::in);
-
-        if (!file.is_open()) {
-            throw "Some error occurred while opening the file.";
-        }
-
-        this->scanner->switch_streams(&file, &std::cerr);
-
-        // TODO use proper init
-        cursor->lines();
-
-        this->parser->parse();
-
-#ifdef FLARE_DEBUG
-        this->scanner->setDebug(true);
-#endif
-
-        file.close();
-        return 0;
-    }
-
     Driver::~Driver() {
         delete parser;
         delete scanner;
@@ -57,23 +34,35 @@ namespace lang {
         this->error_ = err;
     }
 
-    int Driver::parseInputStream(std::istream &stream) {
+    void Driver::setAstRoot(flare::ast::Node *node) {
+        this->astRoot = node;
+    }
 
-        if (stream.bad()) {
+    flare::ast::Node *Driver::getAstRoot() {
+        return this->astRoot;
+    }
+
+    void Driver::setInputStream(std::istream &stream) {
+        this->sourceStream = &stream;
+    }
+
+    flare::ast::Node *Driver::parse() {
+
+        if (this->sourceStream->bad()) {
             throw "Some error occurred while opening the stream.";
         }
 
-        this->scanner->switch_streams(&stream, &std::cerr);
+        this->scanner->switch_streams(this->sourceStream, &std::cerr);
+#ifdef FLARE_DEBUG
+        this->scanner->setDebug(true);
+#endif
 
         // TODO use proper init
         cursor->lines();
 
         this->parser->parse();
 
-#ifdef FLARE_DEBUG
-        this->scanner->setDebug(true);
-#endif
-        return 0;
+        return this->getAstRoot();
     }
 
 } // namespace lang

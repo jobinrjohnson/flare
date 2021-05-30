@@ -86,7 +86,7 @@
 %start start
 
 
-%type <statementList> start
+%type <node> start
 %type <node> statement class_content
 %type <expression> expr
 %type <literal> scalar
@@ -131,10 +131,8 @@
 
 start:
     statements  {
-
         $$ = $1;
-        $$->startCodeGen();
-
+        driver.setAstRoot($1);
     }
 ;
 

@@ -6,6 +6,7 @@
 #define FLARE_FLARE_H
 
 #include <lang/driver.h>
+#include <ast/Node.h>
 
 namespace flare {
 
@@ -13,7 +14,7 @@ namespace flare {
 
         lang::Driver driver;
 
-        bool hasParseError = false;
+        ast::Node *ast;
 
         int exitCode = 0;
 
@@ -22,6 +23,12 @@ namespace flare {
         Flare();
 
         void setInputStream(std::istream &stream);
+
+        void setFileStream(std::string &fileName);
+
+        void parseStream();
+
+        void codeGenAst();
 
         int getExitCode();
 

@@ -14,23 +14,11 @@ namespace flare {
     }
 
     void Flare::setInputStream(std::istream &stream) {
-
-        try {
-            this->driver.parseInputStream(stream);
-            return;
-        } catch (char const *e) {
-            std::cerr << "Error occurred while parsing : " << e;
-        } catch (std::string e) {
-            std::cerr << "Error occurred while parsing : " << e;
-        } catch (exceptions::FlareException *e) {
-            std::cerr << e->getMessage() << "\n\n";
-        }
-
-        this->hasParseError = true;
+        this->driver.setInputStream(stream);
     }
 
     int Flare::getExitCode() {
-        return this->hasParseError ? 1 : this->exitCode;
+        return this->exitCode;
     }
 
     void Flare::printLLVMIR() {
@@ -46,5 +34,39 @@ namespace flare {
         this->exitCode = jit.getExitCode();
 
     }
+
+    void Flare::setFileStream(std::string &fileName) {
+
+        std::ifstream file(fileName.c_str(), std::ifstream::in);
+
+        if (!file.is_open()) {
+            std::cerr << "Some error occurred while opening the file.";
+            return;
+        }
+
+        this->setInputStream(file);
+    }
+
+    void Flare::parseStream() {
+        try {
+            this->ast = this->driver.parse();
+        } catch (char const *e) {
+            std::cerr << "Error occurred while parsing : " << e;
+        }
+    }
+
+    void Flare::codeGenAst() {
+        try {
+            this->ast->startCodeGen();
+        } catch (char const *e) {
+            std::cerr << "Error occurred while parsing : " << e;
+        } catch (std::string e) {
+            std::cerr << "Error occurred while parsing : " << e;
+        } catch (exceptions::FlareException *e) {
+            std::cerr << e->getMessage() << "\n\n";
+        }
+
+    }
+
 
 }

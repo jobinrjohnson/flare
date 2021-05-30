@@ -17,7 +17,6 @@ int main(int argc, char **argv) {
 #endif
     }
 
-
     std::ifstream file(fileName.c_str(), std::ifstream::in);
 
     if (!file.is_open()) {
@@ -25,9 +24,10 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-
     flare::Flare f;
     f.setInputStream(file);
+    f.parseStream();
+    f.codeGenAst();
 
 #ifdef FLARE_DEBUG
     // Print LLVM IR if debug mode is on
