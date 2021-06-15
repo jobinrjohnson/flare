@@ -41,7 +41,7 @@ namespace flare::ast {
             case VariableType::VARTYPE_NUMBER:
                 return ConstantFP::get(Type::getDoubleTy(context), this->nodeValue.dVal);
             case VariableType::VARTYPE_STRING:
-                return builder.CreateGlobalStringPtr(StringRef(this->nodeValue.sVal));
+                return builder.CreateGlobalStringPtr(StringRef(this->nodeValue.sVal), "str");
             case VariableType::VARTYPE_ARRAY:
             case VariableType::VARTYPE_VOID:
             case VariableType::VARTYPE_OBJECT:

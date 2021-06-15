@@ -1,7 +1,6 @@
 #include <flare.h>
 
 int main(int argc, char **argv) {
-    lang::Driver driver;
     std::string fileName;
 
     if (argc > 1) {
