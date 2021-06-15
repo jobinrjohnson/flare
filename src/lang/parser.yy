@@ -27,6 +27,7 @@
     #include "ast/FunctionCallNode.h"
     #include "ast/LoopNode.h"
     #include "ast/ClassDeclNode.h"
+    #include "ast/CffiIncludeNode.h"
 
     // Namespace
     using namespace flare::ast;
@@ -69,6 +70,7 @@
     LoopNode *loopNode;
     Parameter *parameter;
     VariableDerefNode *variableDerefNode;
+    CffiIncludeNode *ffiInclude;
     std::vector<Parameter *> *parameterList;
     std::vector<ExprNode *> *arguments;
     VarType *varType;
@@ -106,6 +108,7 @@
 %type <classDeclNode> class_decl
 %type <nodeList> class_contents
 %type <variableDerefNode> var_deref
+%type <ffiInclude> include_smt
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
@@ -113,6 +116,7 @@
 %token <tBoolValue> T_BOOLEAN
 %token <tStringValue> T_STRING
 %token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS KW_NEW KW_THIS
+%token KW_IMPORT KW_FROM KW_AS
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 %token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID
 
@@ -154,6 +158,11 @@ statement:
     | loops                             { $$->setLineNumber(driver.cursor->end.line); }
     | class_decl                        { $$->setLineNumber(driver.cursor->end.line); }
     | compound_statement                { $$->setLineNumber(driver.cursor->begin.line); }
+    | include_smt                       { $$->setLineNumber(driver.cursor->begin.line); }
+;
+
+include_smt:
+    KW_IMPORT '*' KW_AS IDENTIFIER KW_FROM T_STRING { $$ = new CffiIncludeNode($4, $6); }
 ;
 
 compound_statement:

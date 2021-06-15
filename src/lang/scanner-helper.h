@@ -77,6 +77,12 @@ int filterKwOrId(
         return token::KW_BOOLEAN;
     } else if (IS_TOKEN("void")) {
         return token::KW_VOID;
+    } else if (IS_TOKEN("import")) {
+        return token::KW_IMPORT;
+    } else if (IS_TOKEN("as")) {
+        return token::KW_AS;
+    }else if (IS_TOKEN("from")) {
+        return token::KW_FROM;
     } else if (IS_TOKEN("this")) {
         return token::KW_THIS;
     } else if (IS_TOKEN("true")) {

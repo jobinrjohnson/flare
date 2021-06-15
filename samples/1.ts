@@ -1,11 +1,15 @@
+import * as cMod from "#stdio.h"
+
+function mlog(a: int): void {
+    console.log(a);
+}
+
 class HelloWorld {
     logToConsole(): void {
-        console.log("\n\nHello\n\nWorld!");
-        console.log("\n\nHello 2\n\nWorld!");
-        console.log("\n\nHello 3\n\nWorld!");
-        console.log("\n\nHello 4\n\nWorld!");
-        console.log("\n\nHello 5\n\nWorld!");
-        console.log("\n\nHello 6\n\nWorld!");
+        mlog(1);
+        mlog(2);
+        mlog(3);
+        mlog(4);
     }
 }
 
@@ -13,13 +17,6 @@ class HelloWorld {
 function main(): int {
 
     let h = new HelloWorld();
-
-    // let i = 10000000;
-    // while (i > 100000) {
-    //     console.log(i);
-    //     i = i + i;
-    // }
-
     h.logToConsole();
 
     return 0;
