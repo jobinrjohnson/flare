@@ -41,13 +41,17 @@ namespace flare::ast {
 
         BasicBlock *currentBlock = builder.GetInsertBlock();
 
-        cxt->pushFunction(this);
-
         this->function = Function::Create(
                 this->codeGenSignature(cxt),
                 GlobalValue::ExternalLinkage,
                 this->getQualifiedFunctionName(), module.get()
         );
+
+        if (this->statementListNode == nullptr) {
+            return this->function;
+        }
+
+        cxt->pushFunction(this);
 
         // Start inserting to the function entry block
         this->entryBlock = BasicBlock::Create(context, "entry", this->function);
@@ -204,6 +208,13 @@ namespace flare::ast {
         }
 
         return this->name;
+    }
+
+    FunctionNode::FunctionNode(const char *name, VarType *type, std::vector<Parameter *> *parameterList) {
+        this->statementListNode = nullptr;
+        this->name = name;
+        this->parameterList = parameterList;
+        this->setReturnType(type);
     }
 
 }

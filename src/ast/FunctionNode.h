@@ -67,6 +67,13 @@ namespace flare::ast {
                 VarType *type
         );
 
+        // function declaration only
+        explicit FunctionNode(
+                const char *name,
+                VarType *type,
+                std::vector<Parameter *> *parameterList
+        );
+
         // function with parameter list
         explicit FunctionNode(
                 const char *name,

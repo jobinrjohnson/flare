@@ -54,7 +54,7 @@ namespace lang {
 
         this->scanner->switch_streams(this->sourceStream, &std::cerr);
 #ifdef FLARE_DEBUG
-        this->scanner->setDebug(true);
+//        this->scanner->setDebug(true);
 #endif
 
         // TODO use proper init

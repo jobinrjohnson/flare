@@ -27,7 +27,6 @@
     #include "ast/FunctionCallNode.h"
     #include "ast/LoopNode.h"
     #include "ast/ClassDeclNode.h"
-    #include "ast/CffiIncludeNode.h"
 
     // Namespace
     using namespace flare::ast;
@@ -70,7 +69,6 @@
     LoopNode *loopNode;
     Parameter *parameter;
     VariableDerefNode *variableDerefNode;
-    CffiIncludeNode *ffiInclude;
     std::vector<Parameter *> *parameterList;
     std::vector<ExprNode *> *arguments;
     VarType *varType;
@@ -98,7 +96,7 @@
 %type <ifStatementNode> if_else_if if_statement
 %type <logSmtNode> log_statement
 %type <statementNode> return_statement
-%type <functionNode> function_declaration class_function
+%type <functionNode> function_declaration class_function function_definition
 %type <loopNode> loops
 %type <functionCallNode> function_call
 %type <parameterList> parameter_list
@@ -108,7 +106,6 @@
 %type <classDeclNode> class_decl
 %type <nodeList> class_contents
 %type <variableDerefNode> var_deref
-%type <ffiInclude> include_smt
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
@@ -158,12 +155,8 @@ statement:
     | loops                             { $$->setLineNumber(driver.cursor->end.line); }
     | class_decl                        { $$->setLineNumber(driver.cursor->end.line); }
     | compound_statement                { $$->setLineNumber(driver.cursor->begin.line); }
-    | include_smt                       { $$->setLineNumber(driver.cursor->begin.line); }
 ;
 
-include_smt:
-    KW_IMPORT '*' KW_AS IDENTIFIER KW_FROM T_STRING { $$ = new CffiIncludeNode($4, $6); }
-;
 
 compound_statement:
     '{' statements '}'                { $$ = $2; }
@@ -205,6 +198,7 @@ loops:
 function_declaration:
     KW_FUNCTION IDENTIFIER '(' ')' ':' var_type compound_statement   { $$ = new FunctionNode($2, $<statementList>7, $6); }
     | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type compound_statement   { $$ = new FunctionNode($2, $<statementList>8, $7, $4); }
+    | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type   { $$ = new FunctionNode($2, $7, $4); }
 ;
 
 parameter:
