@@ -199,6 +199,7 @@ function_declaration:
     KW_FUNCTION IDENTIFIER '(' ')' ':' var_type compound_statement   { $$ = new FunctionNode($2, $<statementList>7, $6); }
     | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type compound_statement   { $$ = new FunctionNode($2, $<statementList>8, $7, $4); }
     | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type   { $$ = new FunctionNode($2, $7, $4); }
+    | KW_FUNCTION IDENTIFIER '(' ')' ':' var_type   { $$ = new FunctionNode($2, $6, nullptr); }
 ;
 
 parameter:
