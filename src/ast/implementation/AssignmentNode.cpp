@@ -45,10 +45,12 @@ namespace flare::ast {
                     "arrayLoad"
             );
 
-            return builder.CreateStore(value, arrayPtrLoad);
+            builder.CreateStore(value, arrayPtrLoad);
+            return value;
         }
 
-        return builder.CreateStore(value, variable->getLLVMVarRef());
+        builder.CreateStore(value, variable->getLLVMVarRef());
+        return value;
     }
 
     NodeType AssignmentNode::getNodeType() {

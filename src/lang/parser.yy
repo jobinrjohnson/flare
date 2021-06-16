@@ -88,7 +88,7 @@
 
 %type <node> start
 %type <node> statement class_content
-%type <expression> expr
+%type <expression> expr arithmetic_expr relative_expr
 %type <literal> scalar
 %type <statementList> compound_statement statements
 %type <varDecl> variable_declaration array_declaration class_variable
@@ -146,7 +146,6 @@ statements:
 statement:
     expr                                { $$->setLineNumber(driver.cursor->end.line); }
     | variable_declaration              { $$->setLineNumber(driver.cursor->end.line); }
-    | assignment_expr                   { $$->setLineNumber(driver.cursor->end.line); }
     | if_else_if                        { $$->setLineNumber(driver.cursor->end.line); }
     | log_statement                     { $$->setLineNumber(driver.cursor->end.line); }
     | return_statement                  { $$->setLineNumber(driver.cursor->end.line); }
@@ -280,12 +279,6 @@ array_declaration:
     }
 ;
 
-
-assignment_expr:
-    IDENTIFIER '=' expr                         { $$ = new AssignmentNode($1, $3); free($1); }
-    | IDENTIFIER '[' expr ']' '=' expr          { $$ = new AssignmentNode($1, $3, $6); free($1); }
-;
-
 arguments:
     expr                                        {
         $$ = new std::vector<ExprNode *>();
@@ -308,13 +301,22 @@ expr:
     | function_call                 { $$ = new ExprNode(OperatorType::FUNCTION_CALL, $1); }
     | var_deref                     { $$ = new ExprNode(OperatorType::VAR_DE_REF, $1); }
     | '(' expr ')'                  { $$ = new ExprNode(OperatorType::GROUPED, $2); }
-    | '+' expr                      { $$ = new ExprNode(OperatorType::PLUS, $2); }
-    | '-' expr                      { $$ = new ExprNode(OperatorType::MINUS, $2); }
-    | expr '+' expr                 { $$ = new ExprNode(OperatorType::PLUS, $1, $3); }
+    | assignment_expr               { $$ = new ExprNode(OperatorType::GROUPED, $1); }
+    | arithmetic_expr               { $$ = $1; }
+    | relative_expr                 { $$ = $1; }
+;
+
+arithmetic_expr:
+    expr '+' expr                   { $$ = new ExprNode(OperatorType::PLUS, $1, $3); }
     | expr '-' expr                 { $$ = new ExprNode(OperatorType::MINUS, $1, $3); }
     | expr '*' expr                 { $$ = new ExprNode(OperatorType::MUL, $1, $3); }
     | expr '/' expr                 { $$ = new ExprNode(OperatorType::DIV, $1, $3); }
-    | expr '%' expr                 { $$ = new ExprNode(OperatorType::MODULO_DIV, $1, $3); }
+    | '+' expr                      { $$ = new ExprNode(OperatorType::PLUS, $2); }
+    | '-' expr                      { $$ = new ExprNode(OperatorType::MINUS, $2); }
+;
+
+relative_expr:
+    expr '%' expr                   { $$ = new ExprNode(OperatorType::MODULO_DIV, $1, $3); }
     | expr '<' expr                 { $$ = new ExprNode(OperatorType::LESS_THAN, $1, $3); }
     | expr '>' expr                 { $$ = new ExprNode(OperatorType::GREATER_THAN, $1, $3); }
     | expr TOK_LTE expr             { $$ = new ExprNode(OperatorType::LESS_THAN_EQUAL, $1, $3); }
@@ -324,11 +326,15 @@ expr:
     | '!' expr                      { $$ = new ExprNode(OperatorType::NOT, $2); }
 ;
 
+assignment_expr:
+    IDENTIFIER '=' expr                         { $$ = new AssignmentNode($1, $3); free($1); }
+    | IDENTIFIER '[' expr ']' '=' expr          { $$ = new AssignmentNode($1, $3, $6); free($1); }
+;
+
 var_deref:
     IDENTIFIER                      { $$ = new VariableDerefNode($1); }
     | KW_THIS '.' IDENTIFIER        { $$ = new VariableDerefNode($3, "this"); }
     | IDENTIFIER '[' expr ']'       { $$ = new VariableDerefNode($1, $3); }
-
 ;
 
 

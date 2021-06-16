@@ -1,10 +1,10 @@
-function printf(formatString: string, params: int): void;
+function printf(formatString: string, params: bigint): void;
 
-function getchar(): int;
+function getchar(): bigint;
 
 class Console {
 
-    isNumericInputOk(ip: int): boolean {
+    isNumericInputOk(ip: bigint): boolean {
         if (ip < 48) {
             return false;
         }
@@ -14,14 +14,14 @@ class Console {
         return true;
     }
 
-    getInt(): int {
+    getInt(): bigint {
 
         let final = 0;
         let isNegative = false;
 
-        let ip: int = getchar();
+        let ip: bigint;
 
-        if (ip == 45) {
+        if ((ip = getchar()) == 45) {
             isNegative = true;
             ip = getchar();
         }
@@ -42,13 +42,13 @@ class Console {
 }
 
 
-function main(): int {
+function main(): bigint {
 
     let prompt:string = "%d Enter the number : ";
     printf(prompt, 1);
 
     let i = new Console();
-    let n: int = i.getInt();
+    let n: bigint = i.getInt();
 
     printf("The input is %d", n);
 
