@@ -23,7 +23,7 @@ namespace flare::ast {
         auto *cNode = dynamic_cast<ClassDeclNode *>(node);
         auto *function = cNode->getInitFunction();
 
-        return builder.CreateCall(function, None, this->className + "::.init");
+        return this->performCall(function, None);
 
     }
 
@@ -42,7 +42,7 @@ namespace flare::ast {
             throw "Function not declared in the scope";
         }
         if (argumentList == nullptr) {
-            return builder.CreateCall(calleeFunction, None, this->functionName);
+            return this->performCall(calleeFunction, None);
         }
 
         std::vector<Value *> calleeArgs;
@@ -50,7 +50,7 @@ namespace flare::ast {
             calleeArgs.push_back(element->codeGen(cxt->nextLevel()));
         }
 
-        return builder.CreateCall(calleeFunction, calleeArgs, this->functionName);
+        return this->performCall(calleeFunction, calleeArgs);
 
     }
 
@@ -95,6 +95,14 @@ namespace flare::ast {
             for (ExprNode *element: *(this->argumentList)) {
                 calleeArgs.push_back(element->codeGen(cxt->nextLevel()));
             }
+        }
+
+        return this->performCall(calleeFunction, calleeArgs);
+    }
+
+    llvm::Value *FunctionCallNode::performCall(Function *calleeFunction, ArrayRef<Value *> calleeArgs) {
+        if (calleeFunction->getReturnType() == llvm::Type::getVoidTy(context)) {
+            return builder.CreateCall(calleeFunction, calleeArgs);
         }
 
         return builder.CreateCall(calleeFunction, calleeArgs, this->functionName);

@@ -21,6 +21,8 @@ namespace flare::ast {
 
         std::string objectName;
 
+        llvm::Value *performCall(Function * calleeFunction, ArrayRef<Value *> Args = None);
+
     public:
 
         FunctionCallNode();
