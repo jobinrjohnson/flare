@@ -48,6 +48,9 @@
 "=="                                    { return token::TOK_EQUALITY; }
 "!="                                    { return token::TOK_NEQUALITY; }
 
+"&&"                                    { return token::TOK_L_AND; }
+"||"                                    { return token::TOK_L_OR; }
+
 "{"                                     { return '{'; }
 "}"                                     { return '}'; }
 

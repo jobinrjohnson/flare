@@ -29,6 +29,8 @@ namespace flare::ast {
         UNARY_MINUS,
         MODULO_DIV,
         FUNCTION_CALL,
+        LOGICAL_AND,
+        LOGICAL_OR,
     };
 
     class ExprNode : public Node {

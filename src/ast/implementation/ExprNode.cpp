@@ -120,6 +120,10 @@ namespace flare::ast {
                 return builder.CreateICmpEQ(lhs, rhs, "mEq");
             case NOT_EQUALITY:
                 return builder.CreateICmpNE(lhs, rhs, "mNeq");
+            case LOGICAL_AND:
+                return builder.CreateAnd(lhs, rhs, "and");
+            case LOGICAL_OR:
+                return builder.CreateOr(lhs, rhs, "or");
             default:
                 throw "Not handled";
         }
@@ -205,6 +209,8 @@ namespace flare::ast {
             case NOT_EQUALITY:
             case DIV:
             case MODULO_DIV:
+            case LOGICAL_AND:
+            case LOGICAL_OR:
                 value = this->codeGenBinaryExpr(cxt);
                 break;
             default:

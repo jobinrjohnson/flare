@@ -88,7 +88,7 @@
 
 %type <node> start
 %type <node> statement class_content
-%type <expression> expr arithmetic_expr relative_expr
+%type <expression> expr arithmetic_expr relative_expr logical_expr
 %type <literal> scalar
 %type <statementList> compound_statement statements
 %type <varDecl> variable_declaration array_declaration class_variable
@@ -115,9 +115,11 @@
 %token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS KW_NEW KW_THIS
 %token KW_IMPORT KW_FROM KW_AS
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
+%token TOK_L_AND TOK_L_OR
 %token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID KW_STRING
 
-%precedence '=' 
+%precedence '='
+%left TOK_L_AND TOK_L_OR
 %left '|'
 %left '^'
 %left '&'
@@ -304,6 +306,7 @@ expr:
     | assignment_expr               { $$ = new ExprNode(OperatorType::GROUPED, $1); }
     | arithmetic_expr               { $$ = $1; }
     | relative_expr                 { $$ = $1; }
+    | logical_expr                  { $$ = $1; }
 ;
 
 arithmetic_expr:
@@ -324,6 +327,11 @@ relative_expr:
     | expr TOK_EQUALITY expr        { $$ = new ExprNode(OperatorType::EQUALITY, $1, $3); }
     | expr TOK_NEQUALITY expr       { $$ = new ExprNode(OperatorType::NOT_EQUALITY, $1, $3); }
     | '!' expr                      { $$ = new ExprNode(OperatorType::NOT, $2); }
+;
+
+logical_expr:
+    expr TOK_L_AND expr               { $$ = new ExprNode(OperatorType::LOGICAL_AND, $1, $3); }
+    | expr TOK_L_OR expr              { $$ = new ExprNode(OperatorType::LOGICAL_OR, $1, $3); }
 ;
 
 assignment_expr:

@@ -4,16 +4,6 @@ function getchar(): bigint;
 
 class Console {
 
-    isNumericInputOk(ip: bigint): boolean {
-        if (ip < 48) {
-            return false;
-        }
-        if (ip > 57) {
-            return false;
-        }
-        return true;
-    }
-
     getInt(): bigint {
 
         let final = 0;
@@ -26,7 +16,7 @@ class Console {
             ip = getchar();
         }
 
-        while (this.isNumericInputOk(ip)) {
+        while (ip >= 48 && ip <= 57) {
             final = final * 10 + (ip - 48);
             ip = getchar();
         }
@@ -44,7 +34,7 @@ class Console {
 
 function main(): bigint {
 
-    let prompt:string = "%d Enter the number : ";
+    let prompt: string = "%d Enter the number : ";
     printf(prompt, 1);
 
     let i = new Console();
