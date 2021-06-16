@@ -7,28 +7,30 @@
 
 #include "Node.h"
 
-enum OperatorType {
-    PLUS,
-    MINUS,
-    MUL,
-    DIV,
-    SCALAR,
-    VAR_DE_REF,
-    GREATER_THAN,
-    LESS_THAN,
-    GREATER_THAN_EQUAL,
-    LESS_THAN_EQUAL,
-    EQUALITY,
-    NOT_EQUALITY,
-    NOT,
-    GROUPED,
-    UNARY_PLUS,
-    UNARY_MINUS,
-    MODULO_DIV,
-    FUNCTION_CALL,
-};
-
 namespace flare::ast {
+
+
+    enum OperatorType {
+        PLUS,
+        MINUS,
+        MUL,
+        DIV,
+        SCALAR,
+        VAR_DE_REF,
+        GREATER_THAN,
+        LESS_THAN,
+        GREATER_THAN_EQUAL,
+        LESS_THAN_EQUAL,
+        EQUALITY,
+        NOT_EQUALITY,
+        NOT,
+        GROUPED,
+        UNARY_PLUS,
+        UNARY_MINUS,
+        MODULO_DIV,
+        FUNCTION_CALL,
+    };
+
     class ExprNode : public Node {
 
     protected:

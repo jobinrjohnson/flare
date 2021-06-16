@@ -308,8 +308,8 @@ expr:
     | function_call                 { $$ = new ExprNode(OperatorType::FUNCTION_CALL, $1); }
     | var_deref                     { $$ = new ExprNode(OperatorType::VAR_DE_REF, $1); }
     | '(' expr ')'                  { $$ = new ExprNode(OperatorType::GROUPED, $2); }
-    | '+' expr                      { $$ = new ExprNode(OperatorType::UNARY_PLUS, $2); }
-    | '-' expr                      { $$ = new ExprNode(OperatorType::UNARY_MINUS, $2); }
+    | '+' expr                      { $$ = new ExprNode(OperatorType::PLUS, $2); }
+    | '-' expr                      { $$ = new ExprNode(OperatorType::MINUS, $2); }
     | expr '+' expr                 { $$ = new ExprNode(OperatorType::PLUS, $1, $3); }
     | expr '-' expr                 { $$ = new ExprNode(OperatorType::MINUS, $1, $3); }
     | expr '*' expr                 { $$ = new ExprNode(OperatorType::MUL, $1, $3); }

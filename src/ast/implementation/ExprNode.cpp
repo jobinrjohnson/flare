@@ -175,6 +175,13 @@ namespace flare::ast {
 
         this->printCallStack(cxt, "ExprNode", __FUNCTION__);
 
+        if (this->operands.size() == 1) {
+            if (this->opr == PLUS)
+                this->opr = UNARY_PLUS;
+            if (this->opr == MINUS)
+                this->opr = UNARY_MINUS;
+        }
+
         llvm::Value *value;
 
         switch (this->opr) {
