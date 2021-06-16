@@ -96,7 +96,7 @@
 %type <ifStatementNode> if_else_if if_statement
 %type <logSmtNode> log_statement
 %type <statementNode> return_statement
-%type <functionNode> function_declaration class_function function_definition
+%type <functionNode> function_declaration function_definition class_function class_function_declaration
 %type <loopNode> loops
 %type <functionCallNode> function_call
 %type <parameterList> parameter_list
@@ -152,6 +152,7 @@ statement:
     | return_statement                  { $$->setLineNumber(driver.cursor->end.line); }
     | statement ';'                     { $$ = $1; }
     | function_declaration              { $$->setLineNumber(driver.cursor->end.line); }
+    | function_definition               { $$->setLineNumber(driver.cursor->end.line); }
     | loops                             { $$->setLineNumber(driver.cursor->end.line); }
     | class_decl                        { $$->setLineNumber(driver.cursor->end.line); }
     | compound_statement                { $$->setLineNumber(driver.cursor->begin.line); }
@@ -163,15 +164,12 @@ compound_statement:
 ;
 
 class_content:
-    class_function                {}
-    | class_function ';'          {}
-    | class_variable              {}
-    | class_variable ';'          {}
-;
-
-class_function:
-    IDENTIFIER '(' ')' ':' var_type compound_statement   { $$ = new FunctionNode($1, $<statementList>6, $5); }
-    | IDENTIFIER '(' parameter_list ')' ':' var_type compound_statement   { $$ = new FunctionNode($1, $<statementList>7, $6, $3); }
+    class_function                      {}
+    | class_function_declaration        {}
+    | class_function_declaration ';'    {}
+    | class_function ';'                {}
+    | class_variable                    {}
+    | class_variable ';'                {}
 ;
 
 class_variable:
@@ -195,11 +193,22 @@ loops:
     KW_WHILE '(' expr ')' compound_statement    { $$ = new LoopNode($3, $5);}
 ;
 
+class_function_declaration:
+    IDENTIFIER '(' ')' ':' var_type                         { $$ = new FunctionNode($1, $5); }
+    | IDENTIFIER '(' parameter_list ')' ':' var_type        { $$ = new FunctionNode($1,$6, $3); }
+;
+
+class_function:
+    class_function_declaration compound_statement                   { $$ = $1; $$->setFunctionBody($<statementList>2); }
+;
+
 function_declaration:
-    KW_FUNCTION IDENTIFIER '(' ')' ':' var_type compound_statement   { $$ = new FunctionNode($2, $<statementList>7, $6); }
-    | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type compound_statement   { $$ = new FunctionNode($2, $<statementList>8, $7, $4); }
-    | KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type   { $$ = new FunctionNode($2, $7, $4); }
-    | KW_FUNCTION IDENTIFIER '(' ')' ':' var_type   { $$ = new FunctionNode($2, $6, nullptr); }
+    KW_FUNCTION IDENTIFIER '(' parameter_list ')' ':' var_type      { $$ = new FunctionNode($2, $7, $4); }
+    | KW_FUNCTION IDENTIFIER '(' ')' ':' var_type                   { $$ = new FunctionNode($2, $6, nullptr); }
+;
+
+function_definition:
+    function_declaration compound_statement                         { $$ = $1; $$->setFunctionBody($2); }
 ;
 
 parameter:

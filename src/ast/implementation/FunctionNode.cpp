@@ -138,17 +138,9 @@ namespace flare::ast {
         return this->function;
     }
 
-    FunctionNode::FunctionNode(const char *name, StatementListNode *statements, VarType *type) {
+    FunctionNode::FunctionNode(const char *name, VarType *type) {
         this->name = name;
-        this->statementListNode = statements;
-        this->setReturnType(type);
-    }
-
-    FunctionNode::FunctionNode(const char *name, StatementListNode *statements, VarType *type,
-                               std::vector<Parameter *> *parameterList) {
-        this->name = name;
-        this->statementListNode = statements;
-        this->parameterList = parameterList;
+        this->statementListNode = nullptr;
         this->setReturnType(type);
     }
 

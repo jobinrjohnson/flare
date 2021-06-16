@@ -63,21 +63,12 @@ namespace flare::ast {
         // function without parameter
         explicit FunctionNode(
                 const char *name,
-                StatementListNode *statements,
                 VarType *type
         );
 
         // function declaration only
         explicit FunctionNode(
                 const char *name,
-                VarType *type,
-                std::vector<Parameter *> *parameterList
-        );
-
-        // function with parameter list
-        explicit FunctionNode(
-                const char *name,
-                StatementListNode *statements,
                 VarType *type,
                 std::vector<Parameter *> *parameterList
         );
@@ -99,6 +90,11 @@ namespace flare::ast {
         // Sets the function return type
         inline void setReturnType(VarType *type) {
             this->returnType = type;
+        }
+
+        // Sets the function body
+        inline void setFunctionBody(StatementListNode *statementList) {
+            this->statementListNode = statementList;
         }
 
         // Sets the class for the function. if it is a part of a class
