@@ -51,7 +51,7 @@ namespace flare::ast {
         Node *node;
     };
 
-    typedef struct {
+    typedef struct VarType {
         VariableType type;
         VariableType subType = OTHER;
         TypeReference *typeRef;

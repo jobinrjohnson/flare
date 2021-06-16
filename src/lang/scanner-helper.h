@@ -85,6 +85,8 @@ int filterKwOrId(
         return token::KW_FROM;
     } else if (IS_TOKEN("this")) {
         return token::KW_THIS;
+    }  else if (IS_TOKEN("string")) {
+        return token::KW_STRING;
     } else if (IS_TOKEN("true")) {
         yylval->tBoolValue = true;
         return token::T_BOOLEAN;

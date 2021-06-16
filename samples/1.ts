@@ -1,5 +1,4 @@
-function printf(formatString: int, params: int): void;
-function printf(formatString: int): void;
+function printf(formatString: string, params: int): void;
 
 function getchar(): int;
 
@@ -45,7 +44,8 @@ class Console {
 
 function main(): int {
 
-    printf("Enter the number : ");
+    let prompt:string = "%d Enter the number : ";
+    printf(prompt, 1);
 
     let i = new Console();
     let n: int = i.getInt();

@@ -25,9 +25,10 @@ namespace flare::ast {
                 return llvm::Type::getVoidTy(context);
             case OTHER:
             case VARTYPE_STRING:
+                return llvm::Type::getInt8PtrTy(context);
             case VARTYPE_ARRAY:
             case VARTYPE_OBJECT:
-                throw "Conversion not defined.";
+                throw "LLVM Type not defined.";
                 break;
         }
         throw "Type not found";

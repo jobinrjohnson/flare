@@ -115,7 +115,7 @@
 %token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS KW_NEW KW_THIS
 %token KW_IMPORT KW_FROM KW_AS
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
-%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID
+%token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID KW_STRING
 
 %precedence '=' 
 %left '|'
@@ -264,6 +264,7 @@ var_type:
     | KW_DOUBLE         { $$ = new VarType; $$->type = VARTYPE_DOUBLE; }
     | KW_BOOLEAN        { $$ = new VarType; $$->type = VARTYPE_BOOLEAN; }
     | KW_VOID           { $$ = new VarType; $$->type = VARTYPE_VOID; }
+    | KW_STRING           { $$ = new VarType; $$->type = VARTYPE_STRING; }
 ;
 
 array_declaration:

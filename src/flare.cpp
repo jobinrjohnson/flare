@@ -56,8 +56,11 @@ namespace flare {
     }
 
     void Flare::codeGenAst() {
+#ifdef FLARE_DEBUG
         try {
+#endif
             this->ast->startCodeGen();
+#ifdef FLARE_DEBUG
         } catch (char const *e) {
             std::cerr << "Error occurred while parsing : " << e;
         } catch (std::string e) {
@@ -65,6 +68,7 @@ namespace flare {
         } catch (exceptions::FlareException *e) {
             std::cerr << e->getMessage() << "\n\n";
         }
+#endif
 
     }
 
