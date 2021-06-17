@@ -19,6 +19,7 @@ message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 message(STATUS "Using C_FLAGS: ${CMAKE_CXX_FLAGS}")
 
 add_subdirectory(src/)
+add_subdirectory(stdapi/capi)
 
 enable_testing()
 add_subdirectory(test/)

@@ -2,6 +2,7 @@
 // Created by jobinrjohnson on 8/8/20.
 //
 
+#include <llvm/Support/DynamicLibrary.h>
 #include "llvm/ExecutionEngine/Interpreter.h"
 #include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/TargetSelect.h"
@@ -26,6 +27,9 @@ namespace flare::jit {
         InitializeNativeTarget();
         this->EE = EngineBuilder(std::move(module))
                 .create();
+
+        sys::DynamicLibrary::LoadLibraryPermanently("../../cmake-build-debug/stdapi/capi/libcapi.so");
+
     }
 
     void FlareJit::setArg(GenericValue arg) {
