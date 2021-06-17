@@ -13,3 +13,8 @@ set(libs "test_base" "lang" "ast" "jit" "exceptions" ${llvm_libs})
 add_executable(SimpleArithmetic SimpleArithmetic.cpp)
 target_link_libraries(SimpleArithmetic ${libs})
 add_test(SimpleArithmetic SimpleArithmetic)
+
+# Test : Logical Ops
+add_executable(LogicalOpsTest LogicalOpsTest.cpp)
+target_link_libraries(LogicalOpsTest ${libs})
+add_test(LogicalOpsTest LogicalOpsTest)
