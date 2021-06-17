@@ -2,12 +2,14 @@
 // Created by jobinrjohnson on 17/06/21.
 //
 #include <cstdio>
+
 using namespace std;
 
 extern "C" {
 
-void print() {
-    printf("Hello World");
+void print(char *string) {
+    printf("%s", string);
+    fflush(stdout);
 }
 
 long int read_int() {
@@ -19,16 +21,15 @@ long int read_int() {
     return i;
 }
 
-char* getLine(){
+char *get_line() {
     char *buffer = NULL;
     size_t len;
     int line = getline(&buffer, &len, stdin);
-    if(line == -1){
+    if (line == -1) {
         return buffer;
     }
     return buffer;
 }
-
 
 
 }

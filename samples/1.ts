@@ -1,13 +1,29 @@
-function print(): void;
+function print(message: string): void;
 
+// @ts-ignore
 function read_int(): int;
 
-function getLine(): string;
+function get_line(): string;
 
 
 function main(): int {
-    print();
-    let gn: int = read_int();
-    console.log(getLine());
-    return gn;
+    print("Enter Your Name : ");
+    let name: string = get_line();
+
+    print("Enter Your Age : ");
+    let age: int = read_int();
+
+    print("Your Name is ");
+    print(name);
+    print("You are ")
+
+    if (age < 50) {
+        print("Young");
+    } else if (age < 100) {
+        print("old");
+    } else {
+        print("too old to be alive");
+    }
+
+    return 0;
 }
