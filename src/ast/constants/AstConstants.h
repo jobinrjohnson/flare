@@ -24,6 +24,7 @@ namespace flare::ast {
         LOOP_NODE,
         FUNCTION_CALL_NODE,
         CLASS_DECL_NODE,
+        TYPE_CONV_NODE,
         EMPTY_NODE
     };
 

@@ -6,12 +6,15 @@ function read_int(): int;
 function get_line(): string;
 
 
+// @ts-ignore
 function main(): int {
     print("Enter Your Name : ");
     let name: string = get_line();
 
     print("Enter Your Age : ");
     let age: int = read_int();
+
+    let i:number;
 
     print("Your Name is ");
     print(name);
