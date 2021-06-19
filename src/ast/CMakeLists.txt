@@ -5,6 +5,7 @@ add_library(
         constants/AstConstants.h
         helpers/VariableHelper.h helpers/VariableHelper.cpp
         helpers/Context.cpp helpers/Context.h
+        helpers/TypeFactory.cpp helpers/TypeFactory.h
 
         implementation/Node.cpp Node.h
         implementation/ExprNode.cpp ExprNode.h
@@ -22,5 +23,4 @@ add_library(
         implementation/FunctionCallNode.cpp FunctionCallNode.h
         implementation/ClassDeclNode.cpp ClassDeclNode.h
         implementation/EmptyNode.cpp EmptyNode.h
-        implementation/TypeConvNode.cpp TypeConvNode.h
-)
+        implementation/TypeConvNode.cpp TypeConvNode.h)

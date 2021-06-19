@@ -43,6 +43,14 @@ namespace flare::ast {
         OTHER
     };
 
+    // Value
+    union LValue {
+        int iVal;       // integer value
+        double dVal;    // double value
+        bool bVal;      // boolean value
+        char *sVal;     // string value
+    };
+
     enum CastTo {
         PR_TY_INT_32, PR_TY_INT_64, PR_TY_FLOAT, PR_TY_DOUBLE, PR_TY_BOOLEAN
     };

@@ -2,14 +2,15 @@
 // Created by jobinrjohnson on 19/06/21.
 //
 
-#ifndef FLARE_INTTYPE_H
-#define FLARE_INTTYPE_H
+#ifndef FLARE_STRINGTYPE_H
+#define FLARE_STRINGTYPE_H
 
 #include "BaseType.h"
 
 namespace flare::types {
 
-    class IntType : public BaseType {
+
+    class StringType : public BaseType {
 
     public:
 
@@ -22,4 +23,4 @@ namespace flare::types {
 }
 
 
-#endif //FLARE_INTTYPE_H
+#endif //FLARE_STRINGTYPE_H

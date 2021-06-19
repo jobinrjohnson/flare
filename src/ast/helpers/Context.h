@@ -9,8 +9,14 @@
 #include <stack>
 #include <vector>
 #include <map>
+#include <llvm/IR/IRBuilder.h>
 
 #include "llvm/IR/Value.h"
+
+
+extern llvm::LLVMContext context;
+extern llvm::IRBuilder<> builder;
+extern std::unique_ptr<llvm::Module> module;
 
 namespace flare::ast {
 
@@ -57,7 +63,15 @@ namespace flare::ast {
 
         void addType(llvm::Type *type, Node *);
 
-        Node * getType(llvm::Type *type);
+        Node *getType(llvm::Type *type);
+
+        inline llvm::LLVMContext *getLLVMContext() {
+            return &context;
+        }
+
+        inline llvm::IRBuilder<> *getBuilder() {
+            return &builder;
+        }
 
 
     };
