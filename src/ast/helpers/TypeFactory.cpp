@@ -42,4 +42,8 @@ namespace flare::ast::helpers {
         return nullptr;
     }
 
+    BaseType *TypeFactory::getFlareType(VarType type) {
+        return this->getFlareType(type.type);
+    }
+
 }

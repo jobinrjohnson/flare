@@ -14,7 +14,9 @@ namespace flare::ast::helpers {
     class TypeFactory {
 
     public:
-        BaseType *getFlareType(ast::VariableType type);
+        BaseType *getFlareType(VariableType type);
+
+        BaseType *getFlareType(VarType type);
 
     };
 }

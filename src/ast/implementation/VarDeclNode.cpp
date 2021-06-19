@@ -7,6 +7,8 @@
 #include <ast/VarDeclNode.h>
 #include <ast/StatementListNode.h>
 #include <ast/ClassDeclNode.h>
+#include <ast/helpers/TypeFactory.h>
+#include <types/BaseType.h>
 
 namespace flare::ast {
 
@@ -65,7 +67,7 @@ namespace flare::ast {
         // If there is no initial value specified at the declaration of the variable.
         if (this->initialValue == nullptr) {
             // If there is no initial value just return the created variable.
-            Type *variableType = getLLVMType(this->type->type, context);
+            Type *variableType = this->getVariableLLVMType(cxt);
             this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
             currentBlock->createLocal(this->variableName, this);
             return this->llvmVarRef;
@@ -76,7 +78,7 @@ namespace flare::ast {
         Type *variableType;
         // If type is explicitly specified use that for declaration
         if (this->type != nullptr) {
-            variableType = this->getVariableLLVMType();
+            variableType = this->getVariableLLVMType(cxt);
         } else {
             variableType = initializerValue->getType();
 
@@ -148,7 +150,7 @@ namespace flare::ast {
         this->setVarType(type);
     }
 
-    llvm::Type *VarDeclNode::getVariableLLVMType() {
+    llvm::Type *VarDeclNode::getVariableLLVMType(Context *cxt) {
 
         // TODO deal with type from initializer
 
@@ -168,7 +170,10 @@ namespace flare::ast {
         }
 
 
+        helpers::TypeFactory tf;
+        types::BaseType *fType = tf.getFlareType(*this->type);
+
         // If there is no initial value just return the created variable.
-        return getLLVMType(this->type->type, context);
+        return fType->getLLVMType(cxt);
     }
 }

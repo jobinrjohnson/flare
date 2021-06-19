@@ -77,7 +77,7 @@ namespace flare::ast {
             return this->type;
         }
 
-        llvm::Type *getVariableLLVMType();
+        llvm::Type *getVariableLLVMType(Context *cxt);
 
         // Returns the node types (for debugging)
         NodeType getNodeType() override;

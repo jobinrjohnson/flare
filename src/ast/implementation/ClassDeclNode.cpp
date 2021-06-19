@@ -17,7 +17,7 @@ namespace flare::ast {
         // Codegen for class variables
         std::vector<llvm::Type *> items;
         for (VarDeclNode *ele:this->vars) {
-            items.push_back(ele->getVariableLLVMType());
+            items.push_back(ele->getVariableLLVMType(cxt));
         }
 
         // Create LLVM type
