@@ -10,6 +10,8 @@
 #include <ast/helpers/TypeFactory.h>
 #include <types/BaseType.h>
 
+using namespace flare::exceptions;
+
 namespace flare::ast {
 
 
@@ -62,6 +64,40 @@ namespace flare::ast {
 
 
     llvm::Value *VarDeclNode::codeGenLocalVariable(Context *cxt) {
+
+
+        helpers::TypeFactory tf;
+        Value *initializerValue = nullptr;
+
+        auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
+
+        if (initialValue != nullptr) {
+            initializerValue = this->initialValue->codeGen(cxt);
+            types::BaseType *initializerType = tf.getFlareType(*this->type);
+
+            if (this->type != nullptr) {
+                // TODO handle
+            }
+
+            this->flareType = initializerType;
+        } else {
+            this->flareType = tf.getFlareType(*this->type);
+        }
+
+
+        Type *variableType = this->flareType->getLLVMType(cxt);
+        this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
+        currentBlock->createLocal(this->variableName, this);
+
+        if (initialValue != nullptr) {
+            return builder.CreateStore(initializerValue, this->llvmVarRef);
+        }
+
+        return this->llvmVarRef;
+
+    }
+
+    llvm::Value *VarDeclNode::codeGenLocalVariable2(Context *cxt) {
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
 
         // If there is no initial value specified at the declaration of the variable.
@@ -123,10 +159,10 @@ namespace flare::ast {
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
         if (currentBlock != nullptr && currentBlock->findLocal(this->variableName) != nullptr) {
 
-            throw new flare::exceptions::SemanticException("variable with name : '"
-                                                           + this->variableName
-                                                           + "' already exists in this block",
-                                                           this->lineNumber
+            throw new SemanticException("variable with name : '"
+                                        + this->variableName
+                                        + "' already exists in this block",
+                                        this->lineNumber
             );
 
         }
@@ -156,10 +192,10 @@ namespace flare::ast {
 
         if (this->type == nullptr) {
 
-            throw new exceptions::SemanticException("variable : '"
-                                                    + this->variableName
-                                                    + "' has no initializer or explicit type definition",
-                                                    this->lineNumber
+            throw new SemanticException("variable : '"
+                                        + this->variableName
+                                        + "' has no initializer or explicit type definition",
+                                        this->lineNumber
             );
 
         }

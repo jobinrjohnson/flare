@@ -6,6 +6,7 @@
 #define FLARE_VARDECLNODE_H
 
 
+#include <types/BaseType.h>
 #include "Node.h"
 #include "LiteralNode.h"
 #include "constants/AstConstants.h"
@@ -33,6 +34,8 @@ namespace flare::ast {
 
         // LLVM Variable reference
         Value *llvmVarRef;
+
+        types::BaseType *flareType;
 
         // Functions
 
@@ -96,6 +99,9 @@ namespace flare::ast {
 
         // Generate code if the node corresponds to a local variable
         llvm::Value *codeGenLocalVariable(Context *cxt);
+
+        // temp
+        llvm::Value *codeGenLocalVariable2(Context *cxt);
 
     };
 

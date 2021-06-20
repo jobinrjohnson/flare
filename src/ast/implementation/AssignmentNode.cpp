@@ -3,7 +3,6 @@
 //
 
 #include <ast/AssignmentNode.h>
-#include <ast/helpers/VariableHelper.h>
 #include <ast/VarDeclNode.h>
 
 namespace flare::ast {
