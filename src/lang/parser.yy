@@ -266,6 +266,7 @@ var_type:
     | KW_BOOLEAN        { $$ = new VarType; $$->type = VARTYPE_BOOLEAN; }
     | KW_VOID           { $$ = new VarType; $$->type = VARTYPE_VOID; }
     | KW_STRING           { $$ = new VarType; $$->type = VARTYPE_STRING; }
+    | IDENTIFIER           { $$ = new VarType; $$->type = OTHER; $$->name = $1; }
 ;
 
 array_declaration:

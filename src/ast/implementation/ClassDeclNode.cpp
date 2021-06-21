@@ -5,6 +5,7 @@
 #include <ast/helpers/VariableHelper.h>
 #include <ast/ClassDeclNode.h>
 #include <exceptions/SemanticException.h>
+#include <types/ClassObjectType.h>
 
 namespace flare::ast {
 
@@ -13,6 +14,11 @@ namespace flare::ast {
     }
 
     llvm::Value *ClassDeclNode::codeGen(Context *cxt) {
+
+        cxt->registerType(
+                this->className,
+                new ClassObjectType(this)
+        );
 
         // Codegen for class variables
         std::vector<llvm::Type *> items;

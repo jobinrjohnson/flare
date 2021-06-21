@@ -132,6 +132,11 @@ namespace flare::ast {
     }
 
     BaseType *Context::getFlareType(VarType type) {
+
+        if (type.type == VariableType::OTHER) {
+            return this->findType(type.name);
+        }
+
         return this->getFlareType(type.type);
     }
 

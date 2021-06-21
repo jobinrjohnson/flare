@@ -62,6 +62,7 @@ namespace flare::ast {
 
     typedef struct VarType {
         VariableType type;
+        std::string name = "";
         VariableType subType = OTHER;
         TypeReference *typeRef;
     } VarType;
