@@ -5,7 +5,6 @@ add_library(
         constants/AstConstants.h
         helpers/VariableHelper.h helpers/VariableHelper.cpp
         helpers/Context.cpp helpers/Context.h
-        helpers/TypeFactory.cpp helpers/TypeFactory.h
 
         implementation/Node.cpp Node.h
         implementation/ExprNode.cpp ExprNode.h

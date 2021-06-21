@@ -7,10 +7,13 @@
 
 #include <llvm/IR/IRBuilder.h>
 #include <ast/constants/AstConstants.h>
-#include <ast/helpers/Context.h>
 
 using namespace llvm;
 using namespace flare::ast;
+
+namespace flare::ast{
+    class Context;
+}
 
 namespace flare::types {
 

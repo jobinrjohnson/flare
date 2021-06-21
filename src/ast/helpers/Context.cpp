@@ -5,6 +5,9 @@
 #include <ast/helpers/Context.h>
 #include <ast/StatementListNode.h>
 
+#include <types/IntType.h>
+#include <types/StringType.h>
+
 namespace flare::ast {
 
     void Context::pushFunction(Node *function) {
@@ -78,4 +81,70 @@ namespace flare::ast {
         }
         return nullptr;
     }
+
+
+    BaseType *Context::findType(std::string name) {
+        auto val = this->types.find(name);
+        if (val != this->types.end()) {
+            return val->second;
+        }
+
+        // Register built in types
+        BaseType *type = nullptr;
+        if (name == "int") {
+            type = new IntType();
+        } else if (name == "string") {
+            type = new StringType();
+        }
+
+        if (type != nullptr) {
+            this->registerType("int", type);
+            return type;
+        }
+        return nullptr;
+    }
+
+    bool Context::registerType(std::string name, BaseType *type) {
+        this->types.insert(std::pair<std::string, BaseType *>(name, type));
+        return true;
+    }
+
+
+    BaseType *Context::getFlareType(ast::VariableType type) {
+
+        switch (type) {
+
+            case VARTYPE_INT_32:
+                break;
+            case VARTYPE_INT_64:
+            case VARTYPE_INT:
+                return this->findType("int");
+            case VARTYPE_FLOAT:
+                break;
+            case VARTYPE_DOUBLE:
+                break;
+            case VARTYPE_NUMBER:
+                break;
+            case VARTYPE_BOOLEAN:
+                break;
+            case VARTYPE_ARRAY:
+                break;
+            case VARTYPE_STRING:
+                return this->findType("string");
+            case VARTYPE_VOID:
+                break;
+            case VARTYPE_OBJECT:
+                break;
+            case OTHER:
+                break;
+        }
+
+        throw "this wont work";
+    }
+
+    BaseType *Context::getFlareType(VarType type) {
+        return this->getFlareType(type.type);
+    }
+
+
 }

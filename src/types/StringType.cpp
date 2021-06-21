@@ -3,6 +3,7 @@
 //
 
 #include "StringType.h"
+#include <ast/helpers/Context.h>
 
 namespace flare::types {
     Type *StringType::getLLVMType(Context *context) {

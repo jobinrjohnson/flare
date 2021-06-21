@@ -5,7 +5,6 @@
 #include <ast/LiteralNode.h>
 #include <exceptions/UnimplementedException.h>
 #include <types/BaseType.h>
-#include <ast/helpers/TypeFactory.h>
 
 namespace flare::ast {
 
@@ -28,8 +27,7 @@ namespace flare::ast {
 
         this->printCallStack(cxt, "LiteralNode", __FUNCTION__);
 
-        helpers::TypeFactory tf;
-        types::BaseType *fType = tf.getFlareType(this->literalType);
+        types::BaseType *fType = cxt->getFlareType(this->literalType);
         return fType->createInstance(cxt, this->nodeValue);
 
         switch (this->literalType) {

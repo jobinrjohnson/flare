@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <llvm/IR/IRBuilder.h>
+#include <types/BaseType.h>
 
 #include "llvm/IR/Value.h"
 
@@ -17,6 +18,8 @@
 extern llvm::LLVMContext context;
 extern llvm::IRBuilder<> builder;
 extern std::unique_ptr<llvm::Module> module;
+
+using namespace flare::types;
 
 namespace flare::ast {
 
@@ -29,6 +32,8 @@ namespace flare::ast {
         std::map<std::string, Node *> classDeclarations;
 
         std::map<llvm::Type *, Node *> customTypesAvail;
+
+        std::map<std::string, BaseType *> types;
 
     public:
 
@@ -72,6 +77,17 @@ namespace flare::ast {
         inline llvm::IRBuilder<> *getBuilder() {
             return &builder;
         }
+
+
+        BaseType *findType(std::string name);
+
+        bool registerType(std::string name, BaseType *type);
+
+
+
+        BaseType *getFlareType(VariableType type);
+
+        BaseType *getFlareType(VarType type);
 
 
     };

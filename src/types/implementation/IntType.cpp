@@ -3,6 +3,7 @@
 //
 
 #include "types/IntType.h"
+#include <ast/helpers/Context.h>
 
 namespace flare::types {
 

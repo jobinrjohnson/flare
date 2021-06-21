@@ -7,7 +7,6 @@
 #include <ast/VarDeclNode.h>
 #include <ast/StatementListNode.h>
 #include <ast/ClassDeclNode.h>
-#include <ast/helpers/TypeFactory.h>
 #include <types/BaseType.h>
 
 using namespace flare::exceptions;
@@ -66,14 +65,13 @@ namespace flare::ast {
     llvm::Value *VarDeclNode::codeGenLocalVariable(Context *cxt) {
 
 
-        helpers::TypeFactory tf;
         Value *initializerValue = nullptr;
 
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
 
         if (initialValue != nullptr) {
             initializerValue = this->initialValue->codeGen(cxt);
-            types::BaseType *initializerType = tf.getFlareType(*this->type);
+            types::BaseType *initializerType = cxt->getFlareType(*this->type);
 
             if (this->type != nullptr) {
                 // TODO handle
@@ -81,7 +79,7 @@ namespace flare::ast {
 
             this->flareType = initializerType;
         } else {
-            this->flareType = tf.getFlareType(*this->type);
+            this->flareType = cxt->getFlareType(*this->type);
         }
 
 
@@ -206,8 +204,7 @@ namespace flare::ast {
         }
 
 
-        helpers::TypeFactory tf;
-        types::BaseType *fType = tf.getFlareType(*this->type);
+        types::BaseType *fType = cxt->getFlareType(*this->type);
 
         // If there is no initial value just return the created variable.
         return fType->getLLVMType(cxt);
