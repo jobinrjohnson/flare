@@ -71,10 +71,14 @@ namespace flare::ast {
 
         if (initialValue != nullptr) {
             initializerValue = this->initialValue->codeGen(cxt);
-            types::BaseType *initializerType = cxt->getFlareType(*this->type);
+            types::BaseType *initializerType = cxt->getFlareType(initializerValue);
 
-            if (this->type != nullptr) {
-                // TODO handle
+            // If the assignment is illegal throw error
+            if (this->type != nullptr && initializerType != cxt->getFlareType(*this->type)) {
+                throw new SemanticException(
+                        "Illegal assignment :  Types does not match",
+                        this->lineNumber
+                );
             }
 
             this->flareType = initializerType;

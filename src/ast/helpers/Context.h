@@ -89,6 +89,9 @@ namespace flare::ast {
 
         BaseType *getFlareType(VarType type);
 
+        BaseType *getFlareType(Value* value);
+
+        void initTypes();
 
     };
 }

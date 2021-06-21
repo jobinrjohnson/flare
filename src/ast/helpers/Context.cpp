@@ -8,6 +8,8 @@
 #include <types/IntType.h>
 #include <types/StringType.h>
 
+#include <iostream>
+
 namespace flare::ast {
 
     void Context::pushFunction(Node *function) {
@@ -88,19 +90,6 @@ namespace flare::ast {
         if (val != this->types.end()) {
             return val->second;
         }
-
-        // Register built in types
-        BaseType *type = nullptr;
-        if (name == "int") {
-            type = new IntType();
-        } else if (name == "string") {
-            type = new StringType();
-        }
-
-        if (type != nullptr) {
-            this->registerType("int", type);
-            return type;
-        }
         return nullptr;
     }
 
@@ -144,6 +133,20 @@ namespace flare::ast {
 
     BaseType *Context::getFlareType(VarType type) {
         return this->getFlareType(type.type);
+    }
+
+    BaseType *Context::getFlareType(Value *value) {
+        for (auto const &x : this->types) {
+            if (x.second->getLLVMType(this) == value->getType()) {
+                return x.second;
+            }
+        }
+        throw "Type not found";
+    }
+
+    void Context::initTypes() {
+        this->registerType("int", new IntType());
+        this->registerType("string", new StringType());
     }
 
 

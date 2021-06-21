@@ -19,6 +19,8 @@ namespace flare::ast {
         module = std::make_unique<llvm::Module>("FlareTest", context);
 
         auto *cxt = new Context();
+        cxt->initTypes();
+
         this->codeGen(cxt);
         free(cxt);
 
