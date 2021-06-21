@@ -1,5 +1,5 @@
 // @ts-ignore
-function printf(format: string, arg: string): void;
+function printf(format: string, arg: double): void;
 
 class A {
     hello: int;
@@ -10,8 +10,8 @@ function main(): int {
 
     let x: A = new A();
 
-    let a: string = "90";
-    printf("The number is %s", a);
+    let a: double = 90.3;
+    printf("The number is %f", a);
 
     return 0;
 }

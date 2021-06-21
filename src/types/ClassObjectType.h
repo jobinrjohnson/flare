@@ -20,6 +20,10 @@ namespace flare::types {
 
         Type *getLLVMType(Context *) override;
 
+        inline bool isInbuiltTy() {
+            return false;
+        }
+
         Value *createInstance(Context *, LValue) override;
 
     };

@@ -9,6 +9,8 @@
 #include <types/StringType.h>
 
 #include <iostream>
+#include <types/BoolType.h>
+#include <types/DoubleType.h>
 
 namespace flare::ast {
 
@@ -111,11 +113,10 @@ namespace flare::ast {
             case VARTYPE_FLOAT:
                 break;
             case VARTYPE_DOUBLE:
-                break;
             case VARTYPE_NUMBER:
-                break;
+                return this->findType("double");
             case VARTYPE_BOOLEAN:
-                break;
+                return this->findType("boolean");
             case VARTYPE_ARRAY:
                 break;
             case VARTYPE_STRING:
@@ -152,6 +153,8 @@ namespace flare::ast {
     void Context::initTypes() {
         this->registerType("int", new IntType());
         this->registerType("string", new StringType());
+        this->registerType("boolean", new BoolType());
+        this->registerType("double", new DoubleType());
     }
 
 

@@ -1,16 +1,15 @@
 //
-// Created by jobinrjohnson on 19/06/21.
+// Created by jobinrjohnson on 21/06/21.
 //
 
-#ifndef FLARE_STRINGTYPE_H
-#define FLARE_STRINGTYPE_H
+#ifndef FLARE_DOUBLETYPE_H
+#define FLARE_DOUBLETYPE_H
 
 #include "BaseType.h"
 
 namespace flare::types {
 
-
-    class StringType : public BaseType {
+    class DoubleType : public BaseType {
 
     public:
 
@@ -27,4 +26,4 @@ namespace flare::types {
 }
 
 
-#endif //FLARE_STRINGTYPE_H
+#endif //FLARE_DOUBLETYPE_H

@@ -11,7 +11,7 @@
 using namespace llvm;
 using namespace flare::ast;
 
-namespace flare::ast{
+namespace flare::ast {
     class Context;
 }
 
@@ -22,6 +22,8 @@ namespace flare::types {
     public:
 
         virtual Type *getLLVMType(Context *) = 0;
+
+        virtual inline bool isInbuiltTy() = 0;
 
         virtual Value *createInstance(Context *, LValue) = 0;
 
