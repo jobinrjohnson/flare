@@ -8,6 +8,7 @@
 #include <ast/VarDeclNode.h>
 #include <exceptions/SemanticException.h>
 #include <ast/ClassDeclNode.h>
+#include <types/ClassObjectType.h>
 
 namespace flare::ast {
 
@@ -31,7 +32,7 @@ namespace flare::ast {
 
         if (!this->base.empty()) {
 
-            Node *vNode = cxt->findVariable(this->base);
+            VarDeclNode *vNode = cxt->findVariable(this->base);
             if (vNode == nullptr) {
                 throw new exceptions::SemanticException("Variable '"
                                                         + this->base
@@ -40,18 +41,16 @@ namespace flare::ast {
                 );
             }
 
-            auto varDecl = dynamic_cast<VarDeclNode *>(vNode);
-            VarType *vType = varDecl->getVariableType();
-            if (vType->type != VARTYPE_OBJECT) {
-                // TODO handle more types
-                throw "not implemented";
+            BaseType *fType = vNode->getFlareType();
+
+            if (auto classType = dynamic_cast<ClassObjectType *>(fType)) {
+                auto *load = builder.CreateLoad(vNode->getLLVMVarRef());
+                auto *itemPointer = builder.CreateStructGEP(load, classType->getVariableIndex(this->variableName));
+                return builder.CreateLoad(itemPointer);
             }
+            // TODO handle more types
 
-            auto classNode = dynamic_cast<ClassDeclNode *>(vType->typeRef->node);
-
-            auto *load = builder.CreateLoad(varDecl->getLLVMVarRef());
-            auto *itemPointer = builder.CreateStructGEP(load, classNode->getVariableIndex(this->variableName));
-            return builder.CreateLoad(itemPointer);
+            throw "VariableDerefNode: type not handled";
 
         }
 

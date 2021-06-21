@@ -71,6 +71,11 @@ namespace flare::ast {
             return this->llvmVarRef;
         }
 
+        // Returns the internal type
+        inline BaseType *getFlareType() {
+            return this->flareType;
+        }
+
         // Returns the variable name
         inline std::string getVariableName() {
             return this->variableName;
@@ -99,9 +104,6 @@ namespace flare::ast {
 
         // Generate code if the node corresponds to a local variable
         llvm::Value *codeGenLocalVariable(Context *cxt);
-
-        // temp
-        llvm::Value *codeGenLocalVariable2(Context *cxt);
 
     };
 

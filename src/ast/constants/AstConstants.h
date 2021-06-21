@@ -39,7 +39,6 @@ namespace flare::ast {
         VARTYPE_ARRAY,
         VARTYPE_STRING,
         VARTYPE_VOID,
-        VARTYPE_OBJECT,
         OTHER
     };
 
@@ -63,8 +62,6 @@ namespace flare::ast {
     typedef struct VarType {
         VariableType type;
         std::string name = "";
-        VariableType subType = OTHER;
-        TypeReference *typeRef;
     } VarType;
 
 

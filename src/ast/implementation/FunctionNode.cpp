@@ -64,10 +64,8 @@ namespace flare::ast {
         if (this->isClassFunction()) {
 
             auto *vType = new VarType{
-                    .type = VariableType::VARTYPE_OBJECT,
-                    .typeRef = new TypeReference{
-                            .node = this->classNode
-                    }
+                    .type = VariableType::OTHER,
+                    .name = dynamic_cast<ClassDeclNode *>(this->classNode)->getQualifiedClassName()
             };
 
             auto *varDeclNode = new VarDeclNode("this", vType);

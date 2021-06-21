@@ -2,7 +2,7 @@
 // Created by jobinrjohnson on 21/06/21.
 //
 
-#include "DoubleType.h"
+#include "types/DoubleType.h"
 
 #include <ast/helpers/Context.h>
 

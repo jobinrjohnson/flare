@@ -11,6 +11,7 @@
 #include <iostream>
 #include <types/BoolType.h>
 #include <types/DoubleType.h>
+#include <types/VoidType.h>
 
 namespace flare::ast {
 
@@ -60,7 +61,7 @@ namespace flare::ast {
         return nullptr;
     }
 
-    Node *Context::findVariable(std::string name) {
+    VarDeclNode *Context::findVariable(std::string name) {
         VarDeclNode *variable = nullptr;
         std::vector<Node *>::iterator i = this->statementList.end();
         while (i != this->statementList.begin()) {
@@ -122,8 +123,7 @@ namespace flare::ast {
             case VARTYPE_STRING:
                 return this->findType("string");
             case VARTYPE_VOID:
-                break;
-            case VARTYPE_OBJECT:
+                std::cout << type << std::endl;
                 break;
             case OTHER:
                 break;
@@ -155,6 +155,7 @@ namespace flare::ast {
         this->registerType("string", new StringType());
         this->registerType("boolean", new BoolType());
         this->registerType("double", new DoubleType());
+        this->registerType("void", new VoidType());
     }
 
 

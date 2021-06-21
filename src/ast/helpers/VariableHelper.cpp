@@ -27,7 +27,6 @@ namespace flare::ast {
             case VARTYPE_STRING:
                 return llvm::Type::getInt8PtrTy(context);
             case VARTYPE_ARRAY:
-            case VARTYPE_OBJECT:
                 throw "LLVM Type not defined.";
                 break;
         }
@@ -98,7 +97,6 @@ namespace flare::ast {
             case VARTYPE_ARRAY:
             case VARTYPE_STRING:
             case VARTYPE_VOID:
-            case VARTYPE_OBJECT:
             case OTHER:
                 break;
         }

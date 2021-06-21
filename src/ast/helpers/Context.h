@@ -25,6 +25,8 @@ namespace flare::ast {
 
     class Node;
 
+    class VarDeclNode;
+
     class Context {
 
         std::stack<Node *> functions;
@@ -60,7 +62,7 @@ namespace flare::ast {
 
         Node *getCurrentFunction();
 
-        Node *findVariable(std::string name);
+        VarDeclNode *findVariable(std::string name);
 
         void pushClassDeclaration(std::string, Node *);
 

@@ -20,8 +20,16 @@ namespace flare::types {
 
         Type *getLLVMType(Context *) override;
 
-        inline bool isInbuiltTy() {
+        inline bool isInbuiltTy() override {
             return false;
+        }
+
+        inline unsigned int getVariableIndex(std::string name) {
+            return this->classDeclNode->getVariableIndex(name);
+        }
+
+        inline std::string getFullyQualifiedName() {
+            return this->classDeclNode->getQualifiedClassName();
         }
 
         Value *createInstance(Context *, LValue) override;

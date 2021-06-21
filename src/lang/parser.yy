@@ -273,10 +273,8 @@ array_declaration:
     KW_LET IDENTIFIER '[' ']'           {
             VarType *vType = new VarType{
                     .type = VARTYPE_ARRAY,
-                    .subType = VARTYPE_INT,
-                    .typeRef = new TypeReference{
-                        .name = "array"
-                    }
+                    .name = "array"
+                    // TODO add secondary type
             };
             $$ = new VarDeclNode($2, vType);
     }
