@@ -7,14 +7,26 @@
 
 namespace flare::types {
 
-    Type *ClassObjectType::getLLVMType(Context *context) {
+    Type *ClassObjectType::probeLLVMType(Context *context) {
         return this
                 ->classDeclNode
                 ->getClassLLVMPointerType();
     }
 
     Value *ClassObjectType::createInstance(Context *context, LValue lVal) {
-        return nullptr;
+
+        std::string varName = this->classDeclNode->getQualifiedClassName() + "::object";
+
+        auto inst = new AllocaInst(
+                this->getLLVMType(context),
+                0,
+                varName,
+                context->getBuilder()->GetInsertBlock()
+        );
+        inst->getAllocatedType();
+
+        return inst;
+
     }
 
     ClassObjectType::ClassObjectType(ClassDeclNode *classDeclNode) {

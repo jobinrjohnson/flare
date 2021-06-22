@@ -12,9 +12,10 @@ namespace flare::types {
 
     class BoolType : public BaseType {
 
-    public:
+    protected:
+        Type *probeLLVMType(Context *) override;
 
-        Type *getLLVMType(Context *) override;
+    public:
 
         inline bool isInbuiltTy() override {
             return true;

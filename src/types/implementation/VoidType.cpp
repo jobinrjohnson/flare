@@ -11,7 +11,7 @@ namespace flare::types {
         return nullptr;
     }
 
-    Type *VoidType::getLLVMType(Context *context) {
+    Type *VoidType::probeLLVMType(Context *context) {
         return Type::getVoidTy(*context->getLLVMContext());
     }
 }

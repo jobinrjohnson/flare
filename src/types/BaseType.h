@@ -19,9 +19,20 @@ namespace flare::types {
 
     class BaseType {
 
+    protected:
+
+        Type *type;
+
+        virtual Type *probeLLVMType(Context *) = 0;
+
     public:
 
-        virtual Type *getLLVMType(Context *) = 0;
+        inline Type *getLLVMType(Context *cxt) {
+            if (this->type == nullptr) {
+                this->type = this->probeLLVMType(cxt);
+            }
+            return type;
+        }
 
         virtual inline bool isInbuiltTy() = 0;
 

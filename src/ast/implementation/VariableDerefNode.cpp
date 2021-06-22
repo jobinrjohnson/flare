@@ -45,7 +45,8 @@ namespace flare::ast {
 
             if (auto classType = dynamic_cast<ClassObjectType *>(fType)) {
                 auto *load = builder.CreateLoad(vNode->getLLVMVarRef());
-                auto *itemPointer = builder.CreateStructGEP(load, classType->getVariableIndex(this->variableName));
+                unsigned int index = classType->getVariableIndex(this->variableName);
+                auto *itemPointer = builder.CreateStructGEP(load, index);
                 return builder.CreateLoad(itemPointer);
             }
             // TODO handle more types

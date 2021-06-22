@@ -12,9 +12,10 @@ namespace flare::types {
 
     class StringType : public BaseType {
 
-    public:
+    protected:
+        Type *probeLLVMType(Context *) override;
 
-        Type *getLLVMType(Context *) override;
+    public:
 
         inline bool isInbuiltTy() override {
             return true;

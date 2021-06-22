@@ -11,9 +11,10 @@ namespace flare::types {
 
     class DoubleType : public BaseType {
 
-    public:
+    protected:
+        Type *probeLLVMType(Context *) override;
 
-        Type *getLLVMType(Context *) override;
+    public:
 
         inline bool isInbuiltTy() override {
             return true;

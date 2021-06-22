@@ -12,6 +12,7 @@
 #include <types/BoolType.h>
 #include <types/DoubleType.h>
 #include <types/VoidType.h>
+#include <types/ClassObjectType.h>
 
 namespace flare::ast {
 
@@ -97,6 +98,12 @@ namespace flare::ast {
     }
 
     bool Context::registerType(std::string name, BaseType *type) {
+
+        std::cout << "<<" << name << std::endl;
+        if (this->findType(name) != nullptr) {
+            throw "already in";
+        }
+
         this->types.insert(std::pair<std::string, BaseType *>(name, type));
         return true;
     }
@@ -143,7 +150,19 @@ namespace flare::ast {
 
     BaseType *Context::getFlareType(Value *value) {
         for (auto const &x : this->types) {
-            if (x.second->getLLVMType(this) == value->getType()) {
+            Type *valType = value->getType();
+
+            AllocaInst *inst;
+            if ((inst = static_cast<AllocaInst *>(value))) {
+                valType = inst->getAllocatedType();
+            }
+
+            std::cout << ">>" << x.first << " ->" << valType << std::endl;
+            if (x.second->getLLVMType(this) == valType) {
+                return x.second;
+            }
+
+            if (x.second->getLLVMType(this) == valType) {
                 return x.second;
             }
         }

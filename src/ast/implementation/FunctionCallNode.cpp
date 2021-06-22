@@ -13,18 +13,15 @@ namespace flare::ast {
 
     llvm::Value *FunctionCallNode::codeGenObjectCreate(Context *cxt) {
 
-        auto *node = cxt->findClassDeclaration(this->className);
-        if (node == nullptr) {
+        BaseType *fType = cxt->findType(this->className);
+        if (fType == nullptr) {
             throw new exceptions::SemanticException("No declarations for class '"
                                                     + this->className
                                                     + "' found",
                                                     this->lineNumber);
         }
-
-        auto *cNode = dynamic_cast<ClassDeclNode *>(node);
-        auto *function = cNode->getInitFunction();
-
-        return this->performCall(function, None);
+        LValue lvl;
+        return fType->createInstance(cxt, lvl);
 
     }
 

@@ -11,7 +11,7 @@ namespace flare::types {
         return llvm::ConstantInt::get(*context->getLLVMContext(), APInt(64, val.iVal));
     }
 
-    Type *IntType::getLLVMType(Context *context) {
+    Type *IntType::probeLLVMType(Context *context) {
         return Type::getInt64Ty(*context->getLLVMContext());
     }
 }

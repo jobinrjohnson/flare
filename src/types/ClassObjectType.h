@@ -12,13 +12,15 @@ namespace flare::types {
 
     class ClassObjectType : public BaseType {
 
-        ClassDeclNode *classDeclNode;
+
+    protected:
+
+        Type *probeLLVMType(Context *) override;
 
     public:
+        ClassDeclNode *classDeclNode;
 
         explicit ClassObjectType(ClassDeclNode *classDeclNode);
-
-        Type *getLLVMType(Context *) override;
 
         inline bool isInbuiltTy() override {
             return false;

@@ -12,7 +12,7 @@ namespace flare::types {
         return ConstantFP::get(*context->getLLVMContext(), APFloat(val.dVal));
     }
 
-    Type *DoubleType::getLLVMType(Context *context) {
+    Type *DoubleType::probeLLVMType(Context *context) {
         return Type::getDoubleTy(*context->getLLVMContext());
     }
 }

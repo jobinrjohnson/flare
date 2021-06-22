@@ -72,6 +72,15 @@ namespace flare::ast {
             initializerValue = this->initialValue->codeGen(cxt);
             types::BaseType *initializerType = cxt->getFlareType(initializerValue);
 
+            // If it is already an alloc inst (in the case of class) just rename it to this.
+            AllocaInst *inst;
+            if ((inst = static_cast<AllocaInst *>(initializerValue))) {
+                this->flareType = cxt->getFlareType(inst);
+                this->llvmVarRef = inst;
+                currentBlock->createLocal(this->variableName, this);
+                return this->llvmVarRef;
+            }
+
             // If the assignment is illegal throw error
             if (this->type != nullptr && initializerType != cxt->getFlareType(*this->type)) {
                 throw new SemanticException(

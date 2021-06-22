@@ -15,11 +15,6 @@ namespace flare::ast {
 
     llvm::Value *ClassDeclNode::codeGen(Context *cxt) {
 
-        cxt->registerType(
-                this->className,
-                new ClassObjectType(this)
-        );
-
         // Codegen for class variables
         std::vector<llvm::Type *> items;
         for (VarDeclNode *ele:this->vars) {
@@ -39,6 +34,11 @@ namespace flare::ast {
         cxt->addType(this->LLVMType, this);
 
         cxt->pushClassDeclaration(this->getQualifiedClassName(), this);
+        
+        cxt->registerType(
+                this->className,
+                new ClassObjectType(this)
+        );
 
         return nullptr;
     }
@@ -100,7 +100,10 @@ namespace flare::ast {
     }
 
     llvm::PointerType *ClassDeclNode::getClassLLVMPointerType() {
-        return PointerType::get(this->getClassLLVMType(), 0);
+        if (this->LLVMPtrType == nullptr) {
+            this->LLVMPtrType = PointerType::get(this->getClassLLVMType(), 0);
+        }
+        return this->LLVMPtrType;
     }
 
     std::string ClassDeclNode::getQualifiedClassName() {

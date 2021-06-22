@@ -6,7 +6,7 @@
 #include <ast/helpers/Context.h>
 
 namespace flare::types {
-    Type *StringType::getLLVMType(Context *context) {
+    Type *StringType::probeLLVMType(Context *context) {
         return llvm::Type::getInt8PtrTy(*context->getLLVMContext());
     }
 

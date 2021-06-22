@@ -11,7 +11,7 @@ namespace flare::types {
         return llvm::ConstantInt::get(*context->getLLVMContext(), APInt(1, val.bVal));
     }
 
-    Type *BoolType::getLLVMType(Context *context) {
+    Type *BoolType::probeLLVMType(Context *context) {
         return Type::getInt1Ty(*context->getLLVMContext());
     }
 }
