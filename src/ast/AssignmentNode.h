@@ -32,6 +32,8 @@ namespace flare::ast {
 
         llvm::Value *codeGenArrayAssign(Context *cxt);
 
+        llvm::Value *codeGenObjectAssign(Context *cxt);
+
     };
 
 }

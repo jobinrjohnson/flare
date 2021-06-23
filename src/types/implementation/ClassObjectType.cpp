@@ -17,15 +17,12 @@ namespace flare::types {
 
         std::string varName = this->classDeclNode->getQualifiedClassName() + "::object";
 
-        auto inst = new AllocaInst(
+        return new AllocaInst(
                 this->getLLVMType(context),
                 0,
                 varName,
                 context->getBuilder()->GetInsertBlock()
         );
-        inst->getAllocatedType();
-
-        return inst;
 
     }
 

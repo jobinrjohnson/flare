@@ -30,10 +30,22 @@ namespace flare::ast {
             throw "Invalid variable name";
         }
 
+
         auto *variable = dynamic_cast<VarDeclNode *>(vNode);
         Value *value = this->expression->codeGen(cxt->nextLevel());
 
-        builder.CreateStore(value, variable->getLLVMVarRef());
+
+        if (!cxt->getFlareType(value)->isInbuiltTy()) {
+
+            auto bCst1 = builder.CreateBitCast(value, Type::getInt8PtrTy(*cxt->getLLVMContext()));
+            auto bCst2 = builder.CreateBitCast(variable->getLLVMVarRef(), Type::getInt8PtrTy(*cxt->getLLVMContext()));
+
+            builder.CreateMemCpy(bCst2, MaybeAlign(8), bCst1, MaybeAlign(8), 8);
+
+        } else {
+            builder.CreateStore(value, variable->getLLVMVarRef());
+        }
+
         return value;
     }
 
@@ -66,6 +78,10 @@ namespace flare::ast {
 
         builder.CreateStore(value, arrayPtrLoad);
         return value;
+    }
+
+    llvm::Value *AssignmentNode::codeGenObjectAssign(Context *cxt) {
+        return nullptr;
     }
 
 }

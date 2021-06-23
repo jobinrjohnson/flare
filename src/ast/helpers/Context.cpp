@@ -12,7 +12,6 @@
 #include <types/BoolType.h>
 #include <types/DoubleType.h>
 #include <types/VoidType.h>
-#include <types/ClassObjectType.h>
 
 namespace flare::ast {
 
@@ -66,8 +65,7 @@ namespace flare::ast {
         VarDeclNode *variable = nullptr;
         std::vector<Node *>::iterator i = this->statementList.end();
         while (i != this->statementList.begin()) {
-            --i;
-            StatementListNode *node = dynamic_cast<StatementListNode *>(*i);
+            StatementListNode *node = dynamic_cast<StatementListNode *>(*(--i));
             variable = node->findLocal(name);
             if (variable != nullptr) {
                 return variable;
@@ -99,7 +97,6 @@ namespace flare::ast {
 
     bool Context::registerType(std::string name, BaseType *type) {
 
-        std::cout << "<<" << name << std::endl;
         if (this->findType(name) != nullptr) {
             throw "already in";
         }
@@ -149,22 +146,17 @@ namespace flare::ast {
     }
 
     BaseType *Context::getFlareType(Value *value) {
+        Type *valType = value->getType();
+
+        if (valType->isPointerTy()) {
+            valType = valType->getPointerElementType();
+        }
+
         for (auto const &x : this->types) {
-            Type *valType = value->getType();
-
-            AllocaInst *inst;
-            if ((inst = static_cast<AllocaInst *>(value))) {
-                valType = inst->getAllocatedType();
-            }
-
-            std::cout << ">>" << x.first << " ->" << valType << std::endl;
             if (x.second->getLLVMType(this) == valType) {
                 return x.second;
             }
 
-            if (x.second->getLLVMType(this) == valType) {
-                return x.second;
-            }
         }
         throw "Type not found";
     }
