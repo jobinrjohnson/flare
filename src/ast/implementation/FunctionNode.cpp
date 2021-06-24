@@ -16,8 +16,9 @@ namespace flare::ast {
 
         if (this->isClassFunction()) {
             // If it is a class function add class type as the first parameter
-            auto *cNode = dynamic_cast<ClassDeclNode *>(this->classNode);
-            argVector.push_back(cNode->getClassLLVMPointerType());
+            // TODO refactor this
+            auto *cNode = cxt->findType(dynamic_cast<ClassDeclNode *>(this->classNode)->getQualifiedClassName());
+            argVector.push_back(cNode->getLLVMType(cxt));
         }
 
         // Fill in the parameter list
@@ -62,17 +63,12 @@ namespace flare::ast {
 
         Function::arg_iterator actualArgs = function->arg_begin();
         if (this->isClassFunction()) {
-
-            auto *vType = new VarType{
-                    .type = VariableType::OTHER,
-                    .name = dynamic_cast<ClassDeclNode *>(this->classNode)->getQualifiedClassName()
-            };
-
-            auto *varDeclNode = new VarDeclNode("this", vType);
+            // TODO refactor this
+            auto *cBType = cxt->findType(dynamic_cast<ClassDeclNode *>(this->classNode)->getQualifiedClassName());
+            auto *varDeclNode = new VarDeclNode("this", cBType);
             varDeclNode->setInitialValue(new EmptyNode(&(*actualArgs)));
             varDeclNode->setLineNumber(this->lineNumber);
             this->statementListNode->pushFirst(varDeclNode);
-
             ++actualArgs;
         }
 

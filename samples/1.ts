@@ -4,10 +4,9 @@ function printf(format: string, arg: int): void;
 class SampleClass {
     hello: int = 0;
 
-    //
-    // say2hello(): void {
-    //     printf("The class number is %d 1", 0)
-    // }
+    say2hello(): void {
+        printf("The class number is %d", this.hello);
+    }
 
     // sayHello(): int {
     //     // this.say2hello();
@@ -34,7 +33,7 @@ function main(): int {
 
     let i: int = 0;
 
-    // x.sayHello();
+    x.say2hello();
 
     // printf("%d", x.hello);
 

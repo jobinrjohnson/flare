@@ -63,10 +63,18 @@ namespace flare::ast {
 
     llvm::Value *VarDeclNode::codeGenLocalVariable(Context *cxt) {
 
-
         Value *initializerValue = nullptr;
 
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
+
+        if (this->variableName == "this") {
+            Type *variableType = this->flareType->getLLVMType(cxt);
+            this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
+            currentBlock->createLocal(this->variableName, this);
+            initializerValue = this->initialValue->codeGen(cxt);
+            builder.CreateStore(initializerValue, this->llvmVarRef);
+            return this->llvmVarRef;
+        }
 
         if (initialValue != nullptr) {
             initializerValue = this->initialValue->codeGen(cxt);
@@ -158,9 +166,16 @@ namespace flare::ast {
 
         }
 
-        types::BaseType *fType = cxt->getFlareType(*this->type);
+        if (this->flareType == nullptr) {
+            this->flareType = cxt->getFlareType(*this->type);
+        }
 
         // If there is no initial value just return the created variable.
-        return fType->getLLVMType(cxt);
+        return this->flareType->getLLVMType(cxt);
+    }
+
+    VarDeclNode::VarDeclNode(const char *name, BaseType *type) {
+        this->variableName.assign(name);
+        this->flareType = type;
     }
 }

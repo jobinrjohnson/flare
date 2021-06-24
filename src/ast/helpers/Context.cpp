@@ -158,6 +158,7 @@ namespace flare::ast {
             }
 
         }
+
         throw "Type not found";
     }
 

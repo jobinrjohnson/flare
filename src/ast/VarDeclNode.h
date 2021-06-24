@@ -96,6 +96,9 @@ namespace flare::ast {
         // Constructor name and variable type.
         VarDeclNode(const char *name, VarType *type);
 
+        // Constructor name and variable type.
+        VarDeclNode(const char *name, BaseType *type);
+
         // Generate code for the node (Post AST function)
         llvm::Value *codeGen(Context *cxt) override;
 
