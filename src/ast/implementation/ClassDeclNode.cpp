@@ -5,6 +5,7 @@
 #include <ast/helpers/VariableHelper.h>
 #include <ast/ClassDeclNode.h>
 #include <exceptions/SemanticException.h>
+#include <types/ClassObjectType.h>
 
 namespace flare::ast {
 
@@ -17,11 +18,21 @@ namespace flare::ast {
         // Codegen for class variables
         std::vector<llvm::Type *> items;
         for (VarDeclNode *ele:this->vars) {
-            items.push_back(ele->getVariableLLVMType());
+            items.push_back(ele->getVariableLLVMType(cxt));
         }
 
         // Create LLVM type
         this->LLVMType = StructType::create(context, items, this->getQualifiedClassName());
+
+        cxt->addType(this->LLVMType, this);
+
+        cxt->pushClassDeclaration(this->getQualifiedClassName(), this);
+
+        cxt->registerType(
+                this->className,
+                new ClassObjectType(this)
+        );
+
 
         this->codeGenConstructor(cxt);
 
@@ -29,10 +40,6 @@ namespace flare::ast {
         for (FunctionNode *ele:this->functions) {
             ele->codeGen(cxt);
         }
-
-        cxt->addType(this->LLVMType, this);
-
-        cxt->pushClassDeclaration(this->getQualifiedClassName(), this);
 
         return nullptr;
     }
@@ -94,7 +101,10 @@ namespace flare::ast {
     }
 
     llvm::PointerType *ClassDeclNode::getClassLLVMPointerType() {
-        return PointerType::get(this->getClassLLVMType(), 0);
+        if (this->LLVMPtrType == nullptr) {
+            this->LLVMPtrType = PointerType::get(this->getClassLLVMType(), 0);
+        }
+        return this->LLVMPtrType;
     }
 
     std::string ClassDeclNode::getQualifiedClassName() {

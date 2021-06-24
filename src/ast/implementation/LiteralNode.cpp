@@ -4,6 +4,7 @@
 
 #include <ast/LiteralNode.h>
 #include <exceptions/UnimplementedException.h>
+#include <types/BaseType.h>
 
 namespace flare::ast {
 
@@ -23,33 +24,9 @@ namespace flare::ast {
     }
 
     llvm::Value *LiteralNode::codeGen(Context *cxt) {
-
         this->printCallStack(cxt, "LiteralNode", __FUNCTION__);
-
-        switch (this->literalType) {
-
-            case VariableType::VARTYPE_INT_32:
-                return llvm::ConstantInt::get(context, APInt(32, this->nodeValue.iVal));
-            case VariableType::VARTYPE_INT_64:
-            case VariableType::VARTYPE_INT:
-                return llvm::ConstantInt::get(context, APInt(64, this->nodeValue.iVal));
-            case VariableType::VARTYPE_BOOLEAN:
-                return ConstantInt::get(context, APInt(1, this->nodeValue.bVal));
-            case VariableType::VARTYPE_FLOAT:
-                return ConstantFP::get(Type::getFloatTy(context), this->nodeValue.dVal);
-            case VariableType::VARTYPE_DOUBLE:
-            case VariableType::VARTYPE_NUMBER:
-                return ConstantFP::get(Type::getDoubleTy(context), this->nodeValue.dVal);
-            case VariableType::VARTYPE_STRING:
-                return builder.CreateGlobalStringPtr(StringRef(this->nodeValue.sVal), "str");
-            case VariableType::VARTYPE_ARRAY:
-            case VariableType::VARTYPE_VOID:
-            case VariableType::VARTYPE_OBJECT:
-            case VariableType::OTHER:
-                break;
-        }
-        throw new exceptions::UnimplementedException("Literal array and other not implemented");
-
+        types::BaseType *fType = cxt->getFlareType(this->literalType);
+        return fType->createInstance(cxt, this->nodeValue);
     }
 
     LiteralNode::LiteralNode(char *mLiteralValue) {

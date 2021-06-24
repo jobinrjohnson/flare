@@ -266,16 +266,15 @@ var_type:
     | KW_BOOLEAN        { $$ = new VarType; $$->type = VARTYPE_BOOLEAN; }
     | KW_VOID           { $$ = new VarType; $$->type = VARTYPE_VOID; }
     | KW_STRING           { $$ = new VarType; $$->type = VARTYPE_STRING; }
+    | IDENTIFIER           { $$ = new VarType; $$->type = OTHER; $$->name = $1; }
 ;
 
 array_declaration:
     KW_LET IDENTIFIER '[' ']'           {
             VarType *vType = new VarType{
                     .type = VARTYPE_ARRAY,
-                    .subType = VARTYPE_INT,
-                    .typeRef = new TypeReference{
-                        .name = "array"
-                    }
+                    .name = "array"
+                    // TODO add secondary type
             };
             $$ = new VarDeclNode($2, vType);
     }

@@ -24,6 +24,7 @@ namespace flare::ast {
         LOOP_NODE,
         FUNCTION_CALL_NODE,
         CLASS_DECL_NODE,
+        TYPE_CONV_NODE,
         EMPTY_NODE
     };
 
@@ -38,8 +39,15 @@ namespace flare::ast {
         VARTYPE_ARRAY,
         VARTYPE_STRING,
         VARTYPE_VOID,
-        VARTYPE_OBJECT,
         OTHER
+    };
+
+    // Value
+    union LValue {
+        int iVal;       // integer value
+        double dVal;    // double value
+        bool bVal;      // boolean value
+        char *sVal;     // string value
     };
 
     enum CastTo {
@@ -53,8 +61,7 @@ namespace flare::ast {
 
     typedef struct VarType {
         VariableType type;
-        VariableType subType = OTHER;
-        TypeReference *typeRef;
+        std::string name = "";
     } VarType;
 
 

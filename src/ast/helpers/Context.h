@@ -9,12 +9,23 @@
 #include <stack>
 #include <vector>
 #include <map>
+#include <llvm/IR/IRBuilder.h>
+#include <types/BaseType.h>
 
 #include "llvm/IR/Value.h"
+
+
+extern llvm::LLVMContext context;
+extern llvm::IRBuilder<> builder;
+extern std::unique_ptr<llvm::Module> module;
+
+using namespace flare::types;
 
 namespace flare::ast {
 
     class Node;
+
+    class VarDeclNode;
 
     class Context {
 
@@ -23,6 +34,8 @@ namespace flare::ast {
         std::map<std::string, Node *> classDeclarations;
 
         std::map<llvm::Type *, Node *> customTypesAvail;
+
+        std::map<std::string, BaseType *> types;
 
     public:
 
@@ -49,7 +62,7 @@ namespace flare::ast {
 
         Node *getCurrentFunction();
 
-        Node *findVariable(std::string name);
+        VarDeclNode *findVariable(std::string name);
 
         void pushClassDeclaration(std::string, Node *);
 
@@ -57,8 +70,30 @@ namespace flare::ast {
 
         void addType(llvm::Type *type, Node *);
 
-        Node * getType(llvm::Type *type);
+        Node *getType(llvm::Type *type);
 
+        inline llvm::LLVMContext *getLLVMContext() {
+            return &context;
+        }
+
+        inline llvm::IRBuilder<> *getBuilder() {
+            return &builder;
+        }
+
+
+        BaseType *findType(std::string name);
+
+        bool registerType(std::string name, BaseType *type);
+
+
+
+        BaseType *getFlareType(VariableType type);
+
+        BaseType *getFlareType(VarType type);
+
+        BaseType *getFlareType(Value* value);
+
+        void initTypes();
 
     };
 }

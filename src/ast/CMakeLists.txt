@@ -21,4 +21,5 @@ add_library(
         implementation/LoopNode.cpp LoopNode.h
         implementation/FunctionCallNode.cpp FunctionCallNode.h
         implementation/ClassDeclNode.cpp ClassDeclNode.h
-        implementation/EmptyNode.cpp EmptyNode.h)
+        implementation/EmptyNode.cpp EmptyNode.h
+        implementation/TypeConvNode.cpp TypeConvNode.h)

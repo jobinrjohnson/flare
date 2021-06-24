@@ -20,9 +20,9 @@ namespace flare::ast {
 
         llvm::StructType *LLVMType;
 
-        llvm::Function *initFunction;
+        llvm::PointerType *LLVMPtrType;
 
-        llvm::StructType *getClassLLVMType();
+        llvm::Function *initFunction;
 
     public:
 
@@ -35,6 +35,8 @@ namespace flare::ast {
 
         llvm::Value *codeGenConstructor(Context *cxt);
 
+        llvm::StructType *getClassLLVMType();
+        
         llvm::PointerType *getClassLLVMPointerType();
 
         unsigned int getVariableIndex(std::string name);

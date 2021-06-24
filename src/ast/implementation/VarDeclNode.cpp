@@ -6,7 +6,9 @@
 #include <exceptions/SemanticException.h>
 #include <ast/VarDeclNode.h>
 #include <ast/StatementListNode.h>
-#include <ast/ClassDeclNode.h>
+#include <types/BaseType.h>
+
+using namespace flare::exceptions;
 
 namespace flare::ast {
 
@@ -60,55 +62,57 @@ namespace flare::ast {
 
 
     llvm::Value *VarDeclNode::codeGenLocalVariable(Context *cxt) {
+
+        Value *initializerValue = nullptr;
+
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
 
-        // If there is no initial value specified at the declaration of the variable.
-        if (this->initialValue == nullptr) {
-            // If there is no initial value just return the created variable.
-            Type *variableType = getLLVMType(this->type->type, context);
+        if (this->variableName == "this") {
+            Type *variableType = this->flareType->getLLVMType(cxt);
             this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
             currentBlock->createLocal(this->variableName, this);
+            initializerValue = this->initialValue->codeGen(cxt);
+            builder.CreateStore(initializerValue, this->llvmVarRef);
             return this->llvmVarRef;
         }
 
-        Value *initializerValue = this->initialValue->codeGen(cxt);
+        if (initialValue != nullptr) {
+            initializerValue = this->initialValue->codeGen(cxt);
+            types::BaseType *initializerType = cxt->getFlareType(initializerValue);
 
-        Type *variableType;
-        // If type is explicitly specified use that for declaration
-        if (this->type != nullptr) {
-            variableType = this->getVariableLLVMType();
-        } else {
-            variableType = initializerValue->getType();
-
-            if (initializerValue->getType()->isPointerTy()) {
-
-                auto *pointer = static_cast<PointerType *>(initializerValue->getType());
-
-                auto node = cxt->getType(pointer->getElementType());
-                if (node == nullptr) {
-                    throw "type not found add more impl";
-                }
-
-                this->type = new VarType{
-                        .type = VariableType::VARTYPE_OBJECT,
-                        .typeRef = new TypeReference{
-                                .node = node
-                        }
-                };
+            // If it is already an alloc inst (in the case of class) just rename it to this.
+            AllocaInst *inst;
+            if ((inst = static_cast<AllocaInst *>(initializerValue))) {
+                this->flareType = cxt->getFlareType(inst);
+                this->llvmVarRef = inst;
+                currentBlock->createLocal(this->variableName, this);
+                return this->llvmVarRef;
             }
 
+            // If the assignment is illegal throw error
+            if (this->type != nullptr && initializerType != cxt->getFlareType(*this->type)) {
+                throw new SemanticException(
+                        "Illegal assignment :  Types does not match",
+                        this->lineNumber
+                );
+            }
+
+            this->flareType = initializerType;
+        } else {
+            this->flareType = cxt->getFlareType(*this->type);
         }
 
+
+        Type *variableType = this->flareType->getLLVMType(cxt);
         this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
         currentBlock->createLocal(this->variableName, this);
 
-        // if initializer type and variable type mismatches. cast the initializer type to the variable's type
-        if (this->type != nullptr && initializerValue->getType() != variableType) {
-            initializerValue = castTo(initializerValue, this->type);
+        if (initialValue != nullptr) {
+            return builder.CreateStore(initializerValue, this->llvmVarRef);
         }
 
-        // Store and return
-        return builder.CreateStore(initializerValue, this->llvmVarRef);
+        return this->llvmVarRef;
+
     }
 
     llvm::Value *VarDeclNode::codeGen(Context *cxt) {
@@ -121,10 +125,10 @@ namespace flare::ast {
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
         if (currentBlock != nullptr && currentBlock->findLocal(this->variableName) != nullptr) {
 
-            throw new flare::exceptions::SemanticException("variable with name : '"
-                                                           + this->variableName
-                                                           + "' already exists in this block",
-                                                           this->lineNumber
+            throw new SemanticException("variable with name : '"
+                                        + this->variableName
+                                        + "' already exists in this block",
+                                        this->lineNumber
             );
 
         }
@@ -148,27 +152,30 @@ namespace flare::ast {
         this->setVarType(type);
     }
 
-    llvm::Type *VarDeclNode::getVariableLLVMType() {
+    llvm::Type *VarDeclNode::getVariableLLVMType(Context *cxt) {
 
         // TODO deal with type from initializer
 
         if (this->type == nullptr) {
 
-            throw new exceptions::SemanticException("variable : '"
-                                                    + this->variableName
-                                                    + "' has no initializer or explicit type definition",
-                                                    this->lineNumber
+            throw new SemanticException("variable : '"
+                                        + this->variableName
+                                        + "' has no initializer or explicit type definition",
+                                        this->lineNumber
             );
 
         }
 
-        if (this->type->type == VariableType::VARTYPE_OBJECT) {
-            ClassDeclNode *cNode = dynamic_cast<ClassDeclNode *>(this->type->typeRef->node);
-            return cNode->getClassLLVMPointerType();
+        if (this->flareType == nullptr) {
+            this->flareType = cxt->getFlareType(*this->type);
         }
 
-
         // If there is no initial value just return the created variable.
-        return getLLVMType(this->type->type, context);
+        return this->flareType->getLLVMType(cxt);
+    }
+
+    VarDeclNode::VarDeclNode(const char *name, BaseType *type) {
+        this->variableName.assign(name);
+        this->flareType = type;
     }
 }

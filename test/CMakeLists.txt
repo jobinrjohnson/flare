@@ -7,7 +7,7 @@ add_library(
 )
 
 llvm_map_components_to_libnames(llvm_libs core native mcjit interpreter)
-set(libs "test_base" "lang" "ast" "jit" "exceptions" ${llvm_libs})
+set(libs "test_base" "lang" "ast" "jit" "exceptions" "types" ${llvm_libs})
 
 # Test : SimpleArithmetic
 add_executable(SimpleArithmetic SimpleArithmetic.cpp)

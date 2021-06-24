@@ -6,24 +6,22 @@
 #include <exceptions/SemanticException.h>
 #include <ast/ClassDeclNode.h>
 #include <ast/helpers/VariableHelper.h>
+#include <types/ClassObjectType.h>
 
 namespace flare::ast {
 
 
     llvm::Value *FunctionCallNode::codeGenObjectCreate(Context *cxt) {
 
-        auto *node = cxt->findClassDeclaration(this->className);
-        if (node == nullptr) {
+        BaseType *fType = cxt->findType(this->className);
+        if (fType == nullptr) {
             throw new exceptions::SemanticException("No declarations for class '"
                                                     + this->className
                                                     + "' found",
                                                     this->lineNumber);
         }
-
-        auto *cNode = dynamic_cast<ClassDeclNode *>(node);
-        auto *function = cNode->getInitFunction();
-
-        return this->performCall(function, None);
+        LValue lvl;
+        return fType->createInstance(cxt, lvl);
 
     }
 
@@ -73,18 +71,18 @@ namespace flare::ast {
             throw "no global variable declared in the scope";
         }
         auto *variable = dynamic_cast<VarDeclNode *>(vNode);
-        VarType *varType = variable->getVariableType();
 
-        if (varType->type != VariableType::VARTYPE_OBJECT || varType->typeRef->node == nullptr) {
+        auto fType = variable->getFlareType();
+        ClassObjectType *classType;
+
+        if (!(classType = dynamic_cast<ClassObjectType *>(fType))) {
             throw new exceptions::SemanticException("Function '"
                                                     + this->functionName
                                                     + "' is not a class method",
                                                     this->lineNumber);
         }
 
-        ClassDeclNode *cnode = dynamic_cast<ClassDeclNode *>(varType->typeRef->node);
-
-        auto calleeFunction = module->getFunction(cnode->getQualifiedClassName() + "::" + this->functionName);
+        auto calleeFunction = module->getFunction(classType->getFullyQualifiedName() + "::" + this->functionName);
         if (calleeFunction == nullptr) {
             throw "Function not declared in the scope";
         }

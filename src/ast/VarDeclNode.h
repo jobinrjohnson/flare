@@ -6,6 +6,7 @@
 #define FLARE_VARDECLNODE_H
 
 
+#include <types/BaseType.h>
 #include "Node.h"
 #include "LiteralNode.h"
 #include "constants/AstConstants.h"
@@ -33,6 +34,8 @@ namespace flare::ast {
 
         // LLVM Variable reference
         Value *llvmVarRef;
+
+        types::BaseType *flareType;
 
         // Functions
 
@@ -68,6 +71,11 @@ namespace flare::ast {
             return this->llvmVarRef;
         }
 
+        // Returns the internal type
+        inline BaseType *getFlareType() {
+            return this->flareType;
+        }
+
         // Returns the variable name
         inline std::string getVariableName() {
             return this->variableName;
@@ -77,7 +85,7 @@ namespace flare::ast {
             return this->type;
         }
 
-        llvm::Type *getVariableLLVMType();
+        llvm::Type *getVariableLLVMType(Context *cxt);
 
         // Returns the node types (for debugging)
         NodeType getNodeType() override;
@@ -87,6 +95,9 @@ namespace flare::ast {
 
         // Constructor name and variable type.
         VarDeclNode(const char *name, VarType *type);
+
+        // Constructor name and variable type.
+        VarDeclNode(const char *name, BaseType *type);
 
         // Generate code for the node (Post AST function)
         llvm::Value *codeGen(Context *cxt) override;

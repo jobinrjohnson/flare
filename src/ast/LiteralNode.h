@@ -17,12 +17,7 @@ namespace flare::ast {
         VariableType literalType;
 
         // Value
-        union LValue {
-            int iVal;       // integer value
-            double dVal;    // double value
-            bool bVal;      // boolean value
-            char *sVal;     // string value
-        } nodeValue;
+        LValue nodeValue;
 
     public:
 
