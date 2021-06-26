@@ -5,7 +5,7 @@ class SampleClass {
     hello: int = 0;
 
     say2hello(): void {
-        // printf("The class number is %d", this.hello);
+        printf("The class number is %d", this.hello);
     }
 
     // sayHello(): int {
@@ -31,7 +31,7 @@ function main(): int {
 
     let i: int = 0;
 
-    // x.say2hello();
+    x.say2hello();
 
     // printf("%d", x.hello);
 

@@ -68,7 +68,7 @@ namespace flare::ast {
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
 
         if (this->variableName == "this") {
-            Type *variableType = this->flareType->getLLVMType(cxt);
+            Type *variableType = this->flareType->getLLVMPtrType(cxt);
             this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
             currentBlock->createLocal(this->variableName, this);
             initializerValue = this->initialValue->codeGen(cxt);
