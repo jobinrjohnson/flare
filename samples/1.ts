@@ -5,7 +5,7 @@ class SampleClass {
     hello: int = 0;
 
     say2hello(): void {
-        printf("The class number is %d", this.hello);
+        // printf("The class number is %d", this.hello);
     }
 
     // sayHello(): int {
@@ -27,13 +27,11 @@ class SampleClass {
 // @ts-ignore
 function main(): int {
 
-    let x: SampleClass;
-
-    x = new SampleClass();
+    let x: SampleClass = new SampleClass();
 
     let i: int = 0;
 
-    x.say2hello();
+    // x.say2hello();
 
     // printf("%d", x.hello);
 

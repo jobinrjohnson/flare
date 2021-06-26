@@ -75,11 +75,12 @@ namespace flare::ast {
 
     llvm::Value *ClassDeclNode::codeGenConstructor(Context *cxt) {
 
-        auto *classPtrTy = this->getClassLLVMPointerType();
+        std::vector<Type *> argVector;
+        argVector.push_back(this->getClassLLVMPointerType());
 
         auto *funcType = FunctionType::get(
-                classPtrTy,
-                None,
+                Type::getVoidTy(*cxt->getLLVMContext()),
+                argVector,
                 false
         );
 
@@ -89,13 +90,29 @@ namespace flare::ast {
                 this->getQualifiedClassName() + "::.init", module.get()
         );
 
+
+        Function::arg_iterator actualArgs = this->initFunction->arg_begin();
+
         builder.SetInsertPoint(BasicBlock::Create(context, "entry", this->initFunction));
+        // prepare vars
+        auto inst = builder.CreateAlloca(this->getClassLLVMPointerType(), 0, "this");
+        builder.CreateStore(actualArgs, inst);
 
-        auto inst = new AllocaInst(classPtrTy, 0, this->getQualifiedClassName() + "object", builder.GetInsertBlock());
+        auto load = builder.CreateLoad(inst, "var");
 
-        // TODO init variables
+        // store some val on struct
+        auto ptrLoad =
+                builder.CreateStructGEP(
+                        load,
+                        0,
+                        "member"
+                );
 
-        builder.CreateRet(builder.CreateLoad(inst));
+        auto val = llvm::ConstantInt::get(*cxt->getLLVMContext(), APInt(64, 100));
+
+        builder.CreateStore(val, ptrLoad);
+
+        builder.CreateRet(nullptr);
 
         return nullptr;
     }

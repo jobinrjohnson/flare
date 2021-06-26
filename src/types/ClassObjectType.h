@@ -36,6 +36,8 @@ namespace flare::types {
 
         Value *createInstance(Context *, LValue) override;
 
+        Type *getLLVMPtrType(Context *) override;
+
     };
 
 }

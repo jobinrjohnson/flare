@@ -14,4 +14,8 @@ namespace flare::types {
     Type *IntType::probeLLVMType(Context *context) {
         return Type::getInt64Ty(*context->getLLVMContext());
     }
+
+    Type *IntType::getLLVMPtrType(Context *) {
+        return nullptr;
+    }
 }

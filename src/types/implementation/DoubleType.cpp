@@ -15,4 +15,8 @@ namespace flare::types {
     Type *DoubleType::probeLLVMType(Context *context) {
         return Type::getDoubleTy(*context->getLLVMContext());
     }
+
+    Type *DoubleType::getLLVMPtrType(Context *) {
+        return nullptr;
+    }
 }

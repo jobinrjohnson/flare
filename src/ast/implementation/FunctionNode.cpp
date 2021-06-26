@@ -18,7 +18,7 @@ namespace flare::ast {
             // If it is a class function add class type as the first parameter
             // TODO refactor this
             auto *cNode = cxt->findType(dynamic_cast<ClassDeclNode *>(this->classNode)->getQualifiedClassName());
-            argVector.push_back(cNode->getLLVMType(cxt));
+            argVector.push_back(cNode->getLLVMPtrType(cxt));
         }
 
         // Fill in the parameter list

@@ -10,7 +10,7 @@ namespace flare::types {
     Type *ClassObjectType::probeLLVMType(Context *context) {
         return this
                 ->classDeclNode
-                ->getClassLLVMPointerType();
+                ->getClassLLVMType();
     }
 
     Value *ClassObjectType::createInstance(Context *context, LValue lVal) {
@@ -28,5 +28,11 @@ namespace flare::types {
 
     ClassObjectType::ClassObjectType(ClassDeclNode *classDeclNode) {
         this->classDeclNode = classDeclNode;
+    }
+
+    Type *ClassObjectType::getLLVMPtrType(Context *) {
+        return this
+                ->classDeclNode
+                ->getClassLLVMPointerType();
     }
 }

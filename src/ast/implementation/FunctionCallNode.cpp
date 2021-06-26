@@ -13,7 +13,7 @@ namespace flare::ast {
 
     llvm::Value *FunctionCallNode::codeGenObjectCreate(Context *cxt) {
 
-        BaseType *fType = cxt->findType(this->className);
+        ClassObjectType *fType = dynamic_cast<ClassObjectType *>(cxt->findType(this->className));
         if (fType == nullptr) {
             throw new exceptions::SemanticException("No declarations for class '"
                                                     + this->className
@@ -21,7 +21,14 @@ namespace flare::ast {
                                                     this->lineNumber);
         }
         LValue lvl;
-        return fType->createInstance(cxt, lvl);
+        auto instance = fType->createInstance(cxt, lvl);
+
+        auto *function = fType->classDeclNode->getInitFunction();
+        std::vector<Value *> calleeArgs;
+        calleeArgs.push_back(instance);
+        this->performCall(function, calleeArgs);
+
+        return instance;
 
     }
 

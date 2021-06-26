@@ -15,4 +15,8 @@ namespace flare::types {
                 ->getBuilder()
                 ->CreateGlobalStringPtr(StringRef(lVal.sVal), "str");
     }
+
+    Type *StringType::getLLVMPtrType(Context *context) {
+        return nullptr;
+    }
 }

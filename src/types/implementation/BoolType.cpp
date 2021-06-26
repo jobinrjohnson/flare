@@ -14,5 +14,9 @@ namespace flare::types {
     Type *BoolType::probeLLVMType(Context *context) {
         return Type::getInt1Ty(*context->getLLVMContext());
     }
+
+    Type *BoolType::getLLVMPtrType(Context *) {
+        return nullptr;
+    }
 }
 
