@@ -7,7 +7,6 @@
 #include <ast/VariableDerefNode.h>
 #include <ast/VarDeclNode.h>
 #include <exceptions/SemanticException.h>
-#include <ast/ClassDeclNode.h>
 #include <types/ClassObjectType.h>
 
 namespace flare::ast {
