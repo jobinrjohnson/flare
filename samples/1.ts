@@ -1,15 +1,16 @@
-// function printf(msg: string, value: int): void;
+function printf(msg: string, value: int): void;
+
 // function printf(msg: string, value: double): void;
-function printf(msg: string, value: string): void;
+// function printf(msg: string, value: string): void;
 
 class A {
-    x: int;
+    x: int = 10;
     y: double;
     z: boolean;
-    w: string;
+    w: string = "hello";
 
     sayHello(): void {
-        printf("Hello World, %s", this.w);
+        printf("Hello World, %d", this.x);
     }
 
 }

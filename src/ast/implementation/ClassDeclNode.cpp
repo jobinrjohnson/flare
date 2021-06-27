@@ -105,7 +105,13 @@ namespace flare::ast {
                             i++,
                             ele->getVariableName()
                     );
-            auto val = ele->getFlareType()->getDefaultValue(cxt);
+
+            Value *val;
+            if (ele->hasInitializer()) {
+                val = ele->getInitializer()->codeGen(cxt);
+            } else {
+                val = ele->getFlareType()->getDefaultValue(cxt);
+            }
             builder.CreateStore(val, ptrLoad);
         }
 

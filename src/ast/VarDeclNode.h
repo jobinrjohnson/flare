@@ -108,6 +108,14 @@ namespace flare::ast {
         // Generate code if the node corresponds to a local variable
         llvm::Value *codeGenLocalVariable(Context *cxt);
 
+        inline bool hasInitializer() {
+            return this->initialValue != nullptr;
+        }
+
+        inline Node *getInitializer() {
+            return this->initialValue;
+        }
+
     };
 
 }
