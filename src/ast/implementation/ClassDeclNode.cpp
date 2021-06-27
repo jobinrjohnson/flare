@@ -24,10 +24,6 @@ namespace flare::ast {
         // Create LLVM type
         this->LLVMType = StructType::create(context, items, this->getQualifiedClassName());
 
-        cxt->addType(this->LLVMType, this);
-
-        cxt->pushClassDeclaration(this->getQualifiedClassName(), this);
-
         cxt->registerType(
                 this->className,
                 new ClassObjectType(this)

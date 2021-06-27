@@ -49,18 +49,6 @@ namespace flare::ast {
         return nullptr;
     }
 
-    void Context::pushClassDeclaration(std::string name, Node *classDecl) {
-        this->classDeclarations.insert(std::pair<std::string, Node *>(name, classDecl));
-    }
-
-    Node *Context::findClassDeclaration(std::string name) {
-        auto val = this->classDeclarations.find(name);
-        if (val != this->classDeclarations.end()) {
-            return val->second;
-        }
-        return nullptr;
-    }
-
     VarDeclNode *Context::findVariable(std::string name) {
         VarDeclNode *variable = nullptr;
         std::vector<Node *>::iterator i = this->statementList.end();
@@ -73,19 +61,6 @@ namespace flare::ast {
         }
         return nullptr;
     }
-
-    void Context::addType(llvm::Type *type, Node *node) {
-        this->customTypesAvail.insert(std::pair<llvm::Type *, Node *>(type, node));
-    }
-
-    Node *Context::getType(llvm::Type *type) {
-        auto val = this->customTypesAvail.find(type);
-        if (val != this->customTypesAvail.end()) {
-            return val->second;
-        }
-        return nullptr;
-    }
-
 
     BaseType *Context::findType(std::string name) {
         auto val = this->types.find(name);
@@ -110,25 +85,21 @@ namespace flare::ast {
 
         switch (type) {
 
-            case VARTYPE_INT_32:
-                break;
             case VARTYPE_INT_64:
             case VARTYPE_INT:
                 return this->findType("int");
-            case VARTYPE_FLOAT:
-                break;
             case VARTYPE_DOUBLE:
             case VARTYPE_NUMBER:
                 return this->findType("double");
             case VARTYPE_BOOLEAN:
                 return this->findType("boolean");
-            case VARTYPE_ARRAY:
-                break;
             case VARTYPE_STRING:
                 return this->findType("string");
             case VARTYPE_VOID:
-                std::cout << type << std::endl;
-                break;
+                return this->findType("void");
+            case VARTYPE_INT_32:
+            case VARTYPE_FLOAT:
+            case VARTYPE_ARRAY:
             case OTHER:
                 break;
         }

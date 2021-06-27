@@ -31,10 +31,6 @@ namespace flare::ast {
 
         std::stack<Node *> functions;
 
-        std::map<std::string, Node *> classDeclarations;
-
-        std::map<llvm::Type *, Node *> customTypesAvail;
-
         std::map<std::string, BaseType *> types;
 
     public:
@@ -64,14 +60,6 @@ namespace flare::ast {
 
         VarDeclNode *findVariable(std::string name);
 
-        void pushClassDeclaration(std::string, Node *);
-
-        Node *findClassDeclaration(std::string);
-
-        void addType(llvm::Type *type, Node *);
-
-        Node *getType(llvm::Type *type);
-
         inline llvm::LLVMContext *getLLVMContext() {
             return &context;
         }
@@ -84,8 +72,6 @@ namespace flare::ast {
         BaseType *findType(std::string name);
 
         bool registerType(std::string name, BaseType *type);
-
-
 
         BaseType *getFlareType(VariableType type);
 
