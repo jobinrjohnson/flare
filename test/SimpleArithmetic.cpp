@@ -24,14 +24,7 @@ int main() {
 
     // Execute
     flare::Flare f;
-    f.setInputStream(ss);
-    f.parseStream();
-    f.codeGenAst();
-
-    f.printLLVMIR();
-
-    f.executeJit();
-
+    f.executeStream(ss, "String");
     // Assert
     if (f.getExitCode() != EXPECTED_EXIT_CODE) {
         return 1;

@@ -24,18 +24,23 @@ int main(int argc, char **argv) {
     }
 
     flare::Flare f;
-    f.setInputStream(file);
-    f.parseStream();
-    f.codeGenAst();
 
-#ifdef FLARE_DEBUG
+#ifndef FLARE_DEBUG
+    f.executeStream(file, fileName);
     // Print LLVM IR if debug mode is on
     std::cout << "========================================\n";
     f.printLLVMIR();
     std::cout << "========================================\n\n";
+#else
+    f.setInputStream(file, fileName);
+    f.parseStream();
+    f.codeGenAst();
+    std::cout << "========================================\n";
+    f.printLLVMIR();
+    std::cout << "========================================\n\n";
+    f.executeJit();
 #endif
 
-    f.executeJit();
     return f.getExitCode();
 
 }

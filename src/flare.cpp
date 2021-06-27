@@ -3,17 +3,16 @@
 //
 
 #include <exceptions/FlareException.h>
+
+#include <utility>
 #include "flare.h"
 #include "ast/Node.h"
 #include "jit/FlareJit.h"
 
 namespace flare {
 
-    Flare::Flare() {
-
-    }
-
-    void Flare::setInputStream(std::istream &stream) {
+    void Flare::setInputStream(std::istream &stream, std::string streamIdentifier) {
+        this->streamName.assign(streamIdentifier);
         this->driver.setInputStream(stream);
     }
 
@@ -44,7 +43,7 @@ namespace flare {
             return;
         }
 
-        this->setInputStream(file);
+        this->setInputStream(file, fileName);
     }
 
     void Flare::parseStream() {
@@ -69,6 +68,18 @@ namespace flare {
         }
 #endif
 
+    }
+
+    void Flare::executeStream(std::istream &stream, std::string streamIdentifier) {
+        this->setInputStream(stream, streamIdentifier);
+        try {
+            this->parseStream();
+            this->codeGenAst();
+        } catch (exceptions::FlareException *e) {
+            std::cerr << e->getMessage() << "\n\n";
+            exit(1);
+        }
+        this->executeJit();
     }
 
 

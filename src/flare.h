@@ -12,29 +12,42 @@ namespace flare {
 
     class Flare {
 
+        // Lex driver
         lang::Driver driver;
 
+        // The AST root node
         ast::Node *ast;
 
+        // The program exit code
         int exitCode = 0;
+
+        std::string streamName = "";
 
     public:
 
-        Flare();
+        // Set input stream
+        void setInputStream(std::istream &stream, std::string stream_name);
 
-        void setInputStream(std::istream &stream);
-
+        // Set file
         void setFileStream(std::string &fileName);
 
+        // Perform parsing using the driver
         void parseStream();
 
+        // Starts generating LLVM IR Trew
         void codeGenAst();
 
+        //  Returns the Program exit code after executing it
         int getExitCode();
 
+        // Executes the program using LLJIT
+        void executeJit();
+
+        // Prints the LLVM IR
         void printLLVMIR();
 
-        void executeJit();
+        // Reads, Parses, IR Generates, Executes the stream
+        void executeStream(std::istream &stream, std::string stream_name);
 
     };
 
