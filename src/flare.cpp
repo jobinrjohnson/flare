@@ -56,19 +56,18 @@ namespace flare {
     }
 
     void Flare::codeGenAst() {
-//#ifdef FLARE_DEBUG
-//        try {
-//#endif
+        try {
             this->ast->startCodeGen();
-//#ifdef FLARE_DEBUG
-//        } catch (char const *e) {
-//            std::cerr << "Error occurred while parsing : " << e;
-//        } catch (std::string e) {
-//            std::cerr << "Error occurred while parsing : " << e;
-//        } catch (exceptions::FlareException *e) {
-//            std::cerr << e->getMessage() << "\n\n";
-//        }
-//#endif
+        } catch (exceptions::FlareException *e) {
+            std::cerr << e->getMessage() << "\n\n";
+        }
+#ifdef FLARE_DEBUG
+        catch (char const *e) {
+            std::cerr << "Error occurred while parsing : " << e;
+        } catch (std::string e) {
+            std::cerr << "Error occurred while parsing : " << e;
+        }
+#endif
 
     }
 
