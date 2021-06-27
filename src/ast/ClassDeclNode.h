@@ -36,7 +36,7 @@ namespace flare::ast {
         llvm::Value *codeGenConstructor(Context *cxt);
 
         llvm::StructType *getClassLLVMType();
-        
+
         llvm::PointerType *getClassLLVMPointerType();
 
         unsigned int getVariableIndex(std::string name);
@@ -46,6 +46,8 @@ namespace flare::ast {
         }
 
         std::string getQualifiedClassName();
+
+        friend class ClassObjectType;
 
     };
 

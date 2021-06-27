@@ -35,4 +35,8 @@ namespace flare::types {
                 ->classDeclNode
                 ->getClassLLVMPointerType();
     }
+
+    Value *ClassObjectType::getDefaultValue(Context *) {
+        return nullptr;
+    }
 }

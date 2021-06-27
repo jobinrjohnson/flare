@@ -18,4 +18,8 @@ namespace flare::types {
     Type *VoidType::getLLVMPtrType(Context *) {
         return nullptr;
     }
+
+    Value *VoidType::getDefaultValue(Context *) {
+        return nullptr;
+    }
 }

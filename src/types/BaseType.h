@@ -35,6 +35,8 @@ namespace flare::types {
         }
 
 
+        virtual Value *getDefaultValue(Context *) = 0;
+
         virtual Type *getLLVMPtrType(Context *) = 0;
 
         virtual inline bool isInbuiltTy() = 0;

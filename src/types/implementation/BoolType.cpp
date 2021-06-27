@@ -18,5 +18,12 @@ namespace flare::types {
     Type *BoolType::getLLVMPtrType(Context *) {
         return nullptr;
     }
+
+    Value *BoolType::getDefaultValue(Context *cxt) {
+        LValue lValue = {
+                .bVal = false
+        };
+        return this->createInstance(cxt, lValue);
+    }
 }
 

@@ -19,4 +19,11 @@ namespace flare::types {
     Type *DoubleType::getLLVMPtrType(Context *) {
         return nullptr;
     }
+
+    Value *DoubleType::getDefaultValue(Context *cxt) {
+        LValue lValue = {
+                .dVal = 0.00
+        };
+        return this->createInstance(cxt, lValue);
+    }
 }

@@ -19,4 +19,11 @@ namespace flare::types {
     Type *StringType::getLLVMPtrType(Context *context) {
         return nullptr;
     }
+
+    Value *StringType::getDefaultValue(Context *cxt) {
+        LValue lValue = {
+                .sVal = const_cast<char *>("")
+        };
+        return this->createInstance(cxt, lValue);
+    }
 }

@@ -25,6 +25,8 @@ namespace flare::types {
 
         Value *createInstance(Context *, LValue) override;
 
+        Value *getDefaultValue(Context *) override;
+
     };
 
 }

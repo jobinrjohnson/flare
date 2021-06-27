@@ -18,4 +18,11 @@ namespace flare::types {
     Type *IntType::getLLVMPtrType(Context *context) {
         return Type::getInt8PtrTy(*context->getLLVMContext());
     }
+
+    Value *IntType::getDefaultValue(Context *cxt) {
+        LValue lValue = {
+                .iVal = 0
+        };
+        return this->createInstance(cxt, lValue);
+    }
 }
