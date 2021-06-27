@@ -336,6 +336,8 @@ logical_expr:
 assignment_expr:
     IDENTIFIER '=' expr                         { $$ = new AssignmentNode($1, $3); free($1); }
     | IDENTIFIER '[' expr ']' '=' expr          { $$ = new AssignmentNode($1, $3, $6); free($1); }
+    | IDENTIFIER '.' IDENTIFIER  '=' expr       { $$ = new AssignmentNode($3, $1, $5); free($1); }
+    | KW_THIS '.' IDENTIFIER  '=' expr          { $$ = new AssignmentNode($3, "this", $5); }
 ;
 
 var_deref:

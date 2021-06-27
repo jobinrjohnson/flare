@@ -4,6 +4,8 @@
 
 #include <ast/AssignmentNode.h>
 #include <ast/VarDeclNode.h>
+#include <types/ClassObjectType.h>
+#include <exceptions/SemanticException.h>
 
 namespace flare::ast {
 
@@ -23,6 +25,10 @@ namespace flare::ast {
 
         if (index != nullptr) {
             return this->codeGenArrayAssign(cxt);
+        }
+
+        if (!this->base.empty()) {
+            return this->codeGenObjectAssign(cxt);
         }
 
         Node *vNode = cxt->findVariable(this->varName);
@@ -55,7 +61,7 @@ namespace flare::ast {
 
     // TODO refactor later
     llvm::Value *AssignmentNode::codeGenArrayAssign(Context *cxt) {
-        Node *vNode = cxt->findVariable(this->varName);
+        VarDeclNode *vNode = cxt->findVariable(this->varName);
 
         if (vNode == nullptr) {
             throw "Invalid variable name";
@@ -81,7 +87,28 @@ namespace flare::ast {
     }
 
     llvm::Value *AssignmentNode::codeGenObjectAssign(Context *cxt) {
-        return nullptr;
+
+        VarDeclNode *vNode = cxt->findVariable(this->base);
+
+        if (vNode == nullptr) {
+            throw new exceptions::SemanticException("Invalid variable name", this->lineNumber);
+        }
+
+        Value *value = this->expression->codeGen(cxt->nextLevel());
+
+        ClassObjectType *coType;
+        if ((coType = dynamic_cast<ClassObjectType *>(vNode->getFlareType())) != nullptr) {
+            auto memPtr = coType->getMemberPtr(this->varName, vNode->getLLVMVarRef());
+            builder.CreateStore(value, memPtr);
+            return value;
+        }
+        throw "Not implemented fpr other types.";
+    }
+
+    AssignmentNode::AssignmentNode(std::string name, std::string base, Node *exprNode) {
+        this->base = base;
+        this->varName = name;
+        this->expression = exprNode;
     }
 
 }

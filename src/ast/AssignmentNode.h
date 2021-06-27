@@ -16,6 +16,8 @@ namespace flare::ast {
 
         std::string varName;
 
+        std::string base;
+
         Node *expression;
 
         Node *index;
@@ -25,6 +27,8 @@ namespace flare::ast {
         NodeType getNodeType();
 
         AssignmentNode(char *name, Node *node);
+
+        AssignmentNode(std::string name, std::string base, Node *exprNode);
 
         AssignmentNode(char *name, Node *indexNode, Node *exprNode);
 

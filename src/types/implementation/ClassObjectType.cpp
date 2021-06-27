@@ -39,4 +39,21 @@ namespace flare::types {
     Value *ClassObjectType::getDefaultValue(Context *) {
         return nullptr;
     }
+
+    Value *ClassObjectType::getMemberPtr(std::string varName, Value *object) {
+
+        Value *value = object;
+        if (value->getType()->isPointerTy() && value->getType()->getPointerElementType()->isPointerTy()) {
+            // Probably we should iterate
+            value = builder.CreateLoad(value);
+        }
+
+        unsigned int index = this->classDeclNode->getVariableIndex(varName);
+
+        auto arrayPtrLoad = builder.CreateStructGEP(
+                value, index
+        );
+
+        return arrayPtrLoad;
+    }
 }

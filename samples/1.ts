@@ -10,6 +10,7 @@ class A {
     w: string = "hello";
 
     sayHello(): void {
+        this.x = this.x * 100;
         printf("Hello World, %d", this.x);
     }
 
@@ -18,7 +19,9 @@ class A {
 function main(): int {
 
     let b: A = new A();
+    b.x = 20;
     b.sayHello();
+
 
     return 0;
 

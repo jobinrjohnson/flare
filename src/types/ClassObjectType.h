@@ -40,6 +40,8 @@ namespace flare::types {
 
         Value *getDefaultValue(Context *) override;
 
+        Value *getMemberPtr(std::string, Value *);
+
     };
 
 }
