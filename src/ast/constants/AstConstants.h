@@ -25,6 +25,7 @@ namespace flare::ast {
         FUNCTION_CALL_NODE,
         CLASS_DECL_NODE,
         TYPE_CONV_NODE,
+        EXCEPTION_HANDLE_NODE,
         EMPTY_NODE
     };
 

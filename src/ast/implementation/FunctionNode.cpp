@@ -176,7 +176,7 @@ namespace flare::ast {
                         function->getReturnType(),
                         0,
                         ".retVal",
-                        this->entryBlock->getTerminator()
+                        this->entryBlock->getFirstNonPHI()
                 );
             }
             builder.CreateStore(returnValue, this->retValue);

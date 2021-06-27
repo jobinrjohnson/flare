@@ -20,7 +20,12 @@ function main(): int {
 
     let b: A = new A();
     b.x = 20;
-    b.sayHello();
+
+    try {
+        b.sayHello();
+    } catch (e: int) {
+
+    }
 
 
     return 0;

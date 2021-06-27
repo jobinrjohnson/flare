@@ -109,6 +109,10 @@ namespace flare::ast {
 
         std::string getQualifiedFunctionName();
 
+        inline Function *getLLVMFunctionRef() {
+            return this->function;
+        }
+
         // Destructor
         ~FunctionNode();
 

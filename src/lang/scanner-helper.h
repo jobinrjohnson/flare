@@ -81,12 +81,18 @@ int filterKwOrId(
         return token::KW_IMPORT;
     } else if (IS_TOKEN("as")) {
         return token::KW_AS;
-    }else if (IS_TOKEN("from")) {
+    } else if (IS_TOKEN("from")) {
         return token::KW_FROM;
     } else if (IS_TOKEN("this")) {
         return token::KW_THIS;
-    }  else if (IS_TOKEN("string")) {
+    } else if (IS_TOKEN("string")) {
         return token::KW_STRING;
+    } else if (IS_TOKEN("try")) {
+        return token::KW_TRY;
+    } else if (IS_TOKEN("catch")) {
+        return token::KW_CATCH;
+    } else if (IS_TOKEN("throw")) {
+        return token::KW_THROW;
     } else if (IS_TOKEN("true")) {
         yylval->tBoolValue = true;
         return token::T_BOOLEAN;

@@ -27,9 +27,11 @@ namespace flare::ast {
 
     class VarDeclNode;
 
+    class FunctionNode;
+
     class Context {
 
-        std::stack<Node *> functions;
+        std::stack<FunctionNode *> functions;
 
         std::map<std::string, BaseType *> types;
 
@@ -52,11 +54,11 @@ namespace flare::ast {
 
         llvm::Value *findLocal();
 
-        void pushFunction(Node *);
+        void pushFunction(FunctionNode *);
 
         void popFunction();
 
-        Node *getCurrentFunction();
+        FunctionNode *getCurrentFunction();
 
         VarDeclNode *findVariable(std::string name);
 

@@ -15,7 +15,7 @@
 
 namespace flare::ast {
 
-    void Context::pushFunction(Node *function) {
+    void Context::pushFunction(FunctionNode *function) {
         functions.push(function);
     }
 
@@ -23,7 +23,7 @@ namespace flare::ast {
         functions.pop();
     }
 
-    Node *Context::getCurrentFunction() {
+    FunctionNode *Context::getCurrentFunction() {
         if (this->functions.empty()) {
             return nullptr;
         }

@@ -27,6 +27,7 @@
     #include "ast/FunctionCallNode.h"
     #include "ast/LoopNode.h"
     #include "ast/ClassDeclNode.h"
+    #include "ast/ExceptionHandleNode.h"
 
     // Namespace
     using namespace flare::ast;
@@ -69,6 +70,7 @@
     LoopNode *loopNode;
     Parameter *parameter;
     VariableDerefNode *variableDerefNode;
+    ExceptionHandleNode *exceptionHandleNode;
     std::vector<Parameter *> *parameterList;
     std::vector<ExprNode *> *arguments;
     VarType *varType;
@@ -106,6 +108,7 @@
 %type <classDeclNode> class_decl
 %type <nodeList> class_contents
 %type <variableDerefNode> var_deref
+%type <exceptionHandleNode> try_catch
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
@@ -117,6 +120,7 @@
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 %token TOK_L_AND TOK_L_OR
 %token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID KW_STRING
+%token KW_TRY KW_CATCH KW_THROW
 
 %precedence '='
 %left TOK_L_AND TOK_L_OR
@@ -157,6 +161,14 @@ statement:
     | loops                             { $$->setLineNumber(driver.cursor->end.line); }
     | class_decl                        { $$->setLineNumber(driver.cursor->end.line); }
     | compound_statement                { $$->setLineNumber(driver.cursor->begin.line); }
+    | try_catch                         { $$->setLineNumber(driver.cursor->begin.line); }
+;
+
+try_catch:
+    KW_TRY compound_statement  KW_CATCH '(' IDENTIFIER ':' var_type ')' compound_statement        {
+                $$ = new ExceptionHandleNode($2);
+                $$->addCatchBlock($9, $7);
+    }
 ;
 
 
