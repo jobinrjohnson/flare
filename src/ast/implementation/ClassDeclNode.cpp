@@ -98,19 +98,19 @@ namespace flare::ast {
         auto inst = builder.CreateAlloca(this->getClassLLVMPointerType(), 0, "this");
         builder.CreateStore(actualArgs, inst);
 
-        auto load = builder.CreateLoad(inst, "var");
+//        auto load = builder.CreateLoad(inst, "var");
 
-        // store some val on struct
-        auto ptrLoad =
-                builder.CreateStructGEP(
-                        load,
-                        0,
-                        "member"
-                );
-
-        auto val = llvm::ConstantInt::get(*cxt->getLLVMContext(), APInt(64, 100));
-
-        builder.CreateStore(val, ptrLoad);
+//        // store some val on struct
+//        auto ptrLoad =
+//                builder.CreateStructGEP(
+//                        load,
+//                        0,
+//                        "member"
+//                );
+//
+//        auto val = llvm::ConstantInt::get(*cxt->getLLVMContext(), APInt(64, 0));
+//
+//        builder.CreateStore(val, ptrLoad);
 
         builder.CreateRet(nullptr);
 
