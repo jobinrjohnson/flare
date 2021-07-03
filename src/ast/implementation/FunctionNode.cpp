@@ -203,4 +203,20 @@ namespace flare::ast {
         this->setReturnType(type);
     }
 
+    ExceptionHandleNode *FunctionNode::getExceptionHandler() {
+        return this->exceptionHandlers.top();
+    }
+
+    void FunctionNode::pushExceptionHandler(ExceptionHandleNode *node) {
+        this->exceptionHandlers.push(node);
+    }
+
+    void FunctionNode::popExceptionHandler() {
+        this->exceptionHandlers.pop();
+    }
+
+    bool FunctionNode::hasExceptionHandler() {
+        return !this->exceptionHandlers.empty();
+    }
+
 }

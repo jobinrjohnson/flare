@@ -18,6 +18,8 @@ namespace flare::ast {
 
     public:
 
+        // Unwind block for invoke
+        llvm::BasicBlock *exceptionBlock;
 
         NodeType getNodeType() override;
 
@@ -27,6 +29,8 @@ namespace flare::ast {
 
         void addCatchBlock(StatementListNode *catchBlock, VarType *type);
 
+        llvm::Value *
+        handleOperation(Context *, std::function<Value *(BasicBlock *normalBlock, BasicBlock *exceptionBlock)>);
 
     };
 }

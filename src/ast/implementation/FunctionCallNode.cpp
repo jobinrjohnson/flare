@@ -6,6 +6,7 @@
 #include <exceptions/SemanticException.h>
 #include <ast/ClassDeclNode.h>
 #include <ast/helpers/VariableHelper.h>
+#include <ast/ExceptionHandleNode.h>
 #include <types/ClassObjectType.h>
 
 namespace flare::ast {
@@ -26,7 +27,7 @@ namespace flare::ast {
         auto *function = fType->classDeclNode->getInitFunction();
         std::vector<Value *> calleeArgs;
         calleeArgs.push_back(instance);
-        this->performCall(function, calleeArgs);
+        this->performCall(cxt, function, calleeArgs);
 
         return instance;
 
@@ -47,7 +48,7 @@ namespace flare::ast {
             throw "Function not declared in the scope";
         }
         if (argumentList == nullptr) {
-            return this->performCall(calleeFunction, None);
+            return this->performCall(cxt, calleeFunction, None);
         }
 
         std::vector<Value *> calleeArgs;
@@ -55,7 +56,7 @@ namespace flare::ast {
             calleeArgs.push_back(element->codeGen(cxt->nextLevel()));
         }
 
-        return this->performCall(calleeFunction, calleeArgs);
+        return this->performCall(cxt, calleeFunction, calleeArgs);
 
     }
 
@@ -102,40 +103,27 @@ namespace flare::ast {
             }
         }
 
-        return this->performCall(calleeFunction, calleeArgs);
+        return this->performCall(cxt, calleeFunction, calleeArgs);
     }
 
-    llvm::Value *FunctionCallNode::performCall(Function *calleeFunction, ArrayRef<Value *> calleeArgs) {
+    llvm::Value *FunctionCallNode::performCall(Context *cxt, Function *calleeFunction, ArrayRef<Value *> calleeArgs) {
 
+        if (cxt->getCurrentFunction()->hasExceptionHandler()) {
+            ExceptionHandleNode *eNode = cxt->getCurrentFunction()->getExceptionHandler();
+            return eNode->handleOperation(cxt, [calleeFunction, calleeArgs](BasicBlock *normalBlock,
+                                                                            BasicBlock *exceptionBlock) -> Value * {
+                return builder.CreateInvoke(
+                        calleeFunction,
+                        normalBlock,
+                        exceptionBlock,
+                        calleeArgs
+                );
 
-        // TODO handle this with stack
-
-        // Normal block for invoke
-        llvm::BasicBlock *normalBlock = llvm::BasicBlock::Create(context,
-                                                                 "normal",
-                                                                 builder.GetInsertBlock()->getParent());
-        // Unwind block for invoke
-        llvm::BasicBlock *exceptionBlock = llvm::BasicBlock::Create(context,
-                                                                    "exception",
-                                                                    builder.GetInsertBlock()->getParent());
-
-//        auto insPt = builder.GetInsertBlock();
-
-
-        auto call = builder.CreateInvoke(calleeFunction,
-                                         normalBlock,
-                                         exceptionBlock,
-                                         calleeArgs);
-
-
-        builder.SetInsertPoint(exceptionBlock);
-        builder.CreateRet(llvm::ConstantInt::get(context, APInt(64, 1)));
-        builder.SetInsertPoint(normalBlock);
-
-        return call;
+            });
+        }
 
         if (calleeFunction->getReturnType() == llvm::Type::getVoidTy(context)) {
-            return builder.CreateCall(calleeFunction, calleeFunction);
+            return builder.CreateCall(calleeFunction, calleeArgs);
         }
 
         return builder.CreateCall(calleeFunction, calleeArgs, this->functionName);

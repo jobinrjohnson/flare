@@ -12,6 +12,8 @@
 
 namespace flare::ast {
 
+    class ExceptionHandleNode;
+
     class FunctionNode : public Node {
 
     protected:
@@ -46,6 +48,7 @@ namespace flare::ast {
         // case of functions with multiple branches.
         AllocaInst *retValue;
 
+        std::stack<ExceptionHandleNode *> exceptionHandlers;
 
         // Codegen for function signature
         FunctionType *codeGenSignature(Context *cxt);
@@ -112,6 +115,15 @@ namespace flare::ast {
         inline Function *getLLVMFunctionRef() {
             return this->function;
         }
+
+
+        void pushExceptionHandler(ExceptionHandleNode *);
+
+        void popExceptionHandler();
+
+        bool hasExceptionHandler();
+
+        ExceptionHandleNode *getExceptionHandler();
 
         // Destructor
         ~FunctionNode();

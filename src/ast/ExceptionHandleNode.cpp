@@ -12,34 +12,24 @@ namespace flare::ast {
 
     llvm::Value *ExceptionHandleNode::codeGen(Context *cxt) {
 
-        // Block which calls invoke
-//        llvm::BasicBlock *entryBlock = llvm::BasicBlock::Create(context,
-//                                                                "entry",
-//                                                                cxt->getCurrentFunction()->getLLVMFunctionRef());
-//        // Normal block for invoke
-//        llvm::BasicBlock *normalBlock = llvm::BasicBlock::Create(context,
-//                                                                 "normal",
-//                                                                 cxt->getCurrentFunction()->getLLVMFunctionRef());
-//        // Unwind block for invoke
-//        llvm::BasicBlock *exceptionBlock = llvm::BasicBlock::Create(context,
-//                                                                    "exception",
-//                                                                    cxt->getCurrentFunction()->getLLVMFunctionRef());
-//
-//        llvm::Function *toPrint32Int = module.get()->getFunction("print32Int");
-//
-//
-//
-//        std::vector<llvm::Value*> args;
-//        args.push_back(builder.CreateGlobalStringPtr(StringRef("hello %d"), "str"));
-//        args.push_back(llvm::ConstantInt::get(context, APInt(64, 100)));
-//        builder.CreateInvoke(toPrint32Int,
-//                             normalBlock,
-//                             exceptionBlock,
-//                             args);
+        cxt->getCurrentFunction()->pushExceptionHandler(this);
 
+        // Unwind block for invoke
+        this->exceptionBlock = llvm::BasicBlock::Create(context,
+                                                        "exception",
+                                                        cxt->getCurrentFunction()->getLLVMFunctionRef());
 
+        this->tryBlock->codeGen(cxt);
 
-        return this->tryBlock->codeGen(cxt);
+        cxt->getCurrentFunction()->popExceptionHandler();
+
+        auto currentBlk = cxt->getBuilder()->GetInsertBlock();
+
+        builder.SetInsertPoint(exceptionBlock);
+        builder.CreateRet(llvm::ConstantInt::get(context, APInt(64, 1)));
+        builder.SetInsertPoint(currentBlk);
+
+        return nullptr;
     }
 
     ExceptionHandleNode::ExceptionHandleNode(StatementListNode *tryBlock) {
@@ -48,5 +38,18 @@ namespace flare::ast {
 
     void ExceptionHandleNode::addCatchBlock(StatementListNode *catchBlock, VarType *type) {
         this->catchBlocks.insert(std::pair<VarType *, StatementListNode *>(type, catchBlock));
+    }
+
+    llvm::Value *
+    ExceptionHandleNode::handleOperation(Context *cxt,
+                                         std::function<llvm::Value *(BasicBlock *, BasicBlock *)> closure) {
+        auto nb = BasicBlock::Create(
+                context,
+                "normal",
+                cxt->getCurrentFunction()->getLLVMFunctionRef()
+        );
+        llvm::Value *val = closure(nb, this->exceptionBlock);
+        builder.SetInsertPoint(nb);
+        return val;
     }
 }
