@@ -106,8 +106,36 @@ namespace flare::ast {
     }
 
     llvm::Value *FunctionCallNode::performCall(Function *calleeFunction, ArrayRef<Value *> calleeArgs) {
+
+
+        // TODO handle this with stack
+
+        // Normal block for invoke
+        llvm::BasicBlock *normalBlock = llvm::BasicBlock::Create(context,
+                                                                 "normal",
+                                                                 builder.GetInsertBlock()->getParent());
+        // Unwind block for invoke
+        llvm::BasicBlock *exceptionBlock = llvm::BasicBlock::Create(context,
+                                                                    "exception",
+                                                                    builder.GetInsertBlock()->getParent());
+
+//        auto insPt = builder.GetInsertBlock();
+
+
+        auto call = builder.CreateInvoke(calleeFunction,
+                                         normalBlock,
+                                         exceptionBlock,
+                                         calleeArgs);
+
+
+        builder.SetInsertPoint(exceptionBlock);
+        builder.CreateRet(llvm::ConstantInt::get(context, APInt(64, 1)));
+        builder.SetInsertPoint(normalBlock);
+
+        return call;
+
         if (calleeFunction->getReturnType() == llvm::Type::getVoidTy(context)) {
-            return builder.CreateCall(calleeFunction, calleeArgs);
+            return builder.CreateCall(calleeFunction, calleeFunction);
         }
 
         return builder.CreateCall(calleeFunction, calleeArgs, this->functionName);
