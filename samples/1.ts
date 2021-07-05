@@ -1,3 +1,4 @@
+// @ts-ignore
 function printf(msg: string, value: int): void;
 
 // function printf(msg: string, value: double): void;
@@ -15,7 +16,8 @@ class A {
     }
 
     getValue(): int {
-        return 100;
+        throw "helllo world.";
+        return 1;
     }
 
 }

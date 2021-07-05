@@ -10,7 +10,8 @@
 namespace flare::ast {
 
     enum StatementType {
-        RETURN
+        RETURN,
+        THROW
     };
 
     class StatementNode : public Node {

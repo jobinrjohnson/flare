@@ -97,7 +97,7 @@
 %type <assignmentNode> assignment_expr
 %type <ifStatementNode> if_else_if if_statement
 %type <logSmtNode> log_statement
-%type <statementNode> return_statement
+%type <statementNode> return_statement throw_smt
 %type <functionNode> function_declaration function_definition class_function class_function_declaration
 %type <loopNode> loops
 %type <functionCallNode> function_call
@@ -162,6 +162,7 @@ statement:
     | class_decl                        { $$->setLineNumber(driver.cursor->end.line); }
     | compound_statement                { $$->setLineNumber(driver.cursor->begin.line); }
     | try_catch                         { $$->setLineNumber(driver.cursor->begin.line); }
+    | throw_smt                         { $$->setLineNumber(driver.cursor->begin.line); }
 ;
 
 try_catch:
@@ -169,6 +170,10 @@ try_catch:
                 $$ = new ExceptionHandleNode($2);
                 $$->addCatchBlock($9, $7);
     }
+;
+
+throw_smt:
+    KW_THROW expr                       { $$ = new StatementNode(StatementType::THROW, $<node>2); }
 ;
 
 

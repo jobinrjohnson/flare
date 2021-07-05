@@ -17,7 +17,14 @@ llvm::Value *flare::ast::StatementNode::codeGen(Context *cxt) {
         }
         return dynamic_cast<FunctionNode *>(functionNode)
                 ->setFunctionReturn(operand);
-
+    } else if (this->type == StatementType::THROW) {
+        auto funType = FunctionType::get(
+                builder.getInt32Ty(),
+                None,
+                false
+        );
+        auto function = module->getOrInsertFunction("throwException", funType);
+        return builder.CreateCall(function, None, "exception");
     }
 
     return nullptr;

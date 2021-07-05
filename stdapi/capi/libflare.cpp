@@ -32,4 +32,9 @@ char *get_line() {
 }
 
 
+int throwException() {
+    throw 1;
+}
+
+
 }
