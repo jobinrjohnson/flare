@@ -82,6 +82,28 @@ namespace flare::ast {
             }
         }
 
+        // TODO do this properly
+
+        std::vector<Type *> argVector;
+        argVector.push_back(builder.getInt32Ty());
+        argVector.push_back(builder.getInt32Ty());
+        argVector.push_back(builder.getInt64Ty());
+        argVector.push_back(builder.getInt8PtrTy());
+        argVector.push_back(builder.getInt8PtrTy());
+
+        static auto pfun = Function::Create(
+                FunctionType::get(
+                        builder.getInt32Ty(),
+                        argVector,
+                        false
+                ),
+                GlobalValue::ExternalLinkage,
+                "pFun", module.get()
+        );
+
+
+        this->function->setPersonalityFn(pfun);
+
         // Original Function body.
         this->statementListNode->codeGen(cxt);
 
@@ -201,6 +223,22 @@ namespace flare::ast {
         this->name = name;
         this->parameterList = parameterList;
         this->setReturnType(type);
+    }
+
+    ExceptionHandleNode *FunctionNode::getExceptionHandler() {
+        return this->exceptionHandlers.top();
+    }
+
+    void FunctionNode::pushExceptionHandler(ExceptionHandleNode *node) {
+        this->exceptionHandlers.push(node);
+    }
+
+    void FunctionNode::popExceptionHandler() {
+        this->exceptionHandlers.pop();
+    }
+
+    bool FunctionNode::hasExceptionHandler() {
+        return !this->exceptionHandlers.empty();
     }
 
 }

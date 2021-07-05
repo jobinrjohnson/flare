@@ -11,7 +11,11 @@ class A {
 
     sayHello(): void {
         this.x = this.x * 100;
-        printf("Hello World, %d", this.x);
+        printf("Hello World, %d\n", this.x);
+    }
+
+    getValue(): int {
+        return 100;
     }
 
 }
@@ -22,6 +26,9 @@ function main(): int {
     b.x = 20;
 
     try {
+        b.sayHello();
+        let x: int = b.getValue();
+        b.x = x;
         b.sayHello();
     } catch (e: int) {
 
