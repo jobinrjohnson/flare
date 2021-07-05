@@ -23,8 +23,9 @@ llvm::Value *flare::ast::StatementNode::codeGen(Context *cxt) {
                 None,
                 false
         );
-        auto function = module->getOrInsertFunction("throwException", funType);
-        return builder.CreateCall(function, None, "exception");
+        auto function = module->getOrInsertFunction("__FLARE_throwException", funType);
+        builder.CreateCall(function, None, "raiseException");
+        return builder.CreateUnreachable();
     }
 
     return nullptr;

@@ -17,7 +17,6 @@ class A {
 
     getValue(): int {
         throw "helllo world.";
-        return 1;
     }
 
 }

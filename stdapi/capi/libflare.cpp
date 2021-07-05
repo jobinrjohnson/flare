@@ -32,7 +32,7 @@ char *get_line() {
 }
 
 
-int throwException() {
+int __FLARE_throwException() {
     throw 1;
 }
 
