@@ -98,7 +98,7 @@ namespace flare::ast {
                         false
                 ),
                 GlobalValue::ExternalLinkage,
-                "pFun", module.get()
+                "__FLARE_personality_function", module.get()
         );
 
 
