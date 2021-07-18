@@ -19,13 +19,23 @@ llvm::Value *flare::ast::StatementNode::codeGen(Context *cxt) {
                 ->setFunctionReturn(operand);
     } else if (this->type == StatementType::THROW) {
         auto funType = FunctionType::get(
-                builder.getInt32Ty(),
+                builder.getInt8PtrTy(),
                 None,
                 false
         );
-        auto function = module->getOrInsertFunction("__FLARE_throwException", funType);
-        builder.CreateCall(function, None, "raiseException");
-        return builder.CreateUnreachable();
+        auto function = module->getOrInsertFunction("__FLARE_createUnWindException", funType);
+
+        auto funType2 = FunctionType::get(
+                builder.getVoidTy(),
+                {builder.getInt8PtrTy()},
+                false
+        );
+        auto raiseOurException = module->getOrInsertFunction("__FLARE_raiseException", funType2);
+        auto exception = builder.CreateCall(function, None, "getException");
+        builder.CreateCall(raiseOurException, exception);
+
+        return builder.CreateRet(ConstantInt::get(*cxt->getLLVMContext(), APInt(64, 0)));
+//        return builder.CreateUnreachable();
     }
 
     return nullptr;

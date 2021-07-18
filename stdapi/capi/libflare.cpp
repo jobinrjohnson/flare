@@ -3,6 +3,9 @@
 //
 #include <cstdio>
 #include <cstdint>
+#include <unwind.h>
+#include <malloc.h>
+#include <cstring>
 
 using namespace std;
 
@@ -37,11 +40,46 @@ int __FLARE_throwException() {
     throw 1;
 }
 
-int32_t __FLARE_personality_function(int32_t i321, int32_t i322, int64_t i64, int8_t *i81, int8_t *i82) {
 
-    printf("@__FLARE_personality_function\n");
+_Unwind_Reason_Code __gxx_personality_v0
+        (int, _Unwind_Action, _Unwind_Exception_Class,
+         struct _Unwind_Exception *, struct _Unwind_Context *);
 
-    return 0;
+_Unwind_Reason_Code __FLARE_personality_function(int version, _Unwind_Action actions,
+                                                 _Unwind_Exception_Class exceptionClass,
+                                                 struct _Unwind_Exception *exceptionObject,
+                                                 struct _Unwind_Context *context) {
+
+    return __gxx_personality_v0(version, actions,
+                                exceptionClass,
+                                exceptionObject,
+                                context);
+
+}
+
+struct OurExceptionType_t {
+    int type;
+};
+
+struct OurBaseException_t {
+    struct OurExceptionType_t type;
+    struct _Unwind_Exception unwindException;
+};
+
+_Unwind_Exception *__FLARE_createUnWindException() {
+    size_t size = sizeof(OurBaseException_t);
+    OurBaseException_t *ret = (OurBaseException_t *) memset(malloc(size), 0, size);
+    (ret->type).type = 0;
+    (ret->unwindException).exception_class = 0;
+    (ret->unwindException).exception_cleanup = nullptr;
+    return (&(ret->unwindException));
+}
+
+void __FLARE_raiseException(struct _Unwind_Exception *ex) {
+    printf("unwinding........................");
+    _Unwind_Reason_Code reason = _Unwind_RaiseException(ex);
+    printf("\n\n\n\nthis failed because %d\n\n\n\n", reason);
+    fflush(stdout);
 }
 
 
