@@ -47,7 +47,9 @@ namespace flare::ast {
                 1,
                 "landingPad"
         );
-        caughtResult->addClause(module->getGlobalVariable("_ZTIi"));
+//        auto ptr = module->getGlobalVariable("_ZTIi");
+        auto ptr = builder.CreateBitCast(module->getGlobalVariable("_ZTIi"), builder.getInt8PtrTy());
+        caughtResult->addClause(static_cast<Constant *>(ptr));
 
         this->catchBlocks.begin()->second->codeGen(cxt);
 

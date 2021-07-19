@@ -33,14 +33,14 @@ llvm::Value *StatementNode::codeGenThrowE(Context *cxt) {
 
     // TODO this properly
 
-    new llvm::GlobalVariable(
+    GlobalVariable *gvar = new llvm::GlobalVariable(
             *module,
             builder.getInt8PtrTy(),
             true,
             llvm::GlobalValue::ExternalLinkage,
             0,
             "_ZTIi");
-
+    gvar->setDSOLocal(true);
 
     //
     //
