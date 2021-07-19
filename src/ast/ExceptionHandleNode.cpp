@@ -46,9 +46,13 @@ namespace flare::ast {
                 1,
                 "landingPad"
         );
+        caughtResult->addClause(module->getGlobalVariable("_ZTIi"));
 
-        caughtResult->setCleanup(true);
-        cxt->getCurrentFunction()->setFunctionReturn(ConstantInt::get(*cxt->getLLVMContext(), APInt(64, 101)));
+        this->catchBlocks.begin()->second->codeGen(cxt);
+
+        if (exceptionBlock->getTerminator() == nullptr) {
+            cxt->getCurrentFunction()->setFunctionReturn(ConstantInt::get(*cxt->getLLVMContext(), APInt(64, 1)));
+        }
         //
         //
         //
