@@ -31,14 +31,16 @@ flare::ast::StatementNode::StatementNode(flare::ast::StatementType type, Node *n
 
 llvm::Value *StatementNode::codeGenThrowE(Context *cxt) {
 
-    new llvm::GlobalVariable(
+    // TODO this properly
+
+    GlobalVariable *gvar = new llvm::GlobalVariable(
             *module,
             builder.getInt8PtrTy(),
             true,
             llvm::GlobalValue::ExternalLinkage,
             0,
             "_ZTIi");
-
+    gvar->setDSOLocal(true);
 
     //
     //
@@ -97,7 +99,7 @@ llvm::Value *StatementNode::codeGenThrowE(Context *cxt) {
             exception,
             builder.CreateBitCast(module->getGlobalVariable("_ZTIi"), builder.getInt8PtrTy()),
             ConstantPointerNull::get(builder.getInt8PtrTy())
-    });
+    })->setDoesNotReturn();
     return builder.CreateUnreachable();
 
 //    auto funType = FunctionType::get(

@@ -143,6 +143,10 @@ namespace flare::ast {
             return this->exitBlock;
         }
 
+        inline void setPersonalityFunction(Function *fun) {
+            this->function->setPersonalityFn(fun);
+        }
+
         // Destructor
         ~FunctionNode();
 

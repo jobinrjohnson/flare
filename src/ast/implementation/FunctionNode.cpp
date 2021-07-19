@@ -47,6 +47,7 @@ namespace flare::ast {
                 GlobalValue::ExternalLinkage,
                 this->getQualifiedFunctionName(), module.get()
         );
+        this->function->setDSOLocal(true);
 
         if (this->statementListNode == nullptr) {
             return this->function;
@@ -81,8 +82,6 @@ namespace flare::ast {
                 ++actualArgs;
             }
         }
-
-        this->function->setPersonalityFn(cxt->getPersonalityFunction());
 
         // Original Function body.
         this->statementListNode->codeGen(cxt);
