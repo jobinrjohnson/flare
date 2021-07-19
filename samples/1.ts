@@ -35,14 +35,14 @@ function main(): int {
     // b.x = 20;
 
     try {
-        // printf("Exception start, %d\n", 0);
+        printf("Exception start, %d\n", 0);
         // b.getValue();
         the();
         // let x: int = b.getValue();
         // b.x = x;
         // b.sayHello();
     } catch (e: int) {
-        // printf("Exception happened, %d\n", 0);
+        printf("Exception happened, %d\n", 0);
         return 1;
     }
 

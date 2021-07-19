@@ -3,12 +3,12 @@
 //
 
 #include <llvm/Support/DynamicLibrary.h>
-#include "llvm/ExecutionEngine/Interpreter.h"
 #include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/TargetSelect.h"
+#include "llvm/ExecutionEngine/MCJIT.h"
 
 #include "FlareJit.h"
-
+#include "llvm/ExecutionEngine/SectionMemoryManager.h"
 
 namespace flare::jit {
 
@@ -24,8 +24,15 @@ namespace flare::jit {
 
         this->execStartFunction = module->getFunction("main");
 
+        TargetOptions opts;
         InitializeNativeTarget();
+        InitializeNativeTargetAsmPrinter();
+
+        std::unique_ptr<RTDyldMemoryManager> MemMgr(new SectionMemoryManager());
         this->EE = EngineBuilder(std::move(module))
+                .setEngineKind(EngineKind::JIT)
+                .setMCJITMemoryManager(std::move(MemMgr))
+                .setTargetOptions(opts)
                 .create();
 
         sys::DynamicLibrary::LoadLibraryPermanently("../../cmake-build-debug/stdapi/capi/libcapi.so");
