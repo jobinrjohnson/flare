@@ -1,7 +1,7 @@
 // @ts-ignore
 function printf(msg: string, value: int): void;
 
-let global_exception: int = 10;
+// let global_exception: int = 10;
 
 // function printf(msg: string, value: double): void;
 // function printf(msg: string, value: string): void;
@@ -42,7 +42,7 @@ function main(): int {
         // b.x = x;
         // b.sayHello();
     } catch (e: int) {
-        printf("Exception happened, %d\n", 0);
+        // printf("Exception happened, %d\n", 0);
         return 1;
     }
 

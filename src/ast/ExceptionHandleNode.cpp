@@ -14,6 +14,7 @@ namespace flare::ast {
 
     llvm::Value *ExceptionHandleNode::codeGen(Context *cxt) {
 
+        cxt->getCurrentFunction()->setPersonalityFunction(cxt->getPersonalityFunction());
 
         // Unwind block for invoke
         this->exceptionBlock = BasicBlock::Create(

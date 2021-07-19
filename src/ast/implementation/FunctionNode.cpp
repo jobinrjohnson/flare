@@ -82,8 +82,6 @@ namespace flare::ast {
             }
         }
 
-        this->function->setPersonalityFn(cxt->getPersonalityFunction());
-
         // Original Function body.
         this->statementListNode->codeGen(cxt);
 
