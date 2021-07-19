@@ -141,5 +141,30 @@ namespace flare::ast {
         this->registerType("void", new VoidType());
     }
 
+    Function *Context::getPersonalityFunction() {
+        if (this->personalityFunction == nullptr) {
+//
+//        std::vector<Type *> argVector = {builder.getInt32Ty(), builder.getInt32Ty(), builder.getInt64Ty(), builder.getInt8PtrTy(), builder.getInt8PtrTy()};
+//        this->personalityFunction = Function::Create(
+//                FunctionType::get(
+//                        builder.getInt32Ty(),
+//                        argVector,
+//                        false
+//                ),
+//                GlobalValue::ExternalLinkage,
+//                "__FLARE_personality_function", module.get()
+//        );
+
+            Type *returnType = this->getBuilder()->getInt32Ty();
+            FunctionType *funcType = FunctionType::get(returnType,
+                                                       ArrayRef<Type *>(),
+                                                       true);
+            this->personalityFunction = Function::Create(
+                    funcType, Function::ExternalLinkage, "__gxx_personality_v0", *module);
+            this->personalityFunction->setDSOLocal(true);
+        }
+        return this->personalityFunction;
+    }
+
 
 }

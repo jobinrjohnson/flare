@@ -35,6 +35,8 @@ namespace flare::ast {
 
         std::map<std::string, BaseType *> types;
 
+        Function *personalityFunction;
+
     public:
 
         int depth = 0;
@@ -79,9 +81,11 @@ namespace flare::ast {
 
         BaseType *getFlareType(VarType type);
 
-        BaseType *getFlareType(Value* value);
+        BaseType *getFlareType(Value *value);
 
         void initTypes();
+
+        Function *getPersonalityFunction();
 
     };
 }
