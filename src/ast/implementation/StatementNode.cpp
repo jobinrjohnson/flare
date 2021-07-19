@@ -31,6 +31,8 @@ flare::ast::StatementNode::StatementNode(flare::ast::StatementType type, Node *n
 
 llvm::Value *StatementNode::codeGenThrowE(Context *cxt) {
 
+    // TODO this properly
+
     new llvm::GlobalVariable(
             *module,
             builder.getInt8PtrTy(),
@@ -97,7 +99,7 @@ llvm::Value *StatementNode::codeGenThrowE(Context *cxt) {
             exception,
             builder.CreateBitCast(module->getGlobalVariable("_ZTIi"), builder.getInt8PtrTy()),
             ConstantPointerNull::get(builder.getInt8PtrTy())
-    });
+    })->setDoesNotReturn();
     return builder.CreateUnreachable();
 
 //    auto funType = FunctionType::get(

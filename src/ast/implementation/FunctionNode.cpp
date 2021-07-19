@@ -47,6 +47,7 @@ namespace flare::ast {
                 GlobalValue::ExternalLinkage,
                 this->getQualifiedFunctionName(), module.get()
         );
+        this->function->setDSOLocal(true);
 
         if (this->statementListNode == nullptr) {
             return this->function;
