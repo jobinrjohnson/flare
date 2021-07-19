@@ -125,6 +125,24 @@ namespace flare::ast {
 
         ExceptionHandleNode *getExceptionHandler();
 
+        BasicBlock *getExitBlock(Context *cxt) {
+            if (this->exitBlock == nullptr) {
+                this->exitBlock = BasicBlock::Create(*cxt->getLLVMContext(), "ext", this->function);
+
+                /// TODO refactor
+                if (this->retValue == nullptr) {
+                    this->retValue = new AllocaInst(
+                            function->getReturnType(),
+                            0,
+                            ".retVal",
+                            this->entryBlock->getFirstNonPHI()
+                    );
+                }
+
+            }
+            return this->exitBlock;
+        }
+
         // Destructor
         ~FunctionNode();
 

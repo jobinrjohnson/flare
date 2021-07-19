@@ -27,6 +27,8 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt) override;
 
+        llvm::Value *codeGen2(Context *cxt);
+
         void addCatchBlock(StatementListNode *catchBlock, VarType *type);
 
         llvm::Value *

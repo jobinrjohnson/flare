@@ -10,7 +10,8 @@
 namespace flare::ast {
 
     enum StatementType {
-        RETURN
+        RETURN,
+        THROW
     };
 
     class StatementNode : public Node {
@@ -28,6 +29,8 @@ namespace flare::ast {
         explicit StatementNode(StatementType type, Node *node);
 
         llvm::Value *codeGen(Context *cxt);
+
+        llvm::Value *codeGenThrowE(Context *cxt);
 
     };
 

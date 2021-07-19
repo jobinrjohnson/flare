@@ -8,7 +8,7 @@
 namespace flare::types {
 
     Value *IntType::createInstance(Context *context, LValue val) {
-        return llvm::ConstantInt::get(*context->getLLVMContext(), APInt(64, val.iVal));
+        return ConstantInt::get(*context->getLLVMContext(), APInt(64, val.iVal));
     }
 
     Type *IntType::probeLLVMType(Context *context) {

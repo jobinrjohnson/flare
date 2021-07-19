@@ -82,27 +82,7 @@ namespace flare::ast {
             }
         }
 
-        // TODO do this properly
-
-        std::vector<Type *> argVector;
-        argVector.push_back(builder.getInt32Ty());
-        argVector.push_back(builder.getInt32Ty());
-        argVector.push_back(builder.getInt64Ty());
-        argVector.push_back(builder.getInt8PtrTy());
-        argVector.push_back(builder.getInt8PtrTy());
-
-        static auto pfun = Function::Create(
-                FunctionType::get(
-                        builder.getInt32Ty(),
-                        argVector,
-                        false
-                ),
-                GlobalValue::ExternalLinkage,
-                "pFun", module.get()
-        );
-
-
-        this->function->setPersonalityFn(pfun);
+        this->function->setPersonalityFn(cxt->getPersonalityFunction());
 
         // Original Function body.
         this->statementListNode->codeGen(cxt);
