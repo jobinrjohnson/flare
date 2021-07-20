@@ -2,11 +2,7 @@
 // Created by jobinrjohnson on 17/06/21.
 //
 #include <cstdio>
-#include <cstdint>
-#include <unwind.h>
-#include <malloc.h>
 #include <cstring>
-#include <exception>
 
 using namespace std;
 
@@ -40,54 +36,5 @@ char *get_line() {
 int __FLARE_throwException() {
     throw 1;
 }
-
-
-_Unwind_Reason_Code __gxx_personality_v0
-        (int, _Unwind_Action, _Unwind_Exception_Class,
-         struct _Unwind_Exception *, struct _Unwind_Context *);
-
-_Unwind_Reason_Code __FLARE_personality_function(
-        int version,
-        _Unwind_Action actions,
-        _Unwind_Exception_Class exceptionClass,
-        struct _Unwind_Exception *exceptionObject,
-        struct _Unwind_Context *context
-) {
-
-    return __gxx_personality_v0(version, actions,
-                                exceptionClass,
-                                exceptionObject,
-                                context);
-
-}
-
-struct OurExceptionType_t {
-    int type;
-};
-
-struct OurBaseException_t {
-    struct OurExceptionType_t type;
-    struct _Unwind_Exception unwindException;
-};
-
-void __FLARE_deleteException(_Unwind_Reason_Code reason,
-                             OurBaseException_t *expToDelete) {
-}
-
-_Unwind_Exception *__FLARE_createUnWindException() {
-    size_t size = sizeof(OurBaseException_t);
-    OurBaseException_t *ret = (OurBaseException_t *) memset(malloc(size), 0, size);
-    (ret->type).type = 0;
-    (ret->unwindException).exception_class = 0;
-    (ret->unwindException).exception_cleanup = reinterpret_cast<_Unwind_Exception_Cleanup_Fn>(__FLARE_deleteException);
-    return (&(ret->unwindException));
-}
-
-void __FLARE_raiseException(struct _Unwind_Exception *ex) {
-    _Unwind_Reason_Code reason = _Unwind_RaiseException(ex);
-    printf("unwinding failed because %d\n", reason);
-    fflush(stdout);
-}
-
 
 }

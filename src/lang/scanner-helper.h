@@ -93,6 +93,8 @@ int filterKwOrId(
         return token::KW_CATCH;
     } else if (IS_TOKEN("throw")) {
         return token::KW_THROW;
+    } else if (IS_TOKEN("finally")) {
+        return token::KW_FINALLY;
     } else if (IS_TOKEN("true")) {
         yylval->tBoolValue = true;
         return token::T_BOOLEAN;

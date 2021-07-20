@@ -14,6 +14,7 @@ namespace flare::ast {
 
     llvm::Value *ExceptionHandleNode::codeGen(Context *cxt) {
 
+        // Add personality block
         cxt->getCurrentFunction()->setPersonalityFunction(cxt->getPersonalityFunction());
 
         // Unwind block for invoke
@@ -23,14 +24,22 @@ namespace flare::ast {
                 cxt->getCurrentFunction()->getLLVMFunctionRef()
         );
 
+        // finally block
+        BasicBlock *afterExceptionBlock = BasicBlock::Create(
+                context,
+                "afterExceptionBlock",
+                cxt->getCurrentFunction()->getLLVMFunctionRef()
+        );
+
         // try block
         cxt->getCurrentFunction()->pushExceptionHandler(this);
         this->tryBlock->codeGen(cxt);
         cxt->getCurrentFunction()->popExceptionHandler();
 
-        // Ending normal block
-        // builder.CreateBr(cxt->getCurrentFunction()->getExitBlock(cxt));
-        cxt->getCurrentFunction()->setFunctionReturn(ConstantInt::get(*cxt->getLLVMContext(), APInt(64, 1)));
+        // Ending last normal block
+        if (cxt->getBuilder()->GetInsertBlock()->getTerminator() == nullptr) {
+            cxt->getBuilder()->CreateBr(afterExceptionBlock);
+        }
 
         //
         //
@@ -47,18 +56,24 @@ namespace flare::ast {
                 1,
                 "landingPad"
         );
-//        auto ptr = module->getGlobalVariable("_ZTIi");
         auto ptr = builder.CreateBitCast(module->getGlobalVariable("_ZTIi"), builder.getInt8PtrTy());
         caughtResult->addClause(static_cast<Constant *>(ptr));
 
+        // TODO properly
         this->catchBlocks.begin()->second->codeGen(cxt);
 
+        // TODO properly
+        if (this->finallyNode != nullptr && exceptionBlock->getTerminator() == nullptr)
+            this->finallyNode->codeGen(cxt);
+
         if (exceptionBlock->getTerminator() == nullptr) {
-            cxt->getCurrentFunction()->setFunctionReturn(ConstantInt::get(*cxt->getLLVMContext(), APInt(64, 1)));
+            builder.CreateBr(afterExceptionBlock);
         }
         //
         //
         //
+
+        builder.SetInsertPoint(afterExceptionBlock);
 
         return nullptr;
 
@@ -68,7 +83,7 @@ namespace flare::ast {
         this->tryBlock = tryBlock;
     }
 
-    void ExceptionHandleNode::addCatchBlock(StatementListNode *catchBlock, VarType *type) {
+    void ExceptionHandleNode::addCatchBlock(StatementListNode *catchBlock, VarType *type, std::string varName) {
         this->catchBlocks.insert(std::pair<VarType *, StatementListNode *>(type, catchBlock));
     }
 
@@ -83,5 +98,9 @@ namespace flare::ast {
         llvm::Value *val = closure(nb, this->exceptionBlock);
         builder.SetInsertPoint(nb);
         return val;
+    }
+
+    void ExceptionHandleNode::setFinallyBlock(StatementListNode *finallyStatementListNode) {
+        this->finallyNode = finallyStatementListNode;
     }
 }

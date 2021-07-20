@@ -16,6 +16,8 @@ namespace flare::ast {
 
         std::map<VarType *, StatementListNode *> catchBlocks;
 
+        StatementListNode *finallyNode;
+
     public:
 
         // Unwind block for invoke
@@ -27,10 +29,12 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt) override;
 
-        void addCatchBlock(StatementListNode *catchBlock, VarType *type);
+        void addCatchBlock(StatementListNode *catchBlock, VarType *type, std::string);
 
         llvm::Value *
         handleOperation(Context *, std::function<Value *(BasicBlock *normalBlock, BasicBlock *exceptionBlock)>);
+
+        void setFinallyBlock(StatementListNode *);
 
     };
 }
