@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstdint>
 #include <unwind.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <cstring>
 #include <exception>
 
