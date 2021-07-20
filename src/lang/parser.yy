@@ -108,7 +108,7 @@
 %type <classDeclNode> class_decl
 %type <nodeList> class_contents
 %type <variableDerefNode> var_deref
-%type <exceptionHandleNode> try_catch
+%type <exceptionHandleNode> try_catch try_catch_finally
 
 %token <yyText> IDENTIFIER
 %token <tIntegerValue> T_INTEGER
@@ -120,7 +120,7 @@
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 %token TOK_L_AND TOK_L_OR
 %token KW_INT KW_INT32 KW_INT64 KW_NUMBER KW_FLOAT KW_DOUBLE KW_BIGINT KW_BOOLEAN KW_VOID KW_STRING
-%token KW_TRY KW_CATCH KW_THROW
+%token KW_TRY KW_CATCH KW_THROW KW_FINALLY
 
 %precedence '='
 %left TOK_L_AND TOK_L_OR
@@ -161,14 +161,26 @@ statement:
     | loops                             { $$->setLineNumber(driver.cursor->end.line); }
     | class_decl                        { $$->setLineNumber(driver.cursor->end.line); }
     | compound_statement                { $$->setLineNumber(driver.cursor->begin.line); }
-    | try_catch                         { $$->setLineNumber(driver.cursor->begin.line); }
+    | try_catch_finally                 { $$->setLineNumber(driver.cursor->begin.line); }
     | throw_smt                         { $$->setLineNumber(driver.cursor->begin.line); }
 ;
 
 try_catch:
     KW_TRY compound_statement  KW_CATCH '(' IDENTIFIER ':' var_type ')' compound_statement        {
                 $$ = new ExceptionHandleNode($2);
-                $$->addCatchBlock($9, $7);
+                $$->addCatchBlock($9, $7, $5);
+    }
+    | try_catch KW_CATCH '(' IDENTIFIER ':' var_type ')' compound_statement        {
+        $1->addCatchBlock($8, $6, $4);
+        $$ = $1;
+    }
+;
+
+try_catch_finally:
+    try_catch                                       { }
+    | try_catch KW_FINALLY compound_statement       {
+        $$->setFinallyBlock($3);
+        $$ = $1;
     }
 ;
 
@@ -282,8 +294,8 @@ var_type:
     | KW_DOUBLE         { $$ = new VarType; $$->type = VARTYPE_DOUBLE; }
     | KW_BOOLEAN        { $$ = new VarType; $$->type = VARTYPE_BOOLEAN; }
     | KW_VOID           { $$ = new VarType; $$->type = VARTYPE_VOID; }
-    | KW_STRING           { $$ = new VarType; $$->type = VARTYPE_STRING; }
-    | IDENTIFIER           { $$ = new VarType; $$->type = OTHER; $$->name = $1; }
+    | KW_STRING         { $$ = new VarType; $$->type = VARTYPE_STRING; }
+    | IDENTIFIER        { $$ = new VarType; $$->type = OTHER; $$->name = $1; }
 ;
 
 array_declaration:
