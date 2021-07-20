@@ -1,28 +1,6 @@
 // @ts-ignore
 function printf(msg: string, value: int): void;
 
-// let global_exception: int = 10;
-
-// function printf(msg: string, value: double): void;
-// function printf(msg: string, value: string): void;
-
-// class A {
-//     // x: int = 10;
-//     // y: double;
-//     // z: boolean;
-//     // w: string = "hello";
-//     //
-//     // sayHello(): void {
-//     //     this.x = this.x * 100;
-//     //     printf("Hello World, %d\n", this.x);
-//     // }
-//
-//     getValue(): int {
-//         throw "helllo world.";
-//         // return  1;
-//     }
-//
-// }
 
 function the(): void {
     throw "helllo world.";
@@ -31,19 +9,14 @@ function the(): void {
 
 function main(): int {
 
-    // let b: A = new A();
-    // b.x = 20;
-
     try {
-        printf("Exception start, %d\n", 0);
-        // b.getValue();
+        printf("Entering try block, %d\n", 0);
         the();
-        // let x: int = b.getValue();
-        // b.x = x;
-        // b.sayHello();
+        printf("Completed try block, %d\n", 1);
     } catch (e: int) {
-        printf("Exception happened, %d\n", 0);
-        return 1;
+        printf("Entering catch(e:int) block, %d\n", 2);
+    } finally {
+        printf("Entering finally block, %d\n", 3);
     }
 
 
