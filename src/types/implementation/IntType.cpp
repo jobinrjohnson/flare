@@ -30,46 +30,49 @@ namespace flare::types {
         Value *lhs = primary;
         auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_INT);
 
+//        BinaryOperator::Create(Instruction::Add,lhs, rhs);
+        auto builder = cxt->getBuilder();
+
         llvm::Value *value;
         switch (symbol) {
             // Arithmetic operators
             case PLUS:
-                value = builder.CreateAdd(lhs, rhs);
+                value = builder->CreateAdd(lhs, rhs);
                 break;
             case MINUS:
-                value = builder.CreateSub(lhs, rhs);
+                value = builder->CreateSub(lhs, rhs);
                 break;
             case MUL:
-                value = builder.CreateMul(lhs, rhs);
+                value = builder->CreateMul(lhs, rhs);
                 break;
             case MODULO_DIV:
-                value = builder.CreateSRem(lhs, rhs);
+                value = builder->CreateSRem(lhs, rhs);
                 break;
             case DIV:
-                value = builder.CreateFDiv(lhs, rhs);
+                value = builder->CreateFDiv(lhs, rhs);
                 break;
             case UNARY_MINUS:
-                value = builder.CreateSub(rhs, lhs);
+                value = builder->CreateSub(rhs, lhs);
                 break;
                 // Boolean operators
             case LESS_THAN:
-                value = builder.CreateICmpSLT(lhs, rhs);
+                value = builder->CreateICmpSLT(lhs, rhs);
                 break;
             case GREATER_THAN: // TODO remaining
-                return builder.CreateICmpSGT(lhs, rhs);
+                return builder->CreateICmpSGT(lhs, rhs);
             case GREATER_THAN_EQUAL:
-                value = builder.CreateICmpSGE(lhs, rhs);
+                value = builder->CreateICmpSGE(lhs, rhs);
                 break;
             case LESS_THAN_EQUAL:
-                return builder.CreateICmpSLE(lhs, rhs);
+                return builder->CreateICmpSLE(lhs, rhs);
             case EQUALITY:
-                return builder.CreateICmpEQ(lhs, rhs);
+                return builder->CreateICmpEQ(lhs, rhs);
             case NOT_EQUALITY:
-                return builder.CreateICmpNE(lhs, rhs);
+                return builder->CreateICmpNE(lhs, rhs);
             case LOGICAL_AND:
-                return builder.CreateAnd(lhs, rhs);
+                return builder->CreateAnd(lhs, rhs);
             case LOGICAL_OR:
-                return builder.CreateOr(lhs, rhs);
+                return builder->CreateOr(lhs, rhs);
             default:
                 throw "Not handled";
         }
@@ -78,19 +81,20 @@ namespace flare::types {
 
     Value *IntType::getValue(Context *cxt, Value *value, VariableType valueType) {
 
+        auto builder = cxt->getBuilder();
         switch (valueType) {
             case VariableType::VARTYPE_INT:
             case VariableType::VARTYPE_INT_64:
                 return value;
             case VARTYPE_INT_32:
-                return cxt->getBuilder()->CreateIntCast(value, cxt->getBuilder()->getInt32Ty(), true);
+                return builder->CreateIntCast(value, builder->getInt32Ty(), true);
             case VARTYPE_FLOAT:
-                return cxt->getBuilder()->CreateSIToFP(value, cxt->getBuilder()->getFloatTy());
+                return builder->CreateSIToFP(value, builder->getFloatTy());
             case VARTYPE_DOUBLE:
             case VARTYPE_NUMBER:
-                return cxt->getBuilder()->CreateSIToFP(value, cxt->getBuilder()->getDoubleTy());
+                return builder->CreateSIToFP(value, builder->getDoubleTy());
             case VARTYPE_BOOLEAN:
-                return cxt->getBuilder()->CreateIntCast(value, cxt->getBuilder()->getInt1Ty(), false);
+                return builder->CreateIntCast(value, builder->getInt1Ty(), false);
             case VARTYPE_ARRAY:
             case VARTYPE_STRING:
             case VARTYPE_VOID:

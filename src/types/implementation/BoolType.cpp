@@ -33,17 +33,19 @@ namespace flare::types {
 
     Value *BoolType::getValue(Context *cxt, Value *value, VariableType valueType) {
 
+        auto builder = cxt->getBuilder();
+
         switch (valueType) {
             case VariableType::VARTYPE_INT:
             case VariableType::VARTYPE_INT_64:
-                return cxt->getBuilder()->CreateIntCast(value, cxt->getBuilder()->getInt64Ty(), true);
+                return builder->CreateIntCast(value, builder->getInt64Ty(), true);
             case VARTYPE_INT_32:
-                return cxt->getBuilder()->CreateIntCast(value, cxt->getBuilder()->getInt32Ty(), true);
+                return builder->CreateIntCast(value, builder->getInt32Ty(), true);
             case VARTYPE_FLOAT:
-                return cxt->getBuilder()->CreateSIToFP(value, cxt->getBuilder()->getFloatTy());
+                return builder->CreateSIToFP(value, builder->getFloatTy());
             case VARTYPE_DOUBLE:
             case VARTYPE_NUMBER:
-                return cxt->getBuilder()->CreateSIToFP(value, cxt->getBuilder()->getDoubleTy());
+                return builder->CreateSIToFP(value, builder->getDoubleTy());
             case VARTYPE_BOOLEAN:
                 return value;
             case VARTYPE_ARRAY:
