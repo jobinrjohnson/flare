@@ -31,6 +31,10 @@ namespace flare::types {
 
         Value *getValue(Context *cxt, Value *value, VariableType valueType) override;
 
+        int getTypePrecedence() override {
+            return VariableType::VARTYPE_BOOLEAN;
+        }
+
     };
 
 }

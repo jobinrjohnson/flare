@@ -6,7 +6,7 @@ function printf(msg: string, value: int): void;
 function main(): int {
 
     let a: int = 1;
-    let b: int = 1;
+    let b: boolean = false;
 
     printf("Value is %d", (a - b));
 

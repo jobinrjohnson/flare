@@ -30,13 +30,13 @@ namespace flare::ast {
     };
 
     enum VariableType {
+        VARTYPE_BOOLEAN,    // In use
         VARTYPE_INT_32,
         VARTYPE_INT_64,
         VARTYPE_INT,        // In use
         VARTYPE_FLOAT,
         VARTYPE_DOUBLE,     // In use
         VARTYPE_NUMBER,     // In use
-        VARTYPE_BOOLEAN,    // In use
         VARTYPE_ARRAY,
         VARTYPE_STRING,     // In Use
         VARTYPE_VOID,       // In use
