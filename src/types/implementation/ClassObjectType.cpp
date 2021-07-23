@@ -60,4 +60,8 @@ namespace flare::types {
     Value *ClassObjectType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
         return nullptr;
     }
+
+    Value *ClassObjectType::getValue(Context *cxt, Value *value, VariableType valueType) {
+        return nullptr;
+    }
 }

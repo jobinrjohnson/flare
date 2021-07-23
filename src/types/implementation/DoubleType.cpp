@@ -30,4 +30,8 @@ namespace flare::types {
     Value *DoubleType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
         return nullptr;
     }
+
+    Value *DoubleType::getValue(Context *cxt, Value *value, VariableType valueType) {
+        return nullptr;
+    }
 }

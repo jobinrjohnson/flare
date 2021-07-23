@@ -47,6 +47,8 @@ namespace flare::types {
 
         virtual Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) = 0;
 
+        virtual Value *getValue(Context *cxt, Value *value, VariableType valueType) = 0;
+
         int getTypePrecedence() {
             return 0;
         }

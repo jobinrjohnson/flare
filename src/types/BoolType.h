@@ -29,6 +29,8 @@ namespace flare::types {
 
         Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) override;
 
+        Value *getValue(Context *cxt, Value *value, VariableType valueType) override;
+
     };
 
 }
