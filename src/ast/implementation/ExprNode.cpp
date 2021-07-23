@@ -133,18 +133,20 @@ namespace flare::ast {
 
     Value *ExprNode::codeGenBinaryExpr(Context *cxt) {
 
-        std::vector<Value *> *ops = new std::vector<Value *>{
+        std::vector<Value *> ops = {
                 this->operands[0]->codeGen(cxt->nextLevel()), // LHS
                 this->operands[1]->codeGen(cxt->nextLevel()) // RHS
         };
-        typePromote(ops, context, builder);
-        // TODO free
-        // TODO other types
-        if ((*ops)[0]->getType()->getTypeID() == llvm::Type::IntegerTyID) {
-            return this->codeGenIntegerBinaryExpr(cxt, (*ops)[0], (*ops)[1]);
+
+        auto fType1 = cxt->getFlareType(ops.at(0));
+        auto fType2 = cxt->getFlareType(ops.at(1));
+
+        if (fType1->getTypePrecedence() > fType2->getTypePrecedence()) {
+            return fType1->apply(cxt, this->opr, ops[0], ops[1]);
         } else {
-            return this->codeGenFloatingPointBinaryExpr(cxt, (*ops)[0], (*ops)[1]);
+            return fType1->apply(cxt, this->opr, ops[1], ops[0]);
         }
+
     }
 
     Value *ExprNode::codeGenUnaryExpr(Context *cxt) {

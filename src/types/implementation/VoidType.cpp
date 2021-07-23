@@ -22,4 +22,8 @@ namespace flare::types {
     Value *VoidType::getDefaultValue(Context *) {
         return nullptr;
     }
+
+    Value *VoidType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+        return nullptr;
+    }
 }

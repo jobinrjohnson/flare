@@ -26,4 +26,8 @@ namespace flare::types {
         };
         return this->createInstance(cxt, lValue);
     }
+
+    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+        return nullptr;
+    }
 }

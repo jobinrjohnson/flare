@@ -56,4 +56,8 @@ namespace flare::types {
 
         return arrayPtrLoad;
     }
+
+    Value *ClassObjectType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+        return nullptr;
+    }
 }

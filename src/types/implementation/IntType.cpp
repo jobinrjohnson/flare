@@ -25,4 +25,10 @@ namespace flare::types {
         };
         return this->createInstance(cxt, lValue);
     }
+
+    Value *IntType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+        return cxt->getBuilder()->CreateAdd(lhs, rhs);
+
+        return nullptr;
+    }
 }

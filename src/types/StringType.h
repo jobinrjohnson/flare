@@ -27,6 +27,8 @@ namespace flare::types {
 
         Value *getDefaultValue(Context *) override;
 
+        Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) override;
+
     };
 
 }
