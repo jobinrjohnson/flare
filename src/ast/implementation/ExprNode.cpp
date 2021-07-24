@@ -141,10 +141,10 @@ namespace flare::ast {
         auto fType1 = cxt->getFlareType(ops.at(0));
         auto fType2 = cxt->getFlareType(ops.at(1));
 
-        if (fType1->getTypePrecedence() > fType2->getTypePrecedence()) {
+        if (fType1->getTypePrecedence() >= fType2->getTypePrecedence()) {
             return fType1->apply(cxt, this->opr, ops[0], ops[1]);
         } else {
-            return fType1->apply(cxt, this->opr, ops[1], ops[0]);
+            return fType2->apply(cxt, this->opr, ops[1], ops[0]);
         }
 
     }
