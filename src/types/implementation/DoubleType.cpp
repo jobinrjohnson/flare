@@ -100,4 +100,12 @@ namespace flare::types {
         }
         throw "Conversion not defined";
     }
+
+    Value *DoubleType::apply(Context *cxt, OperatorType symbol, Value *primary) {
+        if (symbol == OperatorType::NOT) {
+            return builder.CreateNot(primary);
+        }
+        throw "Operation not supported on boolean type";
+    }
+
 }

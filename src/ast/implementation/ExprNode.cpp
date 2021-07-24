@@ -62,7 +62,7 @@ namespace flare::ast {
                 break;
             }
             case NOT:
-                value = builder.CreateNot(operand, "mNot");
+                value = cxt->getFlareType(operand)->apply(cxt, OperatorType::NOT, operand);
                 break;
             default:
                 throw "Not handled";

@@ -26,6 +26,7 @@ namespace flare::types {
         return this->createInstance(cxt, lValue);
     }
 
+    // Binary operators
     Value *BoolType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
         Value *lhs = primary;
         auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_BOOLEAN);
@@ -53,6 +54,14 @@ namespace flare::types {
             case LESS_THAN_EQUAL:
             default:
                 break;
+        }
+        throw "Operation not supported on boolean type";
+    }
+
+    // Unary operators
+    Value *BoolType::apply(Context *cxt, OperatorType symbol, Value *primary) {
+        if (symbol == OperatorType::NOT) {
+            return builder.CreateNot(primary);
         }
         throw "Operation not supported on boolean type";
     }
