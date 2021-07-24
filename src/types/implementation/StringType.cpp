@@ -12,7 +12,7 @@ namespace flare::types {
                 context->getBuilder()->getInt64Ty()
         };
         auto stringLLVMType = StructType::create(*context->getLLVMContext(), items, "FLARE_string_t");
-        return stringLLVMType;
+        return PointerType::get(stringLLVMType, 0);
     }
 
     Value *StringType::createInstance(Context *context, LValue lVal) {
@@ -24,17 +24,17 @@ namespace flare::types {
 
         auto *f = FunctionType::get(
                 builder->getVoidTy(),
-                {builder->getInt8PtrTy(), builder->getInt8PtrTy()},
+                {PointerType::get(this->getLLVMType(context), 0), builder->getInt8PtrTy()},
                 false
         );
         auto initFun = module->getOrInsertFunction("FLARE_str_init", f);
-        builder->CreateCall(initFun,
-                            {builder->CreateLoad(builder->CreateStructGEP(var, 0)),
-                             builder->CreateGlobalStringPtr(StringRef(lVal.sVal))});
-
-        builder->CreateStore(ConstantInt::get(*context->getLLVMContext(), APInt(64,
-                                                                                strlen(lVal.sVal))),
-                             builder->CreateStructGEP(var, 1));
+        builder->CreateCall(
+                initFun,
+                {
+                        var,
+                        builder->CreateGlobalStringPtr(StringRef(lVal.sVal))
+                }
+        );
         return var;
     }
 
@@ -49,15 +49,29 @@ namespace flare::types {
         return this->createInstance(cxt, lValue);
     }
 
-    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *lhs) {
         return nullptr;
     }
 
     Value *StringType::getValue(Context *cxt, Value *value, VariableType valueType) {
-        return nullptr;
+        return value;
     }
 
-    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *primary) {
-        return nullptr;
+    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
+
+        Value *lhs = primary;
+        auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_STRING);
+
+        auto builder = cxt->getBuilder();
+
+        switch (symbol) {
+            case ASSIGNMENT: {
+                // TODO free the first instance
+                return builder->CreateStore(builder->CreateLoad(rhs), lhs);
+            }
+            default:
+                throw "Not handled";
+        }
+
     }
 }

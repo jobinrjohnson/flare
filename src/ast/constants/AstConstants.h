@@ -65,6 +65,7 @@ namespace flare::ast {
         FUNCTION_CALL,
         LOGICAL_AND,
         LOGICAL_OR,
+        ASSIGNMENT
     };
 
     // Value

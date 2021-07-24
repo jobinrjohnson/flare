@@ -24,7 +24,9 @@ namespace flare::ast {
         // Fill in the parameter list
         if (this->parameterList != nullptr) {
             for (Parameter *element: *(this->parameterList)) {
-                Type *varType = getLLVMType(element->type->type, context);
+//                cxt->getFlareType(element->type->type)->getLLVMType(cxt);
+                Type *varType = cxt->getFlareType(element->type->type)->getLLVMType(
+                        cxt); //getLLVMType(element->type->type, context);
                 argVector.push_back(varType);
             }
         }
