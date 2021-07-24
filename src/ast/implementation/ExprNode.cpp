@@ -2,9 +2,7 @@
 // Created by jobinrjohnson on 7/5/20.
 //
 
-#include <ast/helpers/VariableHelper.h>
 #include <ast/constants/AstConstants.h>
-
 #include <ast/LiteralNode.h>
 #include <ast/ExprNode.h>
 

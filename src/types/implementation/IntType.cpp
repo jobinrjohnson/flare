@@ -37,7 +37,7 @@ namespace flare::types {
         switch (symbol) {
             case ASSIGNMENT:
                 return builder->CreateStore(lhs, rhs);
-                // Arithmetic operators
+            // Arithmetic operators
             case PLUS:
                 value = builder->CreateAdd(lhs, rhs);
                 break;

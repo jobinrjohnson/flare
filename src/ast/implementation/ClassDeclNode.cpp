@@ -2,7 +2,6 @@
 // Created by jobinrjohnson on 12/05/21.
 //
 
-#include <ast/helpers/VariableHelper.h>
 #include <ast/ClassDeclNode.h>
 #include <exceptions/SemanticException.h>
 #include <types/ClassObjectType.h>

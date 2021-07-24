@@ -5,6 +5,8 @@
 #ifndef FLARE_ASTCONSTANTS_H
 #define FLARE_ASTCONSTANTS_H
 
+#include <string>
+
 namespace flare::ast {
 
     class Node;

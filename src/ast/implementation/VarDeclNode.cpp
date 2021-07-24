@@ -2,7 +2,6 @@
 // Created by jobinrjohnson on 7/23/20.
 //
 
-#include <ast/helpers/VariableHelper.h>
 #include <exceptions/SemanticException.h>
 #include <ast/VarDeclNode.h>
 #include <ast/StatementListNode.h>
