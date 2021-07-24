@@ -1,25 +1,16 @@
 // @ts-ignore
-function printf(msg: string, value: int): void;
+function printf(msg: string, value: boolean): void;
 
 
-function the(): void {
-    throw "helllo world.";
-    // return  1;
-}
-
+// @ts-ignore
 function main(): int {
 
-    try {
-        printf("Entering try block, %d\n", 0);
-        the();
-        printf("Completed try block, %d\n", 1);
-    } catch (e: int) {
-        printf("Entering catch(e:int) block, %d\n", 2);
-    } finally {
-        printf("Entering finally block, %d\n", 3);
-    }
+    let a: bigint = 1;
+    let b: boolean = !true;
+    let e: boolean = true;
+    let c: double = 0.0;
 
+    printf("Value is %d", (e && b));
 
     return 0;
-
 }

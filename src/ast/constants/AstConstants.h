@@ -30,17 +30,41 @@ namespace flare::ast {
     };
 
     enum VariableType {
+        VARTYPE_BOOLEAN,    // In use
         VARTYPE_INT_32,
         VARTYPE_INT_64,
-        VARTYPE_INT,
+        VARTYPE_INT,        // In use
         VARTYPE_FLOAT,
-        VARTYPE_DOUBLE,
-        VARTYPE_NUMBER,
-        VARTYPE_BOOLEAN,
+        VARTYPE_DOUBLE,     // In use
+        VARTYPE_NUMBER,     // In use
         VARTYPE_ARRAY,
-        VARTYPE_STRING,
-        VARTYPE_VOID,
+        VARTYPE_STRING,     // In Use
+        VARTYPE_VOID,       // In use
         OTHER
+    };
+
+
+    enum OperatorType {
+        PLUS,
+        MINUS,
+        MUL,
+        DIV,
+        SCALAR,
+        VAR_DE_REF,
+        GREATER_THAN,
+        LESS_THAN,
+        GREATER_THAN_EQUAL,
+        LESS_THAN_EQUAL,
+        EQUALITY,
+        NOT_EQUALITY,
+        NOT,
+        GROUPED,
+        UNARY_PLUS,
+        UNARY_MINUS,
+        MODULO_DIV,
+        FUNCTION_CALL,
+        LOGICAL_AND,
+        LOGICAL_OR,
     };
 
     // Value

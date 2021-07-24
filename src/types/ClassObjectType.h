@@ -42,6 +42,16 @@ namespace flare::types {
 
         Value *getMemberPtr(std::string, Value *);
 
+        Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) override;
+
+        Value *apply(Context *cxt, OperatorType symbol, Value *primary) override;
+
+        Value *getValue(Context *cxt, Value *value, VariableType valueType) override;
+
+        int getTypePrecedence() override {
+            return VariableType::VARTYPE_VOID;
+        }
+
     };
 
 }

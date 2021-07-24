@@ -9,30 +9,6 @@
 
 namespace flare::ast {
 
-
-    enum OperatorType {
-        PLUS,
-        MINUS,
-        MUL,
-        DIV,
-        SCALAR,
-        VAR_DE_REF,
-        GREATER_THAN,
-        LESS_THAN,
-        GREATER_THAN_EQUAL,
-        LESS_THAN_EQUAL,
-        EQUALITY,
-        NOT_EQUALITY,
-        NOT,
-        GROUPED,
-        UNARY_PLUS,
-        UNARY_MINUS,
-        MODULO_DIV,
-        FUNCTION_CALL,
-        LOGICAL_AND,
-        LOGICAL_OR,
-    };
-
     class ExprNode : public Node {
 
     protected:
@@ -43,10 +19,6 @@ namespace flare::ast {
         Value *codeGenBinaryExpr(Context *cxt);
 
         Value *codeGenUnaryExpr(Context *cxt);
-
-        Value *codeGenFloatingPointBinaryExpr(Context *cxt, Value *lhs, Value *rhs);
-
-        Value *codeGenIntegerBinaryExpr(Context *cxt, Value *lhs, Value *rhs);
 
     public:
 

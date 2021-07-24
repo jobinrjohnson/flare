@@ -23,6 +23,8 @@ namespace flare::types {
 
         Type *type;
 
+        int typeLevel = 0;
+
         virtual Type *probeLLVMType(Context *) = 0;
 
     public:
@@ -42,6 +44,14 @@ namespace flare::types {
         virtual inline bool isInbuiltTy() = 0;
 
         virtual Value *createInstance(Context *, LValue) = 0;
+
+        virtual Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) = 0;
+
+        virtual Value *apply(Context *cxt, OperatorType symbol, Value *primary) = 0;
+
+        virtual Value *getValue(Context *cxt, Value *value, VariableType valueType) = 0;
+
+        virtual int getTypePrecedence() = 0;
 
     };
 
