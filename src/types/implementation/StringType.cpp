@@ -7,13 +7,35 @@
 
 namespace flare::types {
     Type *StringType::probeLLVMType(Context *context) {
-        return llvm::Type::getInt8PtrTy(*context->getLLVMContext());
+        std::vector<llvm::Type *> items = {
+                context->getBuilder()->getInt8PtrTy(),
+                context->getBuilder()->getInt64Ty()
+        };
+        auto stringLLVMType = StructType::create(*context->getLLVMContext(), items, "FLARE_string_t");
+        return stringLLVMType;
     }
 
     Value *StringType::createInstance(Context *context, LValue lVal) {
-        return context
-                ->getBuilder()
-                ->CreateGlobalStringPtr(StringRef(lVal.sVal), "str");
+
+        auto builder = context
+                ->getBuilder();
+
+        auto var = builder->CreateAlloca(this->getLLVMType(context));
+
+        auto *f = FunctionType::get(
+                builder->getVoidTy(),
+                {builder->getInt8PtrTy(), builder->getInt8PtrTy()},
+                false
+        );
+        auto initFun = module->getOrInsertFunction("FLARE_str_init", f);
+        builder->CreateCall(initFun,
+                            {builder->CreateLoad(builder->CreateStructGEP(var, 0)),
+                             builder->CreateGlobalStringPtr(StringRef(lVal.sVal))});
+
+        builder->CreateStore(ConstantInt::get(*context->getLLVMContext(), APInt(64,
+                                                                                strlen(lVal.sVal))),
+                             builder->CreateStructGEP(var, 1));
+        return var;
     }
 
     Type *StringType::getLLVMPtrType(Context *context) {

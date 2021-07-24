@@ -1,16 +1,15 @@
 // @ts-ignore
-function printf(msg: string, value: boolean): void;
+function printf(msg: string, value: string): void;
 
 
 // @ts-ignore
 function main(): int {
 
-    let a: bigint = 1;
-    let b: boolean = !true;
-    let e: boolean = true;
-    let c: double = 0.0;
+    let a: string = "hellooooo";
 
-    printf("Value is %d", (e && b));
+    a = "hello 2";
+
+    // printf("Value is %s", a);
 
     return 0;
 }
