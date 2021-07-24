@@ -38,14 +38,14 @@ namespace flare::types {
         switch (valueType) {
             case VariableType::VARTYPE_INT:
             case VariableType::VARTYPE_INT_64:
-                return builder->CreateIntCast(value, builder->getInt64Ty(), true);
+                return builder->CreateIntCast(value, builder->getInt64Ty(), false);
             case VARTYPE_INT_32:
-                return builder->CreateIntCast(value, builder->getInt32Ty(), true);
+                return builder->CreateIntCast(value, builder->getInt32Ty(), false);
             case VARTYPE_FLOAT:
-                return builder->CreateSIToFP(value, builder->getFloatTy());
+                return builder->CreateUIToFP(value, builder->getFloatTy());
             case VARTYPE_DOUBLE:
             case VARTYPE_NUMBER:
-                return builder->CreateSIToFP(value, builder->getDoubleTy());
+                return builder->CreateUIToFP(value, builder->getDoubleTy());
             case VARTYPE_BOOLEAN:
                 return value;
             case VARTYPE_ARRAY:
