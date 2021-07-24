@@ -26,8 +26,35 @@ namespace flare::types {
         return this->createInstance(cxt, lValue);
     }
 
-    Value *BoolType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
-        return nullptr;
+    Value *BoolType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
+        Value *lhs = primary;
+        auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_BOOLEAN);
+        auto builder = cxt->getBuilder();
+        switch (symbol) {
+            case EQUALITY:
+                return builder->CreateICmpEQ(lhs, rhs);
+            case NOT_EQUALITY:
+                return builder->CreateICmpNE(lhs, rhs);
+            case LOGICAL_AND:
+                return builder->CreateAnd(lhs, rhs);
+            case LOGICAL_OR:
+                return builder->CreateOr(lhs, rhs);
+                // Arithmetic operators
+            case PLUS:
+            case MINUS:
+            case MUL:
+            case MODULO_DIV:
+            case DIV:
+            case UNARY_MINUS:
+                // Relational operators
+            case LESS_THAN:
+            case GREATER_THAN:
+            case GREATER_THAN_EQUAL:
+            case LESS_THAN_EQUAL:
+            default:
+                break;
+        }
+        throw "Operation not supported on boolean type";
     }
 
 

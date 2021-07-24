@@ -20,10 +20,6 @@ namespace flare::ast {
 
         Value *codeGenUnaryExpr(Context *cxt);
 
-        Value *codeGenFloatingPointBinaryExpr(Context *cxt, Value *lhs, Value *rhs);
-
-        Value *codeGenIntegerBinaryExpr(Context *cxt, Value *lhs, Value *rhs);
-
     public:
 
         NodeType getNodeType();
