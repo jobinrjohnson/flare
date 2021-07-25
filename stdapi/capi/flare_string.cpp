@@ -15,7 +15,7 @@ struct FLARE_string_t {
 };
 
 void printString(struct FLARE_string_t *s) {
-    printf("%s", ((std::string *) s->str)->c_str());
+    printf("%s\n", ((std::string *) s->str)->c_str());
 }
 
 void FLARE_str_init(FLARE_string_t **s, int8_t *charSeq) {
@@ -30,5 +30,8 @@ void FLARE_str_concat(struct FLARE_string_t *s1, struct FLARE_string_t *s2) {
     ((string *) s1->str)->append(*(string *) s2->str);
 }
 
+bool FLARE_str_is_equal(struct FLARE_string_t *s1, struct FLARE_string_t *s2) {
+    return ((string *) s1->str)->compare(*(string *) s2->str) == 0;
+}
 
 }
