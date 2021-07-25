@@ -35,7 +35,7 @@ namespace flare::types {
                         builder->CreateGlobalStringPtr(StringRef(lVal.sVal))
                 }
         );
-        return var;
+        return builder->CreateLoad(var);
     }
 
     Type *StringType::getLLVMPtrType(Context *context) {
@@ -67,10 +67,20 @@ namespace flare::types {
         switch (symbol) {
             case ASSIGNMENT: {
                 // TODO free the first instance
-                return builder->CreateStore(builder->CreateLoad(rhs), lhs);
+                return builder->CreateStore(rhs, lhs);
+            }
+            case OperatorType::PLUS : {
+                auto *f = FunctionType::get(
+                        builder->getVoidTy(),
+                        {this->getLLVMType(cxt), this->getLLVMType(cxt)},
+                        false
+                );
+                auto initFun = module->getOrInsertFunction("FLARE_str_concat", f);
+                builder->CreateCall(initFun, {lhs, rhs});
+                return lhs;
             }
             default:
-                throw "Not handled";
+                throw "Operator not supported on string operand";
         }
 
     }

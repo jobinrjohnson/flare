@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+using namespace std;
+
 extern "C" {
 
 struct FLARE_string_t {
@@ -22,6 +24,10 @@ void FLARE_str_init(FLARE_string_t **s, int8_t *charSeq) {
     str->assign((const char *) charSeq);
     (*s)->str = (int8_t *) str;
     (*s)->length = str->length();
+}
+
+void FLARE_str_concat(struct FLARE_string_t *s1, struct FLARE_string_t *s2) {
+    ((string *) s1->str)->append(*(string *) s2->str);
 }
 
 

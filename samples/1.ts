@@ -1,19 +1,10 @@
-// @ts-ignore
-// function printf(msg: string, value: int): void;
-
 function printString(msg: string): void;
-
 
 // @ts-ignore
 function main(): int {
-
-    let a: string = "hellooooo";
-
-    a = "hello 2";
-
-    printString(a);
-
-    // printf("Value is %s", a);
-
+    let a: string = "hello";
+    a = "Hello";
+    let b = "World";
+    printString(a + " " + b + "!");
     return 0;
 }

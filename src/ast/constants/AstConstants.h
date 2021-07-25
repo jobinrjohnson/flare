@@ -78,15 +78,6 @@ namespace flare::ast {
         char *sVal;     // string value
     };
 
-    enum CastTo {
-        PR_TY_INT_32, PR_TY_INT_64, PR_TY_FLOAT, PR_TY_DOUBLE, PR_TY_BOOLEAN
-    };
-
-    union TypeReference {
-        std::string name; // Valid only if returnType is other
-        Node *node;
-    };
-
     typedef struct VarType {
         VariableType type;
         std::string name = "";
