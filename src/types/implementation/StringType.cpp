@@ -7,13 +7,35 @@
 
 namespace flare::types {
     Type *StringType::probeLLVMType(Context *context) {
-        return llvm::Type::getInt8PtrTy(*context->getLLVMContext());
+        std::vector<llvm::Type *> items = {
+                context->getBuilder()->getInt8PtrTy(),
+                context->getBuilder()->getInt64Ty()
+        };
+        auto stringLLVMType = StructType::create(*context->getLLVMContext(), items, "FLARE_string_t");
+        return PointerType::get(stringLLVMType, 0);
     }
 
     Value *StringType::createInstance(Context *context, LValue lVal) {
-        return context
-                ->getBuilder()
-                ->CreateGlobalStringPtr(StringRef(lVal.sVal), "str");
+
+        auto builder = context
+                ->getBuilder();
+
+        auto var = builder->CreateAlloca(this->getLLVMType(context));
+
+        auto *f = FunctionType::get(
+                builder->getVoidTy(),
+                {PointerType::get(this->getLLVMType(context), 0), builder->getInt8PtrTy()},
+                false
+        );
+        auto initFun = module->getOrInsertFunction("FLARE_str_init", f);
+        builder->CreateCall(
+                initFun,
+                {
+                        var,
+                        builder->CreateGlobalStringPtr(StringRef(lVal.sVal))
+                }
+        );
+        return builder->CreateLoad(var);
     }
 
     Type *StringType::getLLVMPtrType(Context *context) {
@@ -27,15 +49,52 @@ namespace flare::types {
         return this->createInstance(cxt, lValue);
     }
 
-    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *lhs) {
         return nullptr;
     }
 
     Value *StringType::getValue(Context *cxt, Value *value, VariableType valueType) {
-        return nullptr;
+        return value;
     }
 
-    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *primary) {
-        return nullptr;
+    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
+
+        Value *lhs = primary;
+        auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_STRING);
+
+        auto builder = cxt->getBuilder();
+
+        switch (symbol) {
+            case ASSIGNMENT: {
+                // TODO free the first instance fix memcopy
+                return builder->CreateStore(rhs, lhs);
+            }
+            case OperatorType::PLUS : {
+                auto *f = FunctionType::get(
+                        builder->getVoidTy(),
+                        {this->getLLVMType(cxt), this->getLLVMType(cxt)},
+                        false
+                );
+                auto initFun = module->getOrInsertFunction("FLARE_str_concat", f);
+                builder->CreateCall(initFun, {lhs, rhs});
+                return lhs;
+            }
+            case OperatorType::EQUALITY : {
+                auto *f = FunctionType::get(
+                        builder->getInt1Ty(),
+                        {this->getLLVMType(cxt), this->getLLVMType(cxt)},
+                        false
+                );
+                auto initFun = module->getOrInsertFunction("FLARE_str_is_equal", f);
+                return builder->CreateCall(initFun, {lhs, rhs});
+            }
+            case OperatorType::NOT_EQUALITY : {
+                auto res = this->apply(cxt, OperatorType::EQUALITY, primary, secondary);
+                return builder->CreateNot(res);
+            }
+            default:
+                throw "Operator not supported on string operand";
+        }
+
     }
 }

@@ -49,7 +49,7 @@ namespace flare::ast {
             builder.CreateMemCpy(bCst2, MaybeAlign(8), bCst1, MaybeAlign(8), 8);
 
         } else {
-            builder.CreateStore(value, variable->getLLVMVarRef());
+            variable->getFlareType()->apply(cxt, OperatorType::ASSIGNMENT, variable->getLLVMVarRef(), value);
         }
 
         return value;

@@ -32,6 +32,8 @@ namespace flare::types {
         auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_BOOLEAN);
         auto builder = cxt->getBuilder();
         switch (symbol) {
+            case ASSIGNMENT:
+                return builder->CreateStore(rhs, lhs);
             case EQUALITY:
                 return builder->CreateICmpEQ(lhs, rhs);
             case NOT_EQUALITY:

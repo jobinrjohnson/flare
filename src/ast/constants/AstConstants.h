@@ -5,6 +5,8 @@
 #ifndef FLARE_ASTCONSTANTS_H
 #define FLARE_ASTCONSTANTS_H
 
+#include <string>
+
 namespace flare::ast {
 
     class Node;
@@ -65,6 +67,7 @@ namespace flare::ast {
         FUNCTION_CALL,
         LOGICAL_AND,
         LOGICAL_OR,
+        ASSIGNMENT
     };
 
     // Value
@@ -73,15 +76,6 @@ namespace flare::ast {
         double dVal;    // double value
         bool bVal;      // boolean value
         char *sVal;     // string value
-    };
-
-    enum CastTo {
-        PR_TY_INT_32, PR_TY_INT_64, PR_TY_FLOAT, PR_TY_DOUBLE, PR_TY_BOOLEAN
-    };
-
-    union TypeReference {
-        std::string name; // Valid only if returnType is other
-        Node *node;
     };
 
     typedef struct VarType {

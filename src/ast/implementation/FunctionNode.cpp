@@ -2,7 +2,6 @@
 // Created by jobinrjohnson on 05/05/21.
 //
 
-#include <ast/helpers/VariableHelper.h>
 #include <ast/FunctionNode.h>
 #include <ast/ClassDeclNode.h>
 #include <exceptions/SemanticException.h>
@@ -24,13 +23,15 @@ namespace flare::ast {
         // Fill in the parameter list
         if (this->parameterList != nullptr) {
             for (Parameter *element: *(this->parameterList)) {
-                Type *varType = getLLVMType(element->type->type, context);
+//                cxt->getFlareType(element->type->type)->getLLVMType(cxt);
+                Type *varType = cxt->getFlareType(element->type->type)->getLLVMType(
+                        cxt); //getLLVMType(element->type->type, context);
                 argVector.push_back(varType);
             }
         }
 
         return FunctionType::get(
-                getLLVMType(this->returnType->type, context),
+                cxt->getFlareType(this->returnType->type)->getLLVMType(cxt),
                 argVector,
                 false
         );
@@ -152,7 +153,8 @@ namespace flare::ast {
 
         // TODO move to assignment node
         if (this->function->getReturnType() != returnValue->getType()) {
-            returnValue = castTo(returnValue, this->getReturnType());
+            throw "Return type mismatch";
+            // returnValue = castTo(returnValue, this->getReturnType());
         }
 
         if (builder.GetInsertBlock() == this->entryBlock) {

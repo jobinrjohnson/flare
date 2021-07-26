@@ -4,8 +4,6 @@
 
 #include <ast/FunctionCallNode.h>
 #include <exceptions/SemanticException.h>
-#include <ast/ClassDeclNode.h>
-#include <ast/helpers/VariableHelper.h>
 #include <ast/ExceptionHandleNode.h>
 #include <types/ClassObjectType.h>
 

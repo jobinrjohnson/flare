@@ -60,7 +60,7 @@ namespace flare {
         } catch (exceptions::FlareException *e) {
             std::cerr << e->getMessage() << "\n\n";
         }
-#ifdef FLARE_DEBUG
+#ifndef FLARE_DEBUG
         catch (char const *e) {
             std::cerr << "Error occurred while parsing : " << e;
         } catch (std::string e) {
@@ -72,13 +72,13 @@ namespace flare {
 
     void Flare::executeStream(std::istream &stream, std::string streamIdentifier) {
         this->setInputStream(stream, streamIdentifier);
-        try {
-            this->parseStream();
-            this->codeGenAst();
-        } catch (exceptions::FlareException *e) {
-            std::cerr << e->getMessage() << "\n\n";
-            exit(1);
-        }
+//        try {
+        this->parseStream();
+        this->codeGenAst();
+//        } catch (exceptions::FlareException *e) {
+//            std::cerr << e->getMessage() << "\n\n";
+//            exit(1);
+//        }
         this->executeJit();
     }
 
