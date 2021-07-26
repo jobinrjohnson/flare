@@ -69,25 +69,13 @@ namespace flare::types {
                 // TODO free the first instance fix memcopy
                 return builder->CreateStore(rhs, lhs);
             }
-            case OperatorType::PLUS : {
-                auto *f = FunctionType::get(
-                        builder->getVoidTy(),
-                        {this->getLLVMType(cxt), this->getLLVMType(cxt)},
-                        false
-                );
-                auto initFun = module->getOrInsertFunction("FLARE_str_concat", f);
-                builder->CreateCall(initFun, {lhs, rhs});
+            case OperatorType::PLUS :
+                this->createCall(cxt, "FLARE_str_concat", builder->getVoidTy(),
+                                 {this->getLLVMType(cxt), this->getLLVMType(cxt)}, {lhs, rhs});
                 return lhs;
-            }
-            case OperatorType::EQUALITY : {
-                auto *f = FunctionType::get(
-                        builder->getInt1Ty(),
-                        {this->getLLVMType(cxt), this->getLLVMType(cxt)},
-                        false
-                );
-                auto initFun = module->getOrInsertFunction("FLARE_str_is_equal", f);
-                return builder->CreateCall(initFun, {lhs, rhs});
-            }
+            case OperatorType::EQUALITY :
+                return this->createCall(cxt, "FLARE_str_is_equal", builder->getInt1Ty(),
+                                        {this->getLLVMType(cxt), this->getLLVMType(cxt)}, {lhs, rhs});
             case OperatorType::NOT_EQUALITY : {
                 auto res = this->apply(cxt, OperatorType::EQUALITY, primary, secondary);
                 return builder->CreateNot(res);
