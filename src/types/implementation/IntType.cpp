@@ -36,7 +36,7 @@ namespace flare::types {
         llvm::Value *value;
         switch (symbol) {
             case ASSIGNMENT:
-                return builder->CreateStore(lhs, rhs);
+                return builder->CreateStore(rhs, lhs);
             // Arithmetic operators
             case PLUS:
                 value = builder->CreateAdd(lhs, rhs);

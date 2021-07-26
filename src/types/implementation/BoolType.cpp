@@ -33,7 +33,7 @@ namespace flare::types {
         auto builder = cxt->getBuilder();
         switch (symbol) {
             case ASSIGNMENT:
-                return builder->CreateStore(lhs, rhs);
+                return builder->CreateStore(rhs, lhs);
             case EQUALITY:
                 return builder->CreateICmpEQ(lhs, rhs);
             case NOT_EQUALITY:
