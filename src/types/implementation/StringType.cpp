@@ -8,11 +8,10 @@
 namespace flare::types {
     Type *StringType::probeLLVMType(Context *context) {
         std::vector<llvm::Type *> items = {
-                context->getBuilder()->getInt8PtrTy(),
-                context->getBuilder()->getInt64Ty()
+                context->getBuilder()->getInt8PtrTy()
         };
         auto stringLLVMType = StructType::create(*context->getLLVMContext(), items, "FLARE_string_t");
-        return PointerType::get(stringLLVMType, 0);
+        return stringLLVMType;
     }
 
     Value *StringType::createInstance(Context *context, LValue lVal) {
