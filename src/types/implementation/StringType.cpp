@@ -11,7 +11,7 @@ namespace flare::types {
                 context->getBuilder()->getInt8PtrTy()
         };
         auto stringLLVMType = StructType::create(*context->getLLVMContext(), items, "FLARE_string_t");
-        return stringLLVMType;
+        return PointerType::get(stringLLVMType, 0);
     }
 
     Value *StringType::createInstance(Context *context, LValue lVal) {
@@ -22,7 +22,7 @@ namespace flare::types {
         this->createCall(context, "FLARE_str_init", builder->getVoidTy(),
                          {PointerType::get(this->getLLVMType(context), 0), builder->getInt8PtrTy()},
                          {var, builder->CreateGlobalStringPtr(StringRef(lVal.sVal))});
-
+        // TODO freeup allocated mem on out of scope
         return var;
     }
 
@@ -47,9 +47,22 @@ namespace flare::types {
 
     Value *StringType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
 
-        Value *lhs = primary->getType()->isPointerTy() ? builder.CreateLoad(primary) : primary;
+        Value *lhs = primary;
         auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_STRING);
-        rhs = rhs->getType()->isPointerTy() ? builder.CreateLoad(rhs) : rhs;
+
+        // TODO refactor
+        while (lhs->getType()->isPointerTy()) {
+            if (lhs->getType() == this->getLLVMType(cxt)) {
+                break;
+            }
+            lhs = builder.CreateLoad(lhs);
+        }
+        while (rhs->getType()->isPointerTy()) {
+            if (rhs->getType() == this->getLLVMType(cxt)) {
+                break;;
+            }
+            rhs = builder.CreateLoad(rhs);
+        }
 
         auto builder = cxt->getBuilder();
 
@@ -60,11 +73,12 @@ namespace flare::types {
                 return lhs;
             case OperatorType::PLUS : {
                 auto res = this->getDefaultValue(cxt);
-                res->setName("resssss");
+                res->setName("cRes");
                 this->createCall(cxt, "FLARE_str_concat", builder->getVoidTy(),
-                                 {this->getLLVMType(cxt), this->getLLVMType(cxt), this->getLLVMType(cxt)},
-                                 {lhs, rhs, builder->CreateLoad(res)});
-                return res;
+                                 {this->getLLVMType(cxt), this->getLLVMType(cxt),
+                                  PointerType::get(this->getLLVMType(cxt), 0)},
+                                 {lhs, rhs, res});
+                return builder->CreateLoad(res);
             }
             case OperatorType::EQUALITY :
                 return this->createCall(cxt, "FLARE_str_is_equal", builder->getInt1Ty(),
