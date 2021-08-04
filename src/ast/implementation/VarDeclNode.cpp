@@ -102,8 +102,13 @@ namespace flare::ast {
         }
 
 
-        Type *variableType = this->flareType->getLLVMType(cxt);
-        this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
+        this->llvmVarRef = this->flareType->getDefaultValue(cxt);
+
+        std::cout << this->llvmVarRef;
+        std::cout.flush();
+
+//        Type *variableType = this->flareType->getLLVMType(cxt);
+//        this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
         currentBlock->createLocal(this->variableName, this);
 
         if (initialValue != nullptr) {
