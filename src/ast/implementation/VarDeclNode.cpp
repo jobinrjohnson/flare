@@ -103,7 +103,8 @@ namespace flare::ast {
         }
 
 
-        this->llvmVarRef = this->flareType->getDefaultValue(cxt);
+        LValue lvl;
+        this->llvmVarRef = this->flareType->createInstance(cxt, lvl);
 
 //        std::cout << this->llvmVarRef;
 //        std::cout.flush();

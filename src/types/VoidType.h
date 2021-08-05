@@ -36,6 +36,7 @@ namespace flare::types {
             return VariableType::VARTYPE_VOID;
         }
 
+        Value *createValue(Context *context, LValue val) override;
     };
 
 }

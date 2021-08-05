@@ -9,6 +9,14 @@
 namespace flare::types {
 
     Value *DoubleType::createInstance(Context *context, LValue val) {
+        auto var = context->getBuilder()->CreateAlloca(this->getLLVMType(context));
+        if (context->getBuilder()->GetInsertBlock() != nullptr) {
+            builder.CreateStore(this->createValue(context, val), var);
+        }
+        return var;
+    }
+
+    Value *DoubleType::createValue(Context *context, LValue val) {
         return ConstantFP::get(*context->getLLVMContext(), APFloat(val.dVal));
     }
 
@@ -24,7 +32,7 @@ namespace flare::types {
         LValue lValue = {
                 .dVal = 0.00
         };
-        return this->createInstance(cxt, lValue);
+        return this->createValue(cxt, lValue);
     }
 
     Value *DoubleType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
@@ -37,7 +45,7 @@ namespace flare::types {
         switch (symbol) {
             case ASSIGNMENT:
                 return builder->CreateStore(rhs, lhs);
-            // Arithmetic operators
+                // Arithmetic operators
             case PLUS:
                 value = builder->CreateFAdd(lhs, rhs, "mAdd");
                 break;

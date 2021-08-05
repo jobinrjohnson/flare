@@ -8,6 +8,15 @@
 namespace flare::types {
 
     Value *IntType::createInstance(Context *context, LValue val) {
+        auto var = context->getBuilder()->CreateAlloca(this->getLLVMType(context));
+        if (context->getBuilder()->GetInsertBlock() != nullptr) {
+            builder.CreateStore(this->createValue(context, val), var);
+        }
+        return var;
+    }
+
+
+    Value *IntType::createValue(Context *context, LValue val) {
         return ConstantInt::get(*context->getLLVMContext(), APInt(64, val.iVal));
     }
 
@@ -23,7 +32,7 @@ namespace flare::types {
         LValue lValue = {
                 .iVal = 0
         };
-        return this->createInstance(cxt, lValue);
+        return this->createValue(cxt, lValue);
     }
 
     Value *IntType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
@@ -37,7 +46,7 @@ namespace flare::types {
         switch (symbol) {
             case ASSIGNMENT:
                 return builder->CreateStore(rhs, lhs);
-            // Arithmetic operators
+                // Arithmetic operators
             case PLUS:
                 value = builder->CreateAdd(lhs, rhs);
                 break;

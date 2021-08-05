@@ -26,6 +26,12 @@ namespace flare::types {
 
     }
 
+
+    Value *ClassObjectType::createValue(Context *context, LValue val) {
+        return nullptr;
+    }
+
+
     ClassObjectType::ClassObjectType(ClassDeclNode *classDeclNode) {
         this->classDeclNode = classDeclNode;
     }

@@ -14,6 +14,11 @@ namespace flare::types {
         return PointerType::get(stringLLVMType, 0);
     }
 
+
+    Value *StringType::createValue(Context *context, LValue val) {
+        return this->createInstance(context, val);
+    }
+
     Value *StringType::createInstance(Context *context, LValue lVal) {
 
         auto builder = context
@@ -21,7 +26,7 @@ namespace flare::types {
         auto var = builder->CreateAlloca(this->getLLVMType(context));
         this->createCall(context, "FLARE_str_init", builder->getVoidTy(),
                          {PointerType::get(this->getLLVMType(context), 0), builder->getInt8PtrTy()},
-                         {var, builder->CreateGlobalStringPtr(StringRef(lVal.sVal))});
+                         {var, context->getBuilder()->CreateGlobalStringPtr(StringRef(lVal.sVal))});
         // TODO freeup allocated mem on out of scope
         return var;
     }
@@ -92,4 +97,5 @@ namespace flare::types {
         }
 
     }
+
 }
