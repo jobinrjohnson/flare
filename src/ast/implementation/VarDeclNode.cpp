@@ -6,6 +6,7 @@
 #include <ast/VarDeclNode.h>
 #include <ast/StatementListNode.h>
 #include <types/BaseType.h>
+#include <types/StringType.h>
 
 using namespace flare::exceptions;
 
@@ -80,7 +81,7 @@ namespace flare::ast {
             types::BaseType *initializerType = cxt->getFlareType(initializerValue);
 
             // If it is already an alloc inst (in the case of class) just rename it to this.
-            if (isa<AllocaInst>(initializerValue)) {
+            if (isa<AllocaInst>(initializerValue) && !dynamic_cast<StringType *>(initializerType)) {
                 this->flareType = initializerType;
                 this->llvmVarRef = initializerValue;
                 currentBlock->createLocal(this->variableName, this);
@@ -102,12 +103,18 @@ namespace flare::ast {
         }
 
 
-        Type *variableType = this->flareType->getLLVMType(cxt);
-        this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
+        this->llvmVarRef = this->flareType->getDefaultValue(cxt);
+
+//        std::cout << this->llvmVarRef;
+//        std::cout.flush();
+
+//        Type *variableType = this->flareType->getLLVMType(cxt);
+//        this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
         currentBlock->createLocal(this->variableName, this);
 
         if (initialValue != nullptr) {
-            return builder.CreateStore(initializerValue, this->llvmVarRef);
+            this->getFlareType()->apply(cxt, OperatorType::ASSIGNMENT, this->llvmVarRef, initializerValue);
+//            return builder.CreateStore(initializerValue, this->llvmVarRef);
         }
 
         return this->llvmVarRef;

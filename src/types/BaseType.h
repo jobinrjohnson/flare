@@ -27,6 +27,9 @@ namespace flare::types {
 
         virtual Type *probeLLVMType(Context *) = 0;
 
+        Value *createCall(Context *cxt, std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
+                          ArrayRef<Value *> args, bool isVarArg = false);
+
     public:
 
         inline Type *getLLVMType(Context *cxt) {

@@ -40,7 +40,6 @@ namespace flare::ast {
         auto *variable = dynamic_cast<VarDeclNode *>(vNode);
         Value *value = this->expression->codeGen(cxt->nextLevel());
 
-
         if (!cxt->getFlareType(value)->isInbuiltTy()) {
 
             auto bCst1 = builder.CreateBitCast(value, Type::getInt8PtrTy(*cxt->getLLVMContext()));
