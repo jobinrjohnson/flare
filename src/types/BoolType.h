@@ -25,6 +25,8 @@ namespace flare::types {
 
         Value *createInstance(Context *, LValue) override;
 
+        Value *createValue(Context *, LValue) override;
+
         Value *getDefaultValue(Context *) override;
 
         Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) override;

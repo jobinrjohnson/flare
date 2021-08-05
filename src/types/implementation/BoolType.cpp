@@ -8,6 +8,14 @@
 namespace flare::types {
 
     Value *BoolType::createInstance(Context *context, LValue val) {
+        auto var = context->getBuilder()->CreateAlloca(this->getLLVMType(context));
+        if (context->getBuilder()->GetInsertBlock() != nullptr) {
+            builder.CreateStore(this->createValue(context, val), var);
+        }
+        return var;
+    }
+
+    Value *BoolType::createValue(Context *context, LValue val) {
         return llvm::ConstantInt::get(*context->getLLVMContext(), APInt(1, val.bVal));
     }
 
@@ -23,7 +31,7 @@ namespace flare::types {
         LValue lValue = {
                 .bVal = false
         };
-        return this->createInstance(cxt, lValue);
+        return this->createValue(cxt, lValue);
     }
 
     // Binary operators

@@ -34,6 +34,8 @@ namespace flare::types {
             return this->classDeclNode->getQualifiedClassName();
         }
 
+        Value *createValue(Context *, LValue) override;
+
         Value *createInstance(Context *, LValue) override;
 
         Type *getLLVMPtrType(Context *) override;

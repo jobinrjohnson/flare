@@ -15,6 +15,11 @@ namespace flare::types {
         return Type::getVoidTy(*context->getLLVMContext());
     }
 
+
+    Value *VoidType::createValue(Context *context, LValue val) {
+        return nullptr;
+    }
+
     Type *VoidType::getLLVMPtrType(Context *) {
         return nullptr;
     }
