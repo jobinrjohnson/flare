@@ -131,7 +131,7 @@ namespace flare::ast {
 
         }
 
-        if (this->type->type == VariableType::VARTYPE_ARRAY) {
+        if (this->type != NULL && this->type->type == VariableType::VARTYPE_ARRAY) {
             return this->codeGenArray(cxt);
         }
 

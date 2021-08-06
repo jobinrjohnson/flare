@@ -51,6 +51,25 @@ namespace flare::types {
     }
 
     Value *FArrayType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+
+        auto builder = cxt->getBuilder();
+
+        switch (symbol) {
+            case ASSIGNMENT: {
+                return this->createCall(cxt, "FLARE_arr_index_assign_int", builder->getVoidTy(),
+                                        {this->getLLVMType(cxt), builder->getInt64Ty(), builder->getInt64Ty()},
+                                        {builder->CreateLoad(operands[0]), operands[1], operands[2]});
+                break;
+            }
+            case OperatorType::VAR_DE_REF: {
+                return this->createCall(cxt, "FLARE_arr_index_deref_int", builder->getInt64Ty(),
+                                        {this->getLLVMType(cxt), builder->getInt64Ty()},
+                                        {builder->CreateLoad(operands[0]), operands[1]});
+            }
+            default:
+                break;
+        }
+
         return nullptr;
     }
 

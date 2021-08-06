@@ -50,5 +50,13 @@ void FLARE_arr_init(FLARE_array_t **s, flare::ast::VariableType variableType) {
 
 }
 
+void FLARE_arr_index_assign_int(FLARE_array_t *s, int64_t index, int64_t value) {
+    ((vector<int64_t> *) s->arr)->push_back(value);
+}
+
+int64_t FLARE_arr_index_deref_int(FLARE_array_t *s, int64_t index) {
+    return ((vector<int64_t> *) s->arr)->at(index);
+}
+
 
 }

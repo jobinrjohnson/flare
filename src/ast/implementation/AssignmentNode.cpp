@@ -6,6 +6,7 @@
 #include <ast/VarDeclNode.h>
 #include <types/ClassObjectType.h>
 #include <exceptions/SemanticException.h>
+#include <types/ArrayType.h>
 
 namespace flare::ast {
 
@@ -67,21 +68,28 @@ namespace flare::ast {
         }
 
         auto *variable = dynamic_cast<VarDeclNode *>(vNode);
+
+
+        auto *at = variable->getFlareType();
+
         Value *value = this->expression->codeGen(cxt->nextLevel());
         auto indexVal = this->index->codeGen(cxt->nextLevel());
 
-        std::vector<llvm::Value *> ind{
-                llvm::ConstantInt::get(context, llvm::APInt(64, 0, false)),
-                indexVal
-        };
+        at->apply(cxt, OperatorType::ASSIGNMENT, {variable->getLLVMVarRef(), indexVal, value});
 
-        auto arrayPtrLoad = builder.CreateGEP(
-                variable->getLLVMVarRef(),
-                ind,
-                "arrayLoad"
-        );
 
-        builder.CreateStore(value, arrayPtrLoad);
+//        std::vector<llvm::Value *> ind{
+//                llvm::ConstantInt::get(context, llvm::APInt(64, 0, false)),
+//                indexVal
+//        };
+//
+//        auto arrayPtrLoad = builder.CreateGEP(
+//                variable->getLLVMVarRef(),
+//                ind,
+//                "arrayLoad"
+//        );
+//
+//        builder.CreateStore(value, arrayPtrLoad);
         return value;
     }
 

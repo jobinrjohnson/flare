@@ -67,19 +67,19 @@ namespace flare::ast {
         if (this->isArrayDeReference) {
 
             auto index = this->arrayIndex->codeGen(cxt);
+            return variable->getFlareType()->apply(cxt, OperatorType::VAR_DE_REF, {variable->getLLVMVarRef(), index});
 
-            std::vector<llvm::Value *> ind{
-                    llvm::ConstantInt::get(context, llvm::APInt(64, 0, false)),
-                    index
-            };
-
-            auto arrayPtrLoad = builder.CreateGEP(
-                    variable->getLLVMVarRef(),
-                    ind,
-                    "arrayLoad"
-            );
-
-            return builder.CreateLoad(arrayPtrLoad);
+//            std::vector<llvm::Value *> ind{
+//                    llvm::ConstantInt::get(context, llvm::APInt(64, 0, false)),
+//                    index
+//            };
+//            auto arrayPtrLoad = builder.CreateGEP(
+//                    variable->getLLVMVarRef(),
+//                    ind,
+//                    "arrayLoad"
+//            );
+//
+//            return builder.CreateLoad(arrayPtrLoad);
 
         }
         return builder.CreateLoad(variable->getLLVMVarRef());

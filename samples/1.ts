@@ -6,5 +6,12 @@ function main(): int {
     let x
     [];
 
-    return 0;
+    let i = 0;
+    while (i < 10) {
+        x[i] = i * 10;
+        i = i + 1;
+    }
+
+
+    return x[5];
 }
