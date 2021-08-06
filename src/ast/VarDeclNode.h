@@ -43,7 +43,7 @@ namespace flare::ast {
         Value *codeGenBuiltInTy(Context *);
 
         // Code generation for array types
-        Value *codeGenArray();
+        Value *codeGenArray(Context *cxt);
 
     public:
 

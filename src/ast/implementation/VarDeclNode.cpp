@@ -7,6 +7,7 @@
 #include <ast/StatementListNode.h>
 #include <types/BaseType.h>
 #include <types/StringType.h>
+#include <types/ArrayType.h>
 
 using namespace flare::exceptions;
 
@@ -17,25 +18,21 @@ namespace flare::ast {
         return VAR_DECL_NODE;
     }
 
-    Value *VarDeclNode::codeGenArray() {
+    Value *VarDeclNode::codeGenArray(Context *cxt) {
 
-        // TODO refactor this
-        // probably we should use stl vector
+        auto ft = new FArrayType();
+        ft->setArrayType(VariableType::VARTYPE_INT);
+        this->flareType = ft;
+        cxt->registerType("array_1", this->flareType); // TODO naming
 
-        std::vector<llvm::Constant *> initList;
+        LValue lv;
+        this->llvmVarRef = this->flareType->createInstance(cxt, lv);
 
-        llvm::ArrayType *array = llvm::ArrayType::get(Type::getInt32Ty(context), 100); // TODO Properly initialize array
-        llvm::Constant *initializer = llvm::ConstantArray::get(array, initList);
+        auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
+        currentBlock->createLocal(this->variableName, this);
 
-        llvm::Value *unitInitList = new llvm::GlobalVariable(*module,
-                                                             array,
-                                                             false,
-                                                             llvm::GlobalValue::ExternalLinkage,
-                                                             initializer,
-                                                             this->variableName
-        );
+        return this->llvmVarRef;
 
-        return unitInitList;
     }
 
     llvm::Value *VarDeclNode::codeGenGlobalVariable(Context *cxt) {
@@ -132,6 +129,10 @@ namespace flare::ast {
                                         this->lineNumber
             );
 
+        }
+
+        if (this->type->type == VariableType::VARTYPE_ARRAY) {
+            return this->codeGenArray(cxt);
         }
 
         // global variable

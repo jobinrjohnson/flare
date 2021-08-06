@@ -3,14 +3,12 @@
 //
 
 #include <string>
+#include "flare.h"
 
 using namespace std;
 
 extern "C" {
 
-struct FLARE_string_t {
-    int8_t *str;
-};
 
 void printString(struct FLARE_string_t *s) {
     if (s != nullptr && s->str != nullptr)

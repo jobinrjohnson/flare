@@ -9,4 +9,4 @@ add_library(
         implementation/BoolType.cpp BoolType.h
         implementation/DoubleType.cpp DoubleType.h
         implementation/VoidType.cpp VoidType.h
-)
+        implementation/ArrayType.cpp ArrayType.h)
