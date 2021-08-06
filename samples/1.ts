@@ -3,8 +3,7 @@
 // @ts-ignore
 function main(): int {
 
-    let x
-    [];
+    let x[];
 
     let i = 0;
     while (i < 10) {
