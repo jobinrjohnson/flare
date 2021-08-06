@@ -152,10 +152,10 @@ namespace flare::ast {
     Value *FunctionNode::setFunctionReturn(Value *returnValue) {
 
         // TODO move to assignment node
-        if (this->function->getReturnType() != returnValue->getType()) {
-            throw "Return type mismatch";
-            // returnValue = castTo(returnValue, this->getReturnType());
-        }
+//        if (this->function->getReturnType() != returnValue->getType()) {
+//            throw "Return type mismatch";
+//            // returnValue = castTo(returnValue, this->getReturnType());
+//        }
 
         if (builder.GetInsertBlock() == this->entryBlock) {
 
