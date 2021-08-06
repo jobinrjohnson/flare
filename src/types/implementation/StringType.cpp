@@ -98,4 +98,8 @@ namespace flare::types {
 
     }
 
+    Value *StringType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+        return nullptr;
+    }
+
 }

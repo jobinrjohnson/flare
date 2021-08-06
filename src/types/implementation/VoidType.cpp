@@ -39,4 +39,8 @@ namespace flare::types {
     Value *VoidType::apply(Context *cxt, OperatorType symbol, Value *primary) {
         return nullptr;
     }
+
+    Value *VoidType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+        return nullptr;
+    }
 }

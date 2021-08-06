@@ -74,4 +74,8 @@ namespace flare::types {
     Value *ClassObjectType::apply(Context *cxt, OperatorType symbol, Value *primary) {
         return nullptr;
     }
+
+    Value *ClassObjectType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+        return nullptr;
+    }
 }

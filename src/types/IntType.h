@@ -28,6 +28,8 @@ namespace flare::types {
 
         Value *createValue(Context *, LValue) override;
 
+        Value *apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) override;
+
         Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) override;
 
         Value *apply(Context *cxt, OperatorType symbol, Value *primary) override;

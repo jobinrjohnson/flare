@@ -118,4 +118,8 @@ namespace flare::types {
         throw "Operation not supported on boolean type";
     }
 
+    Value *DoubleType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+        return nullptr;
+    }
+
 }

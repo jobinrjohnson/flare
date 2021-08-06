@@ -50,6 +50,8 @@ namespace flare::types {
 
         virtual Value *createInstance(Context *, LValue) = 0;
 
+        virtual Value *apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) = 0;
+
         virtual Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) = 0;
 
         virtual Value *apply(Context *cxt, OperatorType symbol, Value *primary) = 0;

@@ -102,5 +102,9 @@ namespace flare::types {
         }
         throw "Conversion not defined";
     }
+
+    Value *BoolType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+        return nullptr;
+    }
 }
 

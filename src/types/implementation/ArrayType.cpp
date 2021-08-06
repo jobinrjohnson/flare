@@ -50,4 +50,8 @@ namespace flare::types {
         return nullptr;
     }
 
+    Value *FArrayType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+        return nullptr;
+    }
+
 }
