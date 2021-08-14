@@ -56,7 +56,7 @@ namespace flare::types {
 
         switch (symbol) {
             case ASSIGNMENT: {
-                return this->createCall(cxt, "FLARE_arr_index_assign_int", builder->getVoidTy(),
+                return this->createCall(cxt, "FLARE_arr_index_assign_int64_t", builder->getVoidTy(),
                                         {this->getLLVMType(cxt), builder->getInt64Ty(), builder->getInt64Ty()},
                                         {builder->CreateLoad(operands[0]), operands[1], operands[2]});
                 break;

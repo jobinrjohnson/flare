@@ -50,13 +50,31 @@ void FLARE_arr_init(FLARE_array_t **s, flare::ast::VariableType variableType) {
 
 }
 
-void FLARE_arr_index_assign_int(FLARE_array_t *s, int64_t index, int64_t value) {
-    ((vector<int64_t> *) s->arr)->push_back(value);
+#define FLARE_arr_index_assign(T)  \
+void FLARE_arr_index_assign_##T(FLARE_array_t *s, int64_t index, T value) { \
+((vector<T> *) s->arr)->push_back(value);    \
 }
 
-int64_t FLARE_arr_index_deref_int(FLARE_array_t *s, int64_t index) {
-    return ((vector<int64_t> *) s->arr)->at(index);
+FLARE_arr_index_assign(int64_t)
+FLARE_arr_index_assign(double)
+FLARE_arr_index_assign(bool)
+
+//void FLARE_arr_index_assign_int64_t(FLARE_array_t *s, int64_t index, int64_t value) {
+//    ((vector<int64_t> *) s->arr)->push_back(value);
+//}
+
+#define FLARE_arr_index_deref(T) \
+T FLARE_arr_index_deref_##T(FLARE_array_t *s, int64_t index) { \
+    return ((vector<T> *) s->arr)->at(index); \
 }
+
+FLARE_arr_index_deref(int64_t)
+FLARE_arr_index_deref(double)
+FLARE_arr_index_deref(bool)
+
+//int64_t FLARE_arr_index_deref_int(FLARE_array_t *s, int64_t index) {
+//    return ((vector<int64_t> *) s->arr)->at(index);
+//}
 
 
 }
