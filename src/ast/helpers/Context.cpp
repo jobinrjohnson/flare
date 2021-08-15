@@ -136,11 +136,11 @@ namespace flare::ast {
     }
 
     void Context::initTypes() {
-        this->registerType("int", new IntType());
-        this->registerType("string", new StringType());
-        this->registerType("boolean", new BoolType());
-        this->registerType("double", new DoubleType());
-        this->registerType("void", new VoidType());
+        this->registerType("int", new IntType(this));
+        this->registerType("string", new StringType(this));
+        this->registerType("boolean", new BoolType(this));
+        this->registerType("double", new DoubleType(this));
+        this->registerType("void", new VoidType(this));
     }
 
     Function *Context::getPersonalityFunction() {

@@ -20,7 +20,7 @@ namespace flare::types {
     public:
         ClassDeclNode *classDeclNode;
 
-        explicit ClassObjectType(ClassDeclNode *classDeclNode);
+        explicit ClassObjectType(Context *cx, ClassDeclNode *classDeclNode);
 
         inline bool isInbuiltTy() override {
             return false;

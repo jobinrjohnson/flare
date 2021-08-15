@@ -25,6 +25,8 @@ namespace flare::types {
 
         int typeLevel = 0;
 
+        Context *cxt;
+
         virtual Type *probeLLVMType(Context *) = 0;
 
         Value *createCall(Context *cxt, std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
@@ -32,9 +34,17 @@ namespace flare::types {
 
     public:
 
-        inline Type *getLLVMType(Context *cxt) {
+        BaseType(Context *c) {
+            this->cxt = c;
+        }
+
+//        void setContext(Context *c) {
+//            this->cxt = c;
+//        }
+
+        inline Type *getLLVMType(Context *c) {
             if (this->type == nullptr) {
-                this->type = this->probeLLVMType(cxt);
+                this->type = this->probeLLVMType(c);
             }
             return type;
         }

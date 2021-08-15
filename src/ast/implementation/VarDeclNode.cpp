@@ -20,7 +20,7 @@ namespace flare::ast {
 
     Value *VarDeclNode::codeGenArray(Context *cxt) {
 
-        auto ft = new FArrayType();
+        auto ft = new FArrayType(cxt);
         ft->setArrayType(VariableType::VARTYPE_INT);
         this->flareType = ft;
         cxt->registerType("array_1", this->flareType); // TODO naming

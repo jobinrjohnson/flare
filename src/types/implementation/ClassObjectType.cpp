@@ -32,7 +32,7 @@ namespace flare::types {
     }
 
 
-    ClassObjectType::ClassObjectType(ClassDeclNode *classDeclNode) {
+    ClassObjectType::ClassObjectType(Context *cx, ClassDeclNode *classDeclNode) : BaseType(cx) {
         this->classDeclNode = classDeclNode;
     }
 

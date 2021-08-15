@@ -25,7 +25,7 @@ namespace flare::ast {
 
         cxt->registerType(
                 this->className,
-                new ClassObjectType(this)
+                new ClassObjectType(cxt, this)
         );
 
 

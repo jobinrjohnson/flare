@@ -16,6 +16,8 @@ namespace flare::types {
 
     public:
 
+        explicit IntType(Context *cxt) : BaseType(cxt) {};
+
         inline bool isInbuiltTy() override {
             return true;
         }

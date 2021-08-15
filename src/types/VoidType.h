@@ -16,6 +16,8 @@ namespace flare::types {
 
     public:
 
+        explicit VoidType(Context *cxt) : BaseType(cxt) {};
+
         inline bool isInbuiltTy() override {
             return true;
         }
