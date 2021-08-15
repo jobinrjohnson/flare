@@ -59,7 +59,9 @@ namespace flare::types {
                                         builder->getVoidTy(),
                                         {this->getLLVMType(), builder->getInt64Ty(),
                                          cxt->getFlareType(this->arrayType)->getLLVMType()},
-                                        {builder->CreateLoad(operands[0]), operands[1], operands[2]});
+                                        {builder->CreateLoad(operands[0]), operands[1],
+                                         cxt->getFlareType(operands[2])->getValue(operands[2], arrayType)});
+//                cxt->getFlareType(operands[2])->getValue(operands[2], arrayType)});
                 break;
             }
             case OperatorType::VAR_DE_REF: {

@@ -46,6 +46,12 @@ namespace flare::types {
     }
 
     Value *StringType::getValue(Value *value, VariableType valueType) {
+
+
+        if (value->getType()->isPointerTy() && value->getType()->getPointerElementType() == this->getLLVMType()) {
+            return cxt->getBuilder()->CreateLoad(value);
+        }
+
         return value;
     }
 

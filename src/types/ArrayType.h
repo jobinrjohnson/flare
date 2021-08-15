@@ -58,7 +58,7 @@ namespace flare::types {
                 case VARTYPE_ARRAY:
                     break;
                 case VARTYPE_STRING:
-                    break;
+                    return "FLARE_string_t";
                 case VARTYPE_VOID:
                     break;
                 case OTHER:
