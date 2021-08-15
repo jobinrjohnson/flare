@@ -38,6 +38,34 @@ namespace flare::types {
 
         Value *getValue(Context *cxt, Value *value, VariableType valueType) override;
 
+        std::string getCFunctionBindingType() {
+            switch (this->arrayType) {
+
+                case VARTYPE_BOOLEAN:
+                    return "bool";
+                case VARTYPE_INT_32:
+                    break;
+                case VARTYPE_INT_64:
+                case VARTYPE_INT:
+                    return "int64_t";
+                case VARTYPE_FLOAT:
+                    break;
+                case VARTYPE_DOUBLE:
+                case VARTYPE_NUMBER:
+                    return "double";
+                case VARTYPE_ARRAY:
+                    break;
+                case VARTYPE_STRING:
+                    break;
+                case VARTYPE_VOID:
+                    break;
+                case OTHER:
+                    break;
+            }
+
+            throw "Type implementation not available";
+        }
+
         void setArrayType(VariableType a) {
             this->arrayType = a;
         }

@@ -56,13 +56,16 @@ namespace flare::types {
 
         switch (symbol) {
             case ASSIGNMENT: {
-                return this->createCall(cxt, "FLARE_arr_index_assign_int64_t", builder->getVoidTy(),
-                                        {this->getLLVMType(cxt), builder->getInt64Ty(), builder->getInt64Ty()},
+                return this->createCall(cxt, "FLARE_arr_index_assign_" + getCFunctionBindingType(),
+                                        builder->getVoidTy(),
+                                        {this->getLLVMType(cxt), builder->getInt64Ty(),
+                                         cxt->getFlareType(this->arrayType)->getLLVMType(cxt)},
                                         {builder->CreateLoad(operands[0]), operands[1], operands[2]});
                 break;
             }
             case OperatorType::VAR_DE_REF: {
-                return this->createCall(cxt, "FLARE_arr_index_deref_int", builder->getInt64Ty(),
+                return this->createCall(cxt, "FLARE_arr_index_deref_" + getCFunctionBindingType(),
+                                        cxt->getFlareType(this->arrayType)->getLLVMType(cxt),
                                         {this->getLLVMType(cxt), builder->getInt64Ty()},
                                         {builder->CreateLoad(operands[0]), operands[1]});
             }
