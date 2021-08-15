@@ -67,7 +67,7 @@ namespace flare::ast {
         if (this->isArrayDeReference) {
 
             auto index = this->arrayIndex->codeGen(cxt);
-            return variable->getFlareType()->apply(cxt, OperatorType::VAR_DE_REF, {variable->getLLVMVarRef(), index});
+            return variable->getFlareType()->apply(OperatorType::VAR_DE_REF, {variable->getLLVMVarRef(), index});
 
 //            std::vector<llvm::Value *> ind{
 //                    llvm::ConstantInt::get(context, llvm::APInt(64, 0, false)),

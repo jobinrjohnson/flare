@@ -7,40 +7,40 @@
 
 namespace flare::types {
 
-    Value *VoidType::createInstance(Context *context, LValue val) {
+    Value *VoidType::createInstance(LValue val) {
         return nullptr;
     }
 
-    Type *VoidType::probeLLVMType(Context *context) {
-        return Type::getVoidTy(*context->getLLVMContext());
+    Type *VoidType::probeLLVMType() {
+        return Type::getVoidTy(*cxt->getLLVMContext());
     }
 
 
-    Value *VoidType::createValue(Context *context, LValue val) {
+    Value *VoidType::createValue(LValue val) {
         return nullptr;
     }
 
-    Type *VoidType::getLLVMPtrType(Context *) {
+    Type *VoidType::getLLVMPtrType() {
         return nullptr;
     }
 
-    Value *VoidType::getDefaultValue(Context *) {
+    Value *VoidType::getDefaultValue() {
         return nullptr;
     }
 
-    Value *VoidType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+    Value *VoidType::apply(OperatorType symbol, Value *lhs, Value *rhs) {
         return nullptr;
     }
 
-    Value *VoidType::getValue(Context *cxt, Value *value, VariableType valueType) {
+    Value *VoidType::getValue(Value *value, VariableType valueType) {
         return nullptr;
     }
 
-    Value *VoidType::apply(Context *cxt, OperatorType symbol, Value *primary) {
+    Value *VoidType::apply(OperatorType symbol, Value *primary) {
         return nullptr;
     }
 
-    Value *VoidType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+    Value *VoidType::apply(OperatorType symbol, std::vector<Value *> operands) {
         return nullptr;
     }
 }

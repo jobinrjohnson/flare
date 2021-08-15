@@ -6,64 +6,63 @@
 #include <ast/helpers/Context.h>
 
 namespace flare::types {
-    Type *StringType::probeLLVMType(Context *context) {
+    Type *StringType::probeLLVMType() {
         std::vector<llvm::Type *> items = {
-                context->getBuilder()->getInt8PtrTy()
+                this->cxt->getBuilder()->getInt8PtrTy()
         };
-        auto stringLLVMType = StructType::create(*context->getLLVMContext(), items, "FLARE_string_t");
+        auto stringLLVMType = StructType::create(*this->cxt->getLLVMContext(), items, "FLARE_string_t");
         return PointerType::get(stringLLVMType, 0);
     }
 
 
-    Value *StringType::createValue(Context *context, LValue val) {
-        return this->createInstance(context, val);
+    Value *StringType::createValue(LValue val) {
+        return this->createInstance(val);
     }
 
-    Value *StringType::createInstance(Context *context, LValue lVal) {
+    Value *StringType::createInstance(LValue lVal) {
 
-        auto builder = context
-                ->getBuilder();
-        auto var = builder->CreateAlloca(this->getLLVMType(context));
-        this->createCall(context, "FLARE_str_init", builder->getVoidTy(),
-                         {PointerType::get(this->getLLVMType(context), 0), builder->getInt8PtrTy()},
-                         {var, context->getBuilder()->CreateGlobalStringPtr(StringRef(lVal.sVal))});
+        auto builder = this->cxt->getBuilder();
+        auto var = builder->CreateAlloca(this->getLLVMType());
+        this->createCall("FLARE_str_init", builder->getVoidTy(),
+                         {PointerType::get(this->getLLVMType(), 0), builder->getInt8PtrTy()},
+                         {var, this->cxt->getBuilder()->CreateGlobalStringPtr(StringRef(lVal.sVal))});
         // TODO freeup allocated mem on out of scope
         return var;
     }
 
-    Type *StringType::getLLVMPtrType(Context *context) {
+    Type *StringType::getLLVMPtrType() {
         return nullptr;
     }
 
-    Value *StringType::getDefaultValue(Context *cxt) {
+    Value *StringType::getDefaultValue() {
         LValue lValue = {
                 .sVal = const_cast<char *>("")
         };
-        return this->createInstance(cxt, lValue);
+        return this->createInstance(lValue);
     }
 
-    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *lhs) {
+    Value *StringType::apply(OperatorType symbol, Value *lhs) {
         return nullptr;
     }
 
-    Value *StringType::getValue(Context *cxt, Value *value, VariableType valueType) {
+    Value *StringType::getValue(Value *value, VariableType valueType) {
         return value;
     }
 
-    Value *StringType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
+    Value *StringType::apply(OperatorType symbol, Value *primary, Value *secondary) {
 
         Value *lhs = primary;
-        auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_STRING);
+        auto rhs = cxt->getFlareType(secondary)->getValue(secondary, VariableType::VARTYPE_STRING);
 
         // TODO refactor
         while (lhs->getType()->isPointerTy()) {
-            if (lhs->getType() == this->getLLVMType(cxt)) {
+            if (lhs->getType() == this->getLLVMType()) {
                 break;
             }
             lhs = builder.CreateLoad(lhs);
         }
         while (rhs->getType()->isPointerTy()) {
-            if (rhs->getType() == this->getLLVMType(cxt)) {
+            if (rhs->getType() == this->getLLVMType()) {
                 break;;
             }
             rhs = builder.CreateLoad(rhs);
@@ -73,23 +72,23 @@ namespace flare::types {
 
         switch (symbol) {
             case ASSIGNMENT:
-                this->createCall(cxt, "FLARE_str_assign", builder->getVoidTy(),
-                                 {this->getLLVMType(cxt), this->getLLVMType(cxt)}, {lhs, rhs});
+                this->createCall("FLARE_str_assign", builder->getVoidTy(),
+                                 {this->getLLVMType(), this->getLLVMType()}, {lhs, rhs});
                 return lhs;
             case OperatorType::PLUS : {
-                auto res = this->getDefaultValue(cxt);
+                auto res = this->getDefaultValue();
                 res->setName("cRes");
-                this->createCall(cxt, "FLARE_str_concat", builder->getVoidTy(),
-                                 {this->getLLVMType(cxt), this->getLLVMType(cxt),
-                                  PointerType::get(this->getLLVMType(cxt), 0)},
+                this->createCall("FLARE_str_concat", builder->getVoidTy(),
+                                 {this->getLLVMType(), this->getLLVMType(),
+                                  PointerType::get(this->getLLVMType(), 0)},
                                  {lhs, rhs, res});
                 return builder->CreateLoad(res);
             }
             case OperatorType::EQUALITY :
-                return this->createCall(cxt, "FLARE_str_is_equal", builder->getInt1Ty(),
-                                        {this->getLLVMType(cxt), this->getLLVMType(cxt)}, {lhs, rhs});
+                return this->createCall("FLARE_str_is_equal", builder->getInt1Ty(),
+                                        {this->getLLVMType(), this->getLLVMType()}, {lhs, rhs});
             case OperatorType::NOT_EQUALITY : {
-                auto res = this->apply(cxt, OperatorType::EQUALITY, primary, secondary);
+                auto res = this->apply(OperatorType::EQUALITY, primary, secondary);
                 return builder->CreateNot(res);
             }
             default:
@@ -98,7 +97,7 @@ namespace flare::types {
 
     }
 
-    Value *StringType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+    Value *StringType::apply(OperatorType symbol, std::vector<Value *> operands) {
         return nullptr;
     }
 

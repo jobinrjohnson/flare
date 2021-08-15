@@ -8,36 +8,36 @@
 
 namespace flare::types {
 
-    Value *DoubleType::createInstance(Context *context, LValue val) {
-        auto var = context->getBuilder()->CreateAlloca(this->getLLVMType(context));
-        if (context->getBuilder()->GetInsertBlock() != nullptr) {
-            builder.CreateStore(this->createValue(context, val), var);
+    Value *DoubleType::createInstance(LValue val) {
+        auto var = this->cxt->getBuilder()->CreateAlloca(this->getLLVMType());
+        if (this->cxt->getBuilder()->GetInsertBlock() != nullptr) {
+            builder.CreateStore(this->createValue(val), var);
         }
         return var;
     }
 
-    Value *DoubleType::createValue(Context *context, LValue val) {
-        return ConstantFP::get(*context->getLLVMContext(), APFloat(val.dVal));
+    Value *DoubleType::createValue(LValue val) {
+        return ConstantFP::get(*this->cxt->getLLVMContext(), APFloat(val.dVal));
     }
 
-    Type *DoubleType::probeLLVMType(Context *context) {
-        return Type::getDoubleTy(*context->getLLVMContext());
+    Type *DoubleType::probeLLVMType() {
+        return Type::getDoubleTy(*this->cxt->getLLVMContext());
     }
 
-    Type *DoubleType::getLLVMPtrType(Context *) {
+    Type *DoubleType::getLLVMPtrType() {
         return nullptr;
     }
 
-    Value *DoubleType::getDefaultValue(Context *cxt) {
+    Value *DoubleType::getDefaultValue() {
         LValue lValue = {
                 .dVal = 0.00
         };
-        return this->createValue(cxt, lValue);
+        return this->createValue(lValue);
     }
 
-    Value *DoubleType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
+    Value *DoubleType::apply(OperatorType symbol, Value *primary, Value *secondary) {
         Value *lhs = primary;
-        auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_DOUBLE);
+        auto rhs = cxt->getFlareType(secondary)->getValue(secondary, VariableType::VARTYPE_DOUBLE);
 
         auto builder = cxt->getBuilder();
 
@@ -85,7 +85,7 @@ namespace flare::types {
         return value;
     }
 
-    Value *DoubleType::getValue(Context *cxt, Value *value, VariableType valueType) {
+    Value *DoubleType::getValue(Value *value, VariableType valueType) {
 
         auto builder = cxt->getBuilder();
 
@@ -111,14 +111,14 @@ namespace flare::types {
         throw "Conversion not defined";
     }
 
-    Value *DoubleType::apply(Context *cxt, OperatorType symbol, Value *primary) {
+    Value *DoubleType::apply(OperatorType symbol, Value *primary) {
         if (symbol == OperatorType::NOT) {
             return builder.CreateNot(primary);
         }
         throw "Operation not supported on boolean type";
     }
 
-    Value *DoubleType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+    Value *DoubleType::apply(OperatorType symbol, std::vector<Value *> operands) {
         return nullptr;
     }
 

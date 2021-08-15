@@ -6,7 +6,7 @@
 #include <ast/helpers/Context.h>
 
 namespace flare::types {
-    Value *BaseType::createCall(Context *cxt, std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
+    Value *BaseType::createCall(std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
                                 ArrayRef<Value *> args, bool isVarArg) {
         auto *f = FunctionType::get(
                 returnType,

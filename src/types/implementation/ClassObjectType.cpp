@@ -7,27 +7,27 @@
 
 namespace flare::types {
 
-    Type *ClassObjectType::probeLLVMType(Context *context) {
+    Type *ClassObjectType::probeLLVMType() {
         return this
                 ->classDeclNode
                 ->getClassLLVMType();
     }
 
-    Value *ClassObjectType::createInstance(Context *context, LValue lVal) {
+    Value *ClassObjectType::createInstance(LValue lVal) {
 
         std::string varName = this->classDeclNode->getQualifiedClassName() + "::object";
 
         return new AllocaInst(
-                this->getLLVMType(context),
+                this->getLLVMType(),
                 0,
                 varName,
-                context->getBuilder()->GetInsertBlock()
+                this->cxt->getBuilder()->GetInsertBlock()
         );
 
     }
 
 
-    Value *ClassObjectType::createValue(Context *context, LValue val) {
+    Value *ClassObjectType::createValue(LValue val) {
         return nullptr;
     }
 
@@ -36,13 +36,13 @@ namespace flare::types {
         this->classDeclNode = classDeclNode;
     }
 
-    Type *ClassObjectType::getLLVMPtrType(Context *) {
+    Type *ClassObjectType::getLLVMPtrType() {
         return this
                 ->classDeclNode
                 ->getClassLLVMPointerType();
     }
 
-    Value *ClassObjectType::getDefaultValue(Context *) {
+    Value *ClassObjectType::getDefaultValue() {
         return nullptr;
     }
 
@@ -63,19 +63,19 @@ namespace flare::types {
         return arrayPtrLoad;
     }
 
-    Value *ClassObjectType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+    Value *ClassObjectType::apply(OperatorType symbol, Value *lhs, Value *rhs) {
         return nullptr;
     }
 
-    Value *ClassObjectType::getValue(Context *cxt, Value *value, VariableType valueType) {
+    Value *ClassObjectType::getValue(Value *value, VariableType valueType) {
         return nullptr;
     }
 
-    Value *ClassObjectType::apply(Context *cxt, OperatorType symbol, Value *primary) {
+    Value *ClassObjectType::apply(OperatorType symbol, Value *primary) {
         return nullptr;
     }
 
-    Value *ClassObjectType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+    Value *ClassObjectType::apply(OperatorType symbol, std::vector<Value *> operands) {
         return nullptr;
     }
 }

@@ -7,37 +7,37 @@
 
 namespace flare::types {
 
-    Value *IntType::createInstance(Context *context, LValue val) {
-        auto var = context->getBuilder()->CreateAlloca(this->getLLVMType(context));
-        if (context->getBuilder()->GetInsertBlock() != nullptr) {
-            builder.CreateStore(this->createValue(context, val), var);
+    Value *IntType::createInstance(LValue val) {
+        auto var = this->cxt->getBuilder()->CreateAlloca(this->getLLVMType());
+        if (this->cxt->getBuilder()->GetInsertBlock() != nullptr) {
+            this->cxt->getBuilder()->CreateStore(this->createValue(val), var);
         }
         return var;
     }
 
 
-    Value *IntType::createValue(Context *context, LValue val) {
-        return ConstantInt::get(*context->getLLVMContext(), APInt(64, val.iVal));
+    Value *IntType::createValue(LValue val) {
+        return ConstantInt::get(*this->cxt->getLLVMContext(), APInt(64, val.iVal));
     }
 
-    Type *IntType::probeLLVMType(Context *context) {
-        return Type::getInt64Ty(*context->getLLVMContext());
+    Type *IntType::probeLLVMType() {
+        return Type::getInt64Ty(*this->cxt->getLLVMContext());
     }
 
-    Type *IntType::getLLVMPtrType(Context *context) {
-        return Type::getInt8PtrTy(*context->getLLVMContext());
+    Type *IntType::getLLVMPtrType() {
+        return Type::getInt8PtrTy(*this->cxt->getLLVMContext());
     }
 
-    Value *IntType::getDefaultValue(Context *cxt) {
+    Value *IntType::getDefaultValue() {
         LValue lValue = {
                 .iVal = 0
         };
-        return this->createValue(cxt, lValue);
+        return this->createValue(lValue);
     }
 
-    Value *IntType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
+    Value *IntType::apply(OperatorType symbol, Value *primary, Value *secondary) {
         Value *lhs = primary;
-        auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_INT);
+        auto rhs = cxt->getFlareType(secondary)->getValue(secondary, VariableType::VARTYPE_INT);
 
 //        BinaryOperator::Create(Instruction::Add,lhs, rhs);
         auto builder = cxt->getBuilder();
@@ -90,7 +90,7 @@ namespace flare::types {
         return value;
     }
 
-    Value *IntType::getValue(Context *cxt, Value *value, VariableType valueType) {
+    Value *IntType::getValue(Value *value, VariableType valueType) {
 
         auto builder = cxt->getBuilder();
         switch (valueType) {
@@ -115,14 +115,14 @@ namespace flare::types {
         throw "Conversion not defined";
     }
 
-    Value *IntType::apply(Context *cxt, OperatorType symbol, Value *primary) {
+    Value *IntType::apply(OperatorType symbol, Value *primary) {
         if (symbol == OperatorType::NOT) {
             return builder.CreateNot(primary);
         }
         throw "Operation not supported on boolean type";
     }
 
-    Value *IntType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+    Value *IntType::apply(OperatorType symbol, std::vector<Value *> operands) {
         return nullptr;
     }
 

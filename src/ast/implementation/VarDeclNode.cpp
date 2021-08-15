@@ -26,7 +26,7 @@ namespace flare::ast {
         cxt->registerType("array_1", this->flareType); // TODO naming
 
         LValue lv;
-        this->llvmVarRef = this->flareType->createInstance(cxt, lv);
+        this->llvmVarRef = this->flareType->createInstance(lv);
 
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
         currentBlock->createLocal(this->variableName, this);
@@ -65,7 +65,7 @@ namespace flare::ast {
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
 
         if (this->variableName == "this") {
-            Type *variableType = this->flareType->getLLVMPtrType(cxt);
+            Type *variableType = this->flareType->getLLVMPtrType();
             this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
             currentBlock->createLocal(this->variableName, this);
             initializerValue = this->initialValue->codeGen(cxt);
@@ -101,12 +101,12 @@ namespace flare::ast {
 
 
         LValue lvl;
-        this->llvmVarRef = this->flareType->createInstance(cxt, lvl);
+        this->llvmVarRef = this->flareType->createInstance(lvl);
 
         currentBlock->createLocal(this->variableName, this);
 
         if (initialValue != nullptr) {
-            this->getFlareType()->apply(cxt, OperatorType::ASSIGNMENT, this->llvmVarRef, initializerValue);
+            this->getFlareType()->apply(OperatorType::ASSIGNMENT, this->llvmVarRef, initializerValue);
         }
 
         return this->llvmVarRef;
@@ -173,7 +173,7 @@ namespace flare::ast {
         }
 
         // If there is no initial value just return the created variable.
-        return this->flareType->getLLVMType(cxt);
+        return this->flareType->getLLVMType();
     }
 
     VarDeclNode::VarDeclNode(const char *name, BaseType *type) {

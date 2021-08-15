@@ -13,7 +13,7 @@ namespace flare::types {
     class BoolType : public BaseType {
 
     protected:
-        Type *probeLLVMType(Context *) override;
+        Type *probeLLVMType() override;
 
     public:
 
@@ -23,21 +23,21 @@ namespace flare::types {
             return true;
         }
 
-        Type *getLLVMPtrType(Context *) override;
+        Type *getLLVMPtrType() override;
 
-        Value *createInstance(Context *, LValue) override;
+        Value *createInstance(LValue) override;
 
-        Value *createValue(Context *, LValue) override;
+        Value *createValue(LValue) override;
 
-        Value *getDefaultValue(Context *) override;
+        Value *getDefaultValue() override;
 
-        Value *apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) override;
+        Value *apply(OperatorType symbol, std::vector<Value *> operands) override;
 
-        Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) override;
+        Value *apply(OperatorType symbol, Value *lhs, Value *rhs) override;
 
-        Value *apply(Context *cxt, OperatorType symbol, Value *primary) override;
+        Value *apply(OperatorType symbol, Value *primary) override;
 
-        Value *getValue(Context *cxt, Value *value, VariableType valueType) override;
+        Value *getValue(Value *value, VariableType valueType) override;
 
         int getTypePrecedence() override {
             return VariableType::VARTYPE_BOOLEAN;

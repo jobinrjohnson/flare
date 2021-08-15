@@ -109,7 +109,7 @@ namespace flare::ast {
             if (ele->hasInitializer()) {
                 val = ele->getInitializer()->codeGen(cxt);
             } else {
-                val = ele->getFlareType()->getDefaultValue(cxt);
+                val = ele->getFlareType()->getDefaultValue();
             }
             builder.CreateStore(val, ptrLoad);
         }

@@ -49,7 +49,7 @@ namespace flare::ast {
             builder.CreateMemCpy(bCst2, MaybeAlign(8), bCst1, MaybeAlign(8), 8);
 
         } else {
-            variable->getFlareType()->apply(cxt, OperatorType::ASSIGNMENT, variable->getLLVMVarRef(), value);
+            variable->getFlareType()->apply(OperatorType::ASSIGNMENT, variable->getLLVMVarRef(), value);
         }
 
         return value;
@@ -75,7 +75,7 @@ namespace flare::ast {
         Value *value = this->expression->codeGen(cxt->nextLevel());
         auto indexVal = this->index->codeGen(cxt->nextLevel());
 
-        at->apply(cxt, OperatorType::ASSIGNMENT, {variable->getLLVMVarRef(), indexVal, value});
+        at->apply(OperatorType::ASSIGNMENT, {variable->getLLVMVarRef(), indexVal, value});
 
 
 //        std::vector<llvm::Value *> ind{

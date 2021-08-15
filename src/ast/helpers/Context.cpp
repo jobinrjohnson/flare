@@ -124,7 +124,7 @@ namespace flare::ast {
         }
 
         for (auto const &x : this->types) {
-            auto fType = x.second->getLLVMType(this);
+            auto fType = x.second->getLLVMType();
             // TODO fix this
             if (fType == valType || value->getType() == fType) {
                 return x.second;

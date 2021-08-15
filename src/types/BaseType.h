@@ -21,15 +21,15 @@ namespace flare::types {
 
     protected:
 
+        Context *cxt;
+
         Type *type;
 
         int typeLevel = 0;
 
-        Context *cxt;
+        virtual Type *probeLLVMType() = 0;
 
-        virtual Type *probeLLVMType(Context *) = 0;
-
-        Value *createCall(Context *cxt, std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
+        Value *createCall(std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
                           ArrayRef<Value *> args, bool isVarArg = false);
 
     public:
@@ -38,35 +38,35 @@ namespace flare::types {
             this->cxt = c;
         }
 
-//        void setContext(Context *c) {
+//        void setContext() {
 //            this->cxt = c;
 //        }
 
-        inline Type *getLLVMType(Context *c) {
+        inline Type *getLLVMType() {
             if (this->type == nullptr) {
-                this->type = this->probeLLVMType(c);
+                this->type = this->probeLLVMType();
             }
             return type;
         }
 
 
-        virtual Value *getDefaultValue(Context *) = 0;
+        virtual Value *getDefaultValue() = 0;
 
-        virtual Value *createValue(Context *, LValue) = 0;
+        virtual Value *createValue(LValue) = 0;
 
-        virtual Type *getLLVMPtrType(Context *) = 0;
+        virtual Type *getLLVMPtrType() = 0;
 
         virtual inline bool isInbuiltTy() = 0;
 
-        virtual Value *createInstance(Context *, LValue) = 0;
+        virtual Value *createInstance(LValue) = 0;
 
-        virtual Value *apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) = 0;
+        virtual Value *apply(OperatorType symbol, std::vector<Value *> operands) = 0;
 
-        virtual Value *apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) = 0;
+        virtual Value *apply(OperatorType symbol, Value *lhs, Value *rhs) = 0;
 
-        virtual Value *apply(Context *cxt, OperatorType symbol, Value *primary) = 0;
+        virtual Value *apply(OperatorType symbol, Value *primary) = 0;
 
-        virtual Value *getValue(Context *cxt, Value *value, VariableType valueType) = 0;
+        virtual Value *getValue(Value *value, VariableType valueType) = 0;
 
         virtual int getTypePrecedence() = 0;
 

@@ -26,7 +26,7 @@ namespace flare::ast {
     llvm::Value *LiteralNode::codeGen(Context *cxt) {
         this->printCallStack(cxt, "LiteralNode", __FUNCTION__);
         types::BaseType *fType = cxt->getFlareType(this->literalType);
-        return fType->createValue(cxt, this->nodeValue);
+        return fType->createValue(this->nodeValue);
     }
 
     LiteralNode::LiteralNode(char *mLiteralValue) {

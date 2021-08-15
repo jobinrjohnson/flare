@@ -20,7 +20,7 @@ namespace flare::ast {
                                                     this->lineNumber);
         }
         LValue lvl;
-        auto instance = fType->createInstance(cxt, lvl);
+        auto instance = fType->createInstance(lvl);
 
         auto *function = fType->classDeclNode->getInitFunction();
         std::vector<Value *> calleeArgs;

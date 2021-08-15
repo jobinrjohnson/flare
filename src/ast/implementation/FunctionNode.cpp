@@ -17,21 +17,21 @@ namespace flare::ast {
             // If it is a class function add class type as the first parameter
             // TODO refactor this
             auto *cNode = cxt->findType(dynamic_cast<ClassDeclNode *>(this->classNode)->getQualifiedClassName());
-            argVector.push_back(cNode->getLLVMPtrType(cxt));
+            argVector.push_back(cNode->getLLVMPtrType());
         }
 
         // Fill in the parameter list
         if (this->parameterList != nullptr) {
             for (Parameter *element: *(this->parameterList)) {
 //                cxt->getFlareType(element->type->type)->getLLVMType(cxt);
-                Type *varType = cxt->getFlareType(element->type->type)->getLLVMType(
-                        cxt); //getLLVMType(element->type->type, context);
+                Type *varType = cxt->getFlareType(
+                        element->type->type)->getLLVMType(); //getLLVMType(element->type->type, context);
                 argVector.push_back(varType);
             }
         }
 
         return FunctionType::get(
-                cxt->getFlareType(this->returnType->type)->getLLVMType(cxt),
+                cxt->getFlareType(this->returnType->type)->getLLVMType(),
                 argVector,
                 false
         );

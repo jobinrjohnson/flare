@@ -34,9 +34,9 @@ namespace flare::ast {
         auto fType2 = cxt->getFlareType(ops.at(1));
 
         if (fType1->getTypePrecedence() >= fType2->getTypePrecedence()) {
-            return fType1->apply(cxt, this->opr, ops[0], ops[1]);
+            return fType1->apply(this->opr, ops[0], ops[1]);
         } else {
-            return fType2->apply(cxt, this->opr, ops[1], ops[0]);
+            return fType2->apply(this->opr, ops[1], ops[0]);
         }
 
     }
@@ -60,7 +60,7 @@ namespace flare::ast {
                 break;
             }
             case NOT:
-                value = cxt->getFlareType(operand)->apply(cxt, OperatorType::NOT, operand);
+                value = cxt->getFlareType(operand)->apply(OperatorType::NOT, operand);
                 break;
             default:
                 throw "Not handled";

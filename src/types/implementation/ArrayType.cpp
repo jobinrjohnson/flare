@@ -7,66 +7,65 @@
 
 namespace flare::types {
 
-    Type *FArrayType::probeLLVMType(Context *context) {
+    Type *FArrayType::probeLLVMType() {
         std::vector<llvm::Type *> items = {
-                context->getBuilder()->getInt8PtrTy()
+                this->cxt->getBuilder()->getInt8PtrTy()
         };
-        auto arrayLLVMType = StructType::create(*context->getLLVMContext(), items, "FLARE_array_t");
+        auto arrayLLVMType = StructType::create(*this->cxt->getLLVMContext(), items, "FLARE_array_t");
         return PointerType::get(arrayLLVMType, 0);
     }
 
-    Value *FArrayType::createInstance(Context *context, LValue lVal) {
-        auto builder = context
-                ->getBuilder();
-        auto var = builder->CreateAlloca(this->getLLVMType(context));
-        this->createCall(context, "FLARE_arr_init", builder->getVoidTy(),
-                         {PointerType::get(this->getLLVMType(context), 0), builder->getInt64Ty()},
-                         {var, ConstantInt::get(*context->getLLVMContext(), APInt(64, this->arrayType))});
+    Value *FArrayType::createInstance(LValue lVal) {
+        auto builder = this->cxt->getBuilder();
+        auto var = builder->CreateAlloca(this->getLLVMType());
+        this->createCall("FLARE_arr_init", builder->getVoidTy(),
+                         {PointerType::get(this->getLLVMType(), 0), builder->getInt64Ty()},
+                         {var, ConstantInt::get(*this->cxt->getLLVMContext(), APInt(64, this->arrayType))});
         // TODO freeup allocated mem on out of scope
         return var;
     }
 
-    Type *FArrayType::getLLVMPtrType(Context *) {
+    Type *FArrayType::getLLVMPtrType() {
         return nullptr;
     }
 
-    Value *FArrayType::getDefaultValue(Context *) {
+    Value *FArrayType::getDefaultValue() {
         return nullptr;
     }
 
-    Value *FArrayType::apply(Context *cxt, OperatorType symbol, Value *lhs, Value *rhs) {
+    Value *FArrayType::apply(OperatorType symbol, Value *lhs, Value *rhs) {
         return nullptr;
     }
 
-    Value *FArrayType::apply(Context *cxt, OperatorType symbol, Value *primary) {
+    Value *FArrayType::apply(OperatorType symbol, Value *primary) {
         return nullptr;
     }
 
-    Value *FArrayType::getValue(Context *cxt, Value *value, VariableType valueType) {
+    Value *FArrayType::getValue(Value *value, VariableType valueType) {
         return nullptr;
     }
 
-    Value *FArrayType::createValue(Context *, LValue) {
+    Value *FArrayType::createValue(LValue) {
         return nullptr;
     }
 
-    Value *FArrayType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+    Value *FArrayType::apply(OperatorType symbol, std::vector<Value *> operands) {
 
         auto builder = cxt->getBuilder();
 
         switch (symbol) {
             case ASSIGNMENT: {
-                return this->createCall(cxt, "FLARE_arr_index_assign_" + getCFunctionBindingType(),
+                return this->createCall("FLARE_arr_index_assign_" + getCFunctionBindingType(),
                                         builder->getVoidTy(),
-                                        {this->getLLVMType(cxt), builder->getInt64Ty(),
-                                         cxt->getFlareType(this->arrayType)->getLLVMType(cxt)},
+                                        {this->getLLVMType(), builder->getInt64Ty(),
+                                         cxt->getFlareType(this->arrayType)->getLLVMType()},
                                         {builder->CreateLoad(operands[0]), operands[1], operands[2]});
                 break;
             }
             case OperatorType::VAR_DE_REF: {
-                return this->createCall(cxt, "FLARE_arr_index_deref_" + getCFunctionBindingType(),
-                                        cxt->getFlareType(this->arrayType)->getLLVMType(cxt),
-                                        {this->getLLVMType(cxt), builder->getInt64Ty()},
+                return this->createCall("FLARE_arr_index_deref_" + getCFunctionBindingType(),
+                                        cxt->getFlareType(this->arrayType)->getLLVMType(),
+                                        {this->getLLVMType(), builder->getInt64Ty()},
                                         {builder->CreateLoad(operands[0]), operands[1]});
             }
             default:

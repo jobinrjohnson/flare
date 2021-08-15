@@ -7,37 +7,37 @@
 
 namespace flare::types {
 
-    Value *BoolType::createInstance(Context *context, LValue val) {
-        auto var = context->getBuilder()->CreateAlloca(this->getLLVMType(context));
-        if (context->getBuilder()->GetInsertBlock() != nullptr) {
-            builder.CreateStore(this->createValue(context, val), var);
+    Value *BoolType::createInstance(LValue val) {
+        auto var = this->cxt->getBuilder()->CreateAlloca(this->getLLVMType());
+        if (this->cxt->getBuilder()->GetInsertBlock() != nullptr) {
+            builder.CreateStore(this->createValue(val), var);
         }
         return var;
     }
 
-    Value *BoolType::createValue(Context *context, LValue val) {
-        return llvm::ConstantInt::get(*context->getLLVMContext(), APInt(1, val.bVal));
+    Value *BoolType::createValue(LValue val) {
+        return llvm::ConstantInt::get(*this->cxt->getLLVMContext(), APInt(1, val.bVal));
     }
 
-    Type *BoolType::probeLLVMType(Context *context) {
-        return Type::getInt1Ty(*context->getLLVMContext());
+    Type *BoolType::probeLLVMType() {
+        return Type::getInt1Ty(*this->cxt->getLLVMContext());
     }
 
-    Type *BoolType::getLLVMPtrType(Context *) {
+    Type *BoolType::getLLVMPtrType() {
         return nullptr;
     }
 
-    Value *BoolType::getDefaultValue(Context *cxt) {
+    Value *BoolType::getDefaultValue() {
         LValue lValue = {
                 .bVal = false
         };
-        return this->createValue(cxt, lValue);
+        return this->createValue(lValue);
     }
 
     // Binary operators
-    Value *BoolType::apply(Context *cxt, OperatorType symbol, Value *primary, Value *secondary) {
+    Value *BoolType::apply(OperatorType symbol, Value *primary, Value *secondary) {
         Value *lhs = primary;
-        auto rhs = cxt->getFlareType(secondary)->getValue(cxt, secondary, VariableType::VARTYPE_BOOLEAN);
+        auto rhs = cxt->getFlareType(secondary)->getValue(secondary, VariableType::VARTYPE_BOOLEAN);
         auto builder = cxt->getBuilder();
         switch (symbol) {
             case ASSIGNMENT:
@@ -69,7 +69,7 @@ namespace flare::types {
     }
 
     // Unary operators
-    Value *BoolType::apply(Context *cxt, OperatorType symbol, Value *primary) {
+    Value *BoolType::apply(OperatorType symbol, Value *primary) {
         if (symbol == OperatorType::NOT) {
             return builder.CreateNot(primary);
         }
@@ -77,7 +77,7 @@ namespace flare::types {
     }
 
 
-    Value *BoolType::getValue(Context *cxt, Value *value, VariableType valueType) {
+    Value *BoolType::getValue(Value *value, VariableType valueType) {
 
         auto builder = cxt->getBuilder();
 
@@ -103,7 +103,7 @@ namespace flare::types {
         throw "Conversion not defined";
     }
 
-    Value *BoolType::apply(Context *cxt, OperatorType symbol, std::vector<Value *> operands) {
+    Value *BoolType::apply(OperatorType symbol, std::vector<Value *> operands) {
         return nullptr;
     }
 }
