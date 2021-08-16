@@ -43,6 +43,9 @@ namespace flare::types {
             return VariableType::VARTYPE_BOOLEAN;
         }
 
+        ~BoolType() override {
+        }
+
     };
 
 }

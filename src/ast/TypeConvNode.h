@@ -33,6 +33,11 @@ namespace flare::ast {
         Type *getTargetType();
 
         llvm::Value *codeGen(Context *cxt) override;
+
+        ~TypeConvNode() override {
+
+        }
+
     };
 }
 

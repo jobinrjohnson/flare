@@ -22,6 +22,10 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt);
 
+        ~LogSmtNode() {
+            delete (this->node);
+        }
+
     };
 
 }

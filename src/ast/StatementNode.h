@@ -32,6 +32,12 @@ namespace flare::ast {
 
         llvm::Value *codeGenThrowE(Context *cxt);
 
+        ~StatementNode() {
+            for (auto ele : (this->operands)) {
+                delete (ele);
+            }
+        }
+
     };
 
 }

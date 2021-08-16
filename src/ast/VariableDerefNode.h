@@ -31,6 +31,11 @@ namespace flare::ast {
         llvm::Value *codeGen(Context *cxt);
 
 
+        ~VariableDerefNode() {
+            delete (arrayIndex);
+        }
+
+
     };
 }
 

@@ -41,6 +41,9 @@ namespace flare::types {
         }
 
         Value *createValue(LValue val) override;
+
+        ~VoidType() override {
+        }
     };
 
 }

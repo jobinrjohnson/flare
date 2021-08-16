@@ -22,7 +22,11 @@ namespace flare::ast {
         cxt->initTypes();
 
         this->codeGen(cxt);
-        free(cxt);
+        delete (cxt);
 
+    }
+
+    void Node::printCallStack(Context *, std::string className, std::string functionName) {
+        std::cout << className << "@" << functionName << std::endl;
     }
 }

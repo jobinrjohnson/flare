@@ -87,7 +87,7 @@ namespace flare::ast {
             this->condition.push_back(element);
         }
 
-        free(node);
+        delete (node);
 
     }
 }

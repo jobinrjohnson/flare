@@ -41,10 +41,9 @@ namespace flare::ast {
 
         virtual NodeType getNodeType() = 0;
 
-        inline void printCallStack(Context *, std::string className, std::string functionName) {
-            return;
-            std::cout << className << "@" << functionName << std::endl;
-        }
+        void printCallStack(Context *, std::string className, std::string functionName);
+
+        virtual ~Node() {};
 
     };
 

@@ -49,6 +49,15 @@ namespace flare::ast {
 
         friend class ClassObjectType;
 
+        ~ClassDeclNode() {
+            for (auto f:functions) {
+                delete (f);
+            }
+            for (auto f:vars) {
+                delete (f);
+            }
+        }
+
     };
 
 

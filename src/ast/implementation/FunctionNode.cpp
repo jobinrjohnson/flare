@@ -140,15 +140,6 @@ namespace flare::ast {
         this->setReturnType(type);
     }
 
-    FunctionNode::~FunctionNode() {
-        free(this->statementListNode);
-        free(this->classNode);
-        for (auto ele : *(this->parameterList)) {
-            free(ele);
-        }
-        free(this->parameterList);
-    }
-
     Value *FunctionNode::setFunctionReturn(Value *returnValue) {
 
         // TODO move to assignment node

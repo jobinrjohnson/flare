@@ -43,6 +43,10 @@ namespace flare::types {
             return VariableType::VARTYPE_DOUBLE;
         }
 
+
+        ~DoubleType() override {
+        }
+
     };
 
 }

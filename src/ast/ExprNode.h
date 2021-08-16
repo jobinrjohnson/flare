@@ -22,15 +22,22 @@ namespace flare::ast {
 
     public:
 
-        NodeType getNodeType();
+        NodeType getNodeType() override;
 
         ExprNode(OperatorType opr, Node *a);
 
         ExprNode(OperatorType opr, Node *a, Node *b);
 
-        llvm::Value *codeGen(Context *cxt);
+        llvm::Value *codeGen(Context *cxt) override;
 
-        Node* getOperandNode();
+        Node *getOperandNode();
+
+        ~ExprNode() override {
+            for (auto f:operands) {
+                fflush(stdout);
+                delete (f);
+            }
+        }
 
     };
 

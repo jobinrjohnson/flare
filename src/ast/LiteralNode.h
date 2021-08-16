@@ -43,7 +43,6 @@ namespace flare::ast {
         // Node:codegen override
         llvm::Value *codeGen(Context *cxt) override;
 
-
     };
 
 }

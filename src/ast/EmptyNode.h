@@ -24,6 +24,10 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt) override;
 
+        ~EmptyNode() override {
+
+        }
+
     };
 
 }

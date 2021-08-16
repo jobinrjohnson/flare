@@ -56,6 +56,10 @@ namespace flare::types {
             return VariableType::VARTYPE_VOID;
         }
 
+        ~ClassObjectType() override {
+            delete this->classDeclNode;
+        }
+
     };
 
 }

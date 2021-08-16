@@ -36,6 +36,10 @@ namespace flare::ast {
 
         void setFinallyBlock(StatementListNode *);
 
+        ~ExceptionHandleNode() override {
+
+        }
+
     };
 }
 

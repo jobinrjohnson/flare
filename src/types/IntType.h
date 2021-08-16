@@ -42,6 +42,9 @@ namespace flare::types {
             return VariableType::VARTYPE_INT;
         }
 
+        ~IntType() override {
+        }
+
     };
 
 }

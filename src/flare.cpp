@@ -57,6 +57,7 @@ namespace flare {
     void Flare::codeGenAst() {
         try {
             this->ast->startCodeGen();
+            delete (this->ast);
         } catch (exceptions::FlareException *e) {
             std::cerr << e->getMessage() << "\n\n";
         }

@@ -76,6 +76,10 @@ namespace flare::types {
             return VariableType::VARTYPE_ARRAY;
         }
 
+        ~FArrayType() override {
+            delete arrayType;
+        }
+
     };
 }
 

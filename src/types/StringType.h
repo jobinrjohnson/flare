@@ -44,6 +44,8 @@ namespace flare::types {
             return VariableType::VARTYPE_STRING;
         }
 
+        ~StringType() override {
+        }
     };
 
 }

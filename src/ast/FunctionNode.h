@@ -148,7 +148,18 @@ namespace flare::ast {
         }
 
         // Destructor
-        ~FunctionNode();
+        ~FunctionNode() {
+
+            delete (this->statementListNode);
+            delete (this->classNode);
+
+            if (parameterList != nullptr) {
+                for (auto ele : *(this->parameterList)) {
+                    delete (ele);
+                }
+                delete (this->parameterList);
+            }
+        }
 
     };
 }

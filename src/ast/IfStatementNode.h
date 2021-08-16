@@ -31,6 +31,15 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt) override;
 
+        ~IfStatementNode() {
+            for (auto ele : (this->statementList)) {
+                delete (ele);
+            }
+            for (auto ele : (this->condition)) {
+                delete (ele);
+            }
+        }
+
     };
 
 }

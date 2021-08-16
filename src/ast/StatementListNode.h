@@ -21,21 +21,27 @@ namespace flare::ast {
 
     public:
 
-        NodeType getNodeType();
+        NodeType getNodeType() override;
 
         StatementListNode();
 
-        StatementListNode(Node *node);
+        explicit StatementListNode(Node *node);
 
         void push(Node *node);
 
         void pushFirst(Node *node);
 
-        llvm::Value *codeGen(Context *cxt);
+        llvm::Value *codeGen(Context *cxt) override;
 
         void createLocal(const std::string &, VarDeclNode *);
 
         VarDeclNode *findLocal(const std::string &);
+
+        ~StatementListNode() override {
+            for (auto ele : (this->statements)) {
+                delete (ele);
+            }
+        }
 
     };
 

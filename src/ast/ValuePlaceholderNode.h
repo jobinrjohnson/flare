@@ -21,6 +21,8 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt) override;
 
+        ~ValuePlaceholderNode() override {}
+
     };
 
 }

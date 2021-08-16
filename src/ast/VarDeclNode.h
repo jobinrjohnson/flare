@@ -116,6 +116,17 @@ namespace flare::ast {
             return this->initialValue;
         }
 
+
+        ~VarDeclNode() {
+
+            delete (initialValue);
+            delete (classNode);
+            delete (functionNode);
+            delete (type);
+            delete (flareType);
+
+        }
+
     };
 
 }

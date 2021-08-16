@@ -70,6 +70,10 @@ namespace flare::types {
 
         virtual int getTypePrecedence() = 0;
 
+        virtual ~BaseType() {
+
+        }
+
     };
 
 }

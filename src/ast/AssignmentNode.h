@@ -38,6 +38,11 @@ namespace flare::ast {
 
         llvm::Value *codeGenObjectAssign(Context *cxt);
 
+        ~AssignmentNode() {
+            delete (index);
+            delete (expression);
+        }
+
     };
 
 }

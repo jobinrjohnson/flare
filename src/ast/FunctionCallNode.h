@@ -61,6 +61,16 @@ namespace flare::ast {
             return this->objectName.length() != 0;
         }
 
+        ~FunctionCallNode() {
+            if (argumentList == nullptr) {
+                return;
+            }
+            for (auto f:*argumentList) {
+                delete (f);
+            }
+            delete (argumentList);
+        }
+
     };
 
 }

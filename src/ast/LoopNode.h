@@ -23,6 +23,11 @@ namespace flare::ast {
 
         llvm::Value *codeGen(Context *cxt) override;
 
+        ~LoopNode() {
+            delete (statementList);
+            delete (condition);
+        }
+
 
     };
 }
