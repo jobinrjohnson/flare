@@ -58,7 +58,7 @@ void FLARE_arr_index_assign_##N(FLARE_array_t *s, int64_t index, T value) { \
 FLARE_arr_index_assign(int64_t, int64_t)
 FLARE_arr_index_assign(double, double)
 FLARE_arr_index_assign(bool, bool)
-FLARE_arr_index_assign(FLARE_string_t *, FLARE_string_t)
+FLARE_arr_index_assign(FLARE_string_t, FLARE_string_t)
 
 //void FLARE_arr_index_assign_int64_t(FLARE_array_t *s, int64_t index, int64_t value) {
 //    ((vector<int64_t> *) s->arr)->push_back(value);
@@ -72,7 +72,7 @@ T FLARE_arr_index_deref_##N(FLARE_array_t *s, int64_t index) { \
 FLARE_arr_index_deref(int64_t, int64_t)
 FLARE_arr_index_deref(double, double)
 FLARE_arr_index_deref(bool, bool)
-FLARE_arr_index_deref(FLARE_string_t *, FLARE_string_t)
+FLARE_arr_index_deref(FLARE_string_t, FLARE_string_t)
 
 //int64_t FLARE_arr_index_deref_int(FLARE_array_t *s, int64_t index) {
 //    return ((vector<int64_t> *) s->arr)->at(index);

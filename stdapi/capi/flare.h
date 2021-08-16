@@ -7,13 +7,15 @@
 
 extern "C" {
 
-struct FLARE_string_t {
+struct FLARE_string_base {
     int8_t *str;
 };
 
 struct FLARE_array_t {
     int8_t *arr;
 };
+
+typedef struct FLARE_string_base *FLARE_string_t;
 
 }
 
