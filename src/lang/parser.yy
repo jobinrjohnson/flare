@@ -299,11 +299,10 @@ var_type:
 ;
 
 array_declaration:
-    KW_LET IDENTIFIER '[' ']'           {
+    KW_LET IDENTIFIER ':' var_type '[' ']'           {
             VarType *vType = new VarType{
-                    .type = VARTYPE_ARRAY,
-                    .name = "array"
-                    // TODO add secondary type
+                .type = VARTYPE_ARRAY,
+                .subType = $4
             };
             $$ = new VarDeclNode($2, vType);
     }

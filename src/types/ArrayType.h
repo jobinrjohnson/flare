@@ -14,7 +14,7 @@ namespace flare::types {
     protected:
         Type *probeLLVMType() override;
 
-        VariableType arrayType;
+        VarType *arrayType;
 
     public:
 
@@ -41,7 +41,7 @@ namespace flare::types {
         Value *getValue(Value *value, VariableType valueType) override;
 
         std::string getCFunctionBindingType() {
-            switch (this->arrayType) {
+            switch (this->arrayType->type) {
 
                 case VARTYPE_BOOLEAN:
                     return "bool";
@@ -68,7 +68,7 @@ namespace flare::types {
             throw "Type implementation not available";
         }
 
-        void setArrayType(VariableType a) {
+        void setArrayType(VarType *a) {
             this->arrayType = a;
         }
 

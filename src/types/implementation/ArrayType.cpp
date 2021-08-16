@@ -20,7 +20,7 @@ namespace flare::types {
         auto var = builder->CreateAlloca(this->getLLVMType());
         this->createCall("FLARE_arr_init", builder->getVoidTy(),
                          {PointerType::get(this->getLLVMType(), 0), builder->getInt64Ty()},
-                         {var, ConstantInt::get(*this->cxt->getLLVMContext(), APInt(64, this->arrayType))});
+                         {var, ConstantInt::get(*this->cxt->getLLVMContext(), APInt(64, this->arrayType->type))});
         // TODO freeup allocated mem on out of scope
         return var;
     }
@@ -58,15 +58,13 @@ namespace flare::types {
                 return this->createCall("FLARE_arr_index_assign_" + getCFunctionBindingType(),
                                         builder->getVoidTy(),
                                         {this->getLLVMType(), builder->getInt64Ty(),
-                                         cxt->getFlareType(this->arrayType)->getLLVMType()},
+                                         cxt->getFlareType(*this->arrayType)->getLLVMType()},
                                         {builder->CreateLoad(operands[0]), operands[1],
-                                         cxt->getFlareType(operands[2])->getValue(operands[2], arrayType)});
-//                cxt->getFlareType(operands[2])->getValue(operands[2], arrayType)});
-                break;
+                                         cxt->getFlareType(operands[2])->getValue(operands[2], arrayType->type)});
             }
             case OperatorType::VAR_DE_REF: {
                 return this->createCall("FLARE_arr_index_deref_" + getCFunctionBindingType(),
-                                        cxt->getFlareType(this->arrayType)->getLLVMType(),
+                                        cxt->getFlareType(*this->arrayType)->getLLVMType(),
                                         {this->getLLVMType(), builder->getInt64Ty()},
                                         {builder->CreateLoad(operands[0]), operands[1]});
             }

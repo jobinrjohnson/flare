@@ -81,6 +81,7 @@ namespace flare::ast {
     typedef struct VarType {
         VariableType type;
         std::string name = "";
+        VarType *subType = nullptr;
     } VarType;
 
 

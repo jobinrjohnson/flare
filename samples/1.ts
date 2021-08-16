@@ -3,11 +3,10 @@ function printString(msg: string): void;
 // @ts-ignore
 function main(): int {
 
-    let x
-    [];
+    let x: string[];
 
     let i = 0;
-    while (i < 100000) {
+    while (i < 10) {
         if (i % 2 == 0) {
             x[i] = "Hello world!.";
         } else {
@@ -18,7 +17,6 @@ function main(): int {
         }
         i = i + 1;
     }
-
 
     return 0;
 }
