@@ -7,7 +7,7 @@ add_library(
 )
 
 llvm_map_components_to_libnames(llvm_libs core native mcjit interpreter)
-set(libs "test_base" "lang" "ast" "jit" "exceptions" "types" ${llvm_libs})
+set(libs "test_base" "lang" "ast" "jit" "exceptions" "types" "jsoncpp" ${llvm_libs})
 
 # Test : SimpleArithmetic
 add_executable(SimpleArithmetic SimpleArithmetic.cpp)
@@ -18,3 +18,8 @@ add_test(SimpleArithmetic SimpleArithmetic)
 add_executable(LogicalOpsTest LogicalOpsTest.cpp)
 target_link_libraries(LogicalOpsTest ${libs})
 add_test(LogicalOpsTest LogicalOpsTest)
+
+# Test : Logical Ops
+add_executable(TestInfra TestInfra.cpp)
+target_link_libraries(TestInfra ${libs})
+add_test(TestInfra TestInfra)

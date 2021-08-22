@@ -1,0 +1,7 @@
+{
+  "name": "Hello World.",
+  "description": "A Simple Hello World Program",
+  "script": "script.ts",
+  "exit_code": "0",
+  "output": "expect.txt"
+}
