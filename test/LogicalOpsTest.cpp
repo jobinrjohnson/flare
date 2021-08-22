@@ -19,7 +19,7 @@ function main(): int {
         totalTrueConds = totalTrueConds + 1;
     } else if (x == 0 || x != 0) {
         totalTrueConds = totalTrueConds + 1;
-    }
+    } else { }
 
     let j = 0;
     let k = 10;

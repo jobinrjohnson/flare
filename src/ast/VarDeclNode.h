@@ -123,7 +123,7 @@ namespace flare::ast {
             delete (classNode);
             delete (functionNode);
             delete (type);
-            delete (flareType);
+//            delete (flareType);
 
         }
 

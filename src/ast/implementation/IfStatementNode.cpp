@@ -3,6 +3,7 @@
 //
 
 #include <ast/IfStatementNode.h>
+#include <ast/StatementListNode.h>
 
 namespace flare::ast {
 
@@ -27,10 +28,7 @@ namespace flare::ast {
 
     void IfStatementNode::addElseBranch(Node *smt) {
         this->statementList.push_back(smt);
-
         auto node = new ValuePlaceholderNode(ConstantInt::get(Type::getInt1Ty(context), 1, false));
-
-
         this->condition.push_back(node);
     }
 
@@ -64,7 +62,6 @@ namespace flare::ast {
             }
 
         }
-
         function->getBasicBlockList().push_back(mergeBlock);
         builder.SetInsertPoint(mergeBlock);
 
