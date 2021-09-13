@@ -1,20 +1,11 @@
-function printString(msg: string): void;
+// @ts-ignore
+function printI(i: int): void;
 
 // @ts-ignore
 function main(): int {
 
-    let x: string[];
-
-    let i = 0;
-    while (i < 10) {
-        if (i % 2 == 0) {
-            x[i] = "Hello world!.";
-        } else {
-            x[i] = "Hello world!. Odd";
-        }
-        if (i > 0) {
-            printString(x[i - 1]);
-        }
+    for (let i = 0; i < 10; i = i + 1) {
+        printI(i);
         i = i + 1;
     }
 
