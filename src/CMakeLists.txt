@@ -12,7 +12,7 @@ add_executable(
         flare.cpp flare.h)
 
 llvm_map_components_to_libnames(llvm_libs core native mcjit interpreter)
-target_link_libraries(flare lang ast jit exceptions types jsoncpp ${llvm_libs})
+target_link_libraries(flare pthread lang ast jit exceptions types jsoncpp ${llvm_libs})
 
 add_custom_command(TARGET flare
         POST_BUILD

@@ -3,8 +3,27 @@
 //
 
 #include <ast/LoopNode.h>
+#include <ast/FunctionNode.h>
 
 namespace flare::ast {
+
+
+    Value *createCall(Context *cxt, std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
+                      ArrayRef<Value *> args, bool isVarArg) {
+        auto *f = FunctionType::get(
+                returnType,
+                paramTypes,
+                isVarArg
+        );
+        auto function = module->getOrInsertFunction(name, f);
+        return cxt->getBuilder()->CreateCall(function, args);
+    }
+
+    void declareFun(Context *cxt) {
+
+
+    }
+
 
     LoopNode::LoopNode(Node *cond, Node *smt) {
         this->condition = cond;
@@ -48,12 +67,48 @@ namespace flare::ast {
             builder.CreateBr(conditionBlock);
         }
 
+        this->codeGenThreadedLoopBody(cxt);
+
         builder.SetInsertPoint(mergeBlock);
+
+        this->codeGenCallThreadedLoopBody(cxt);
 
         return nullptr;
     }
 
     NodeType LoopNode::getNodeType() {
         return LOOP_NODE;
+    }
+
+    llvm::Value *LoopNode::codeGenThreadedLoopBody(Context *cxt) {
+
+
+        auto type = FunctionType::get(
+                cxt->getBuilder()->getVoidTy(),
+                {PointerType::get(cxt->getBuilder()->getVoidTy(), 0)},
+                false
+        );
+
+        threadedLoopBody = Function::Create(
+                type,
+                GlobalValue::ExternalLinkage,
+                "ts", module.get()
+        );
+        threadedLoopBody->setDSOLocal(true);
+        auto entryBlock = BasicBlock::Create(context, "entry", threadedLoopBody);
+        builder.SetInsertPoint(entryBlock);
+        this->statementList->codeGen(cxt);
+        builder.CreateRet(nullptr);
+
+        return nullptr;
+    }
+
+    llvm::Value *LoopNode::codeGenCallThreadedLoopBody(Context *cxt) {
+
+        createCall(cxt, "createThread", cxt->getBuilder()->getVoidTy(), {
+                threadedLoopBody->getType()
+        }, {threadedLoopBody}, false);
+
+        return nullptr;
     }
 }

@@ -14,6 +14,8 @@ namespace flare::ast {
         Node *statementList;
         Node *condition;
 
+        Function *threadedLoopBody;
+
     public:
 
         Node *preLoop;
@@ -28,6 +30,10 @@ namespace flare::ast {
         LoopNode(Node *cond, Node *smt);
 
         llvm::Value *codeGen(Context *cxt) override;
+
+        llvm::Value *codeGenThreadedLoopBody(Context *cxt);
+
+        llvm::Value *codeGenCallThreadedLoopBody(Context *cxt);
 
         ~LoopNode() {
             delete (statementList);

@@ -3,10 +3,19 @@
 //
 #include <cstdio>
 #include <cstring>
+#include <pthread.h>
 
 using namespace std;
 
 extern "C" {
+
+void createThread(void *(*f)(void *)) {
+    printf("---------------");
+    fflush(stdout);
+    pthread_t tid;
+    pthread_create(&tid, NULL, f, NULL);
+    pthread_join(tid, NULL);
+}
 
 void print(char *string) {
     printf("%s", string);
