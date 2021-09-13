@@ -55,6 +55,8 @@ int filterKwOrId(
         return token::KW_CONSOLE;
     } else if (IS_TOKEN("while")) {
         return token::KW_WHILE;
+    } else if (IS_TOKEN("for")) {
+        return token::KW_FOR;
     } else if (IS_TOKEN("int")) {
         return token::KW_INT;
     } else if (IS_TOKEN("int32")) {

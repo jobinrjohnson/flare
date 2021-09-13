@@ -89,7 +89,7 @@
 
 
 %type <node> start
-%type <node> statement class_content
+%type <node> statement class_content loop_expr
 %type <expression> expr arithmetic_expr relative_expr logical_expr
 %type <literal> scalar
 %type <statementList> compound_statement statements
@@ -115,7 +115,7 @@
 %token <tDecimalValue> T_DECIMAL
 %token <tBoolValue> T_BOOLEAN
 %token <tStringValue> T_STRING
-%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_CLASS KW_NEW KW_THIS
+%token TOK_EOF 0 PLUS KW_LET KW_IF KW_ELSE KW_LOG KW_CONSOLE KW_RETURN KW_FUNCTION KW_WHILE KW_FOR KW_CLASS KW_NEW KW_THIS
 %token KW_IMPORT KW_FROM KW_AS
 %token TOK_LTE TOK_GTE TOK_EQUALITY TOK_NEQUALITY
 %token TOK_L_AND TOK_L_OR
@@ -219,8 +219,19 @@ class_decl:
     KW_CLASS IDENTIFIER '{' class_contents '}'      { $$ = new ClassDeclNode($2, $4); free($4); }
 ;
 
+loop_expr:
+    %empty                      { $$ = nullptr; }
+    | expr                      { $$ = $1; }
+    | variable_declaration      { $$ = $1; }
+;
+
 loops:
-    KW_WHILE '(' expr ')' compound_statement    { $$ = new LoopNode($3, $5);}
+    KW_WHILE '(' expr ')' compound_statement                    { $$ = new LoopNode($3, $5);}
+    | KW_FOR '(' loop_expr ';' loop_expr ';' loop_expr ')' compound_statement  {
+            $$ = new LoopNode($5, $9);
+            $$->preLoop = $3;
+            $$->after = $7;
+    }
 ;
 
 class_function_declaration:

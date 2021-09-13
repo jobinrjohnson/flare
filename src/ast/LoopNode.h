@@ -16,6 +16,12 @@ namespace flare::ast {
 
     public:
 
+        Node *preLoop;
+        Node *postLoop;
+
+        Node *before;
+
+        Node *after;
 
         NodeType getNodeType() override;
 

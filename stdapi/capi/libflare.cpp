@@ -13,6 +13,11 @@ void print(char *string) {
     fflush(stdout);
 }
 
+void printI(int value) {
+    printf("%d\n", value);
+    fflush(stdout);
+}
+
 long int read_int() {
     long int i;
     int status = scanf("%ld", &i);
