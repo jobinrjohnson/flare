@@ -51,8 +51,11 @@ void FLARE_arr_init(FLARE_array_t **s, flare::ast::VariableType variableType) {
 }
 
 #define FLARE_arr_index_assign(T, N)  \
-void FLARE_arr_index_assign_##N(FLARE_array_t *s, int64_t index, T value) { \
-((vector<T> *) s->arr)->push_back(value);    \
+void FLARE_arr_index_assign_##N(FLARE_array_t *s, int64_t index, T value) {     \
+    if(((vector<T> *) s->arr)->size() <= (unsigned long)(index+1) ){            \
+        ((vector<T> *) s->arr)->resize(index+1);                               \
+    }                                                                           \
+    ((vector<T> *) s->arr)->at(index) = value;                                   \
 }
 
 FLARE_arr_index_assign(int64_t, int64_t)
@@ -61,9 +64,13 @@ FLARE_arr_index_assign(bool, bool)
 FLARE_arr_index_assign(FLARE_string_t, FLARE_string_t)
 
 //void FLARE_arr_index_assign_int64_t(FLARE_array_t *s, int64_t index, int64_t value) {
-//    ((vector<int64_t> *) s->arr)->push_back(value);
+//    if(((vector<int64_t> *) s->arr)->size() <= (unsigned long)(index) ){
+//        ((vector<int64_t> *) s->arr)->resize(index+1);
+//    }
+//    ((vector<int64_t> *) s->arr)->at(index) = value;
 //}
 
+// TODO add size check.
 #define FLARE_arr_index_deref(T, N) \
 T FLARE_arr_index_deref_##N(FLARE_array_t *s, int64_t index) { \
     return ((vector<T> *) s->arr)->at(index); \
