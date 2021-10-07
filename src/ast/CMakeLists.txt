@@ -22,4 +22,4 @@ add_library(
         implementation/FunctionCallNode.cpp FunctionCallNode.h
         implementation/ClassDeclNode.cpp ClassDeclNode.h
         implementation/EmptyNode.cpp EmptyNode.h
-        implementation/TypeConvNode.cpp TypeConvNode.h implementation/ExceptionHandleNode.cpp ExceptionHandleNode.h)
+        implementation/TypeConvNode.cpp TypeConvNode.h implementation/ExceptionHandleNode.cpp ExceptionHandleNode.h analyzer/LoopAnalyzer.cpp analyzer/LoopAnalyzer.h)

@@ -19,15 +19,11 @@ namespace flare::ast {
         return cxt->getBuilder()->CreateCall(function, args);
     }
 
-    void declareFun(Context *cxt) {
-
-
-    }
-
-
     LoopNode::LoopNode(Node *cond, Node *smt) {
         this->condition = cond;
         this->statementList = smt;
+
+        this->analyzer = new LoopAnalyzer(smt);
     }
 
     llvm::Value *LoopNode::codeGen(Context *cxt) {
@@ -67,11 +63,15 @@ namespace flare::ast {
             builder.CreateBr(conditionBlock);
         }
 
-        this->codeGenThreadedLoopBody(cxt);
+        if (analyzer->isParallizable()) {
+            this->codeGenThreadedLoopBody(cxt);
+        }
 
         builder.SetInsertPoint(mergeBlock);
 
-        this->codeGenCallThreadedLoopBody(cxt);
+        if (analyzer->isParallizable()) {
+            this->codeGenCallThreadedLoopBody(cxt);
+        }
 
         return nullptr;
     }

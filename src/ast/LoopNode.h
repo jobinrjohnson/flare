@@ -6,15 +6,19 @@
 #define FLARE_LOOPNODE_H
 
 
+#include <ast/analyzer/LoopAnalyzer.h>
 #include "Node.h"
 
 namespace flare::ast {
+
     class LoopNode : public Node {
 
         Node *statementList;
         Node *condition;
 
         Function *threadedLoopBody;
+
+        LoopAnalyzer *analyzer;
 
     public:
 
