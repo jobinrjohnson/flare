@@ -45,6 +45,8 @@ namespace flare::ast {
 
         virtual ~Node() {};
 
+        friend class LoopAnalyzer;
+
     };
 
 }

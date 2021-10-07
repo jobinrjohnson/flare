@@ -13,6 +13,8 @@ namespace flare::ast {
 
     class LoopNode : public Node {
 
+    public:
+
         Node *statementList;
         Node *condition;
 
@@ -20,7 +22,6 @@ namespace flare::ast {
 
         LoopAnalyzer *analyzer;
 
-    public:
 
         Node *preLoop;
         Node *postLoop;

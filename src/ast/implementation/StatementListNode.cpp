@@ -6,6 +6,9 @@
 
 namespace flare::ast {
 
+    extern Context *globalContext;
+    extern std::vector<Node *> lopStatementLists;
+
 
     NodeType StatementListNode::getNodeType() {
         return STATEMENT_LIST_NODE;
@@ -24,12 +27,16 @@ namespace flare::ast {
 
     llvm::Value *StatementListNode::codeGen(Context *cxt) {
 
+        if (globalContext != nullptr) {
+            this->locals.clear();
+        }
+
         this->printCallStack(cxt, "StatementListNode", __FUNCTION__);
 
         cxt->pushStatementList(this);
 
         Value *finalValue = nullptr;
-        for (auto const &value:this->statements) {
+        for (auto const &value: this->statements) {
             finalValue = value->codeGen(cxt);
             if (cxt->getCurrentFunction() != nullptr && builder.GetInsertBlock()->getTerminator() != nullptr) {
                 goto end;
@@ -37,6 +44,9 @@ namespace flare::ast {
         }
         end:
         cxt->popStatementList();
+        if (globalContext != nullptr) {
+            lopStatementLists.push_back(this);
+        }
         return finalValue;
     }
 

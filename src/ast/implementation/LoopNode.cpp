@@ -7,6 +7,10 @@
 
 namespace flare::ast {
 
+    extern Context *globalContext;
+    extern Node *mLoopNode;
+    extern std::vector<Node *> lopStatementLists;
+
 
     Value *createCall(Context *cxt, std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
                       ArrayRef<Value *> args, bool isVarArg) {
@@ -27,6 +31,10 @@ namespace flare::ast {
     }
 
     llvm::Value *LoopNode::codeGen(Context *cxt) {
+
+        globalContext = cxt;
+        mLoopNode = this;
+        lopStatementLists.clear();
 
         this->printCallStack(cxt, "LoopNode", __FUNCTION__);
 
@@ -72,6 +80,9 @@ namespace flare::ast {
         if (analyzer->isParallizable()) {
             this->codeGenCallThreadedLoopBody(cxt);
         }
+
+        mLoopNode = nullptr;
+        globalContext = nullptr;
 
         return nullptr;
     }

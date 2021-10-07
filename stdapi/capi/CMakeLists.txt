@@ -4,4 +4,4 @@ add_library(
 
         libflare.cpp
         flare_string.cpp
-        flare_array.cpp flare.h)
+        flare_array.cpp flare.h flare_auto_parallel.cpp)

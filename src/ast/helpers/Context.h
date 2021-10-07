@@ -31,13 +31,14 @@ namespace flare::ast {
 
     class Context {
 
+    public:
+
         std::stack<FunctionNode *> functions;
 
         std::map<std::string, BaseType *> types;
 
         Function *personalityFunction;
 
-    public:
 
         int depth = 0;
 

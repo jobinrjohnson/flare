@@ -12,7 +12,7 @@ namespace flare::ast {
 
     class AssignmentNode : public Node {
 
-    protected:
+    public:
 
         std::string varName;
 
@@ -22,7 +22,6 @@ namespace flare::ast {
 
         Node *index;
 
-    public:
 
         NodeType getNodeType();
 

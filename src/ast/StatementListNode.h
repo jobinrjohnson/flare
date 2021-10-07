@@ -13,13 +13,10 @@ namespace flare::ast {
 
     class StatementListNode : public Node {
 
-    private:
+    public:
         std::vector<Node *> statements;
 
         std::map<std::string, VarDeclNode *> locals;
-
-
-    public:
 
         NodeType getNodeType() override;
 

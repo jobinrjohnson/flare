@@ -6,20 +6,38 @@
 #define FLARE_LOOPANALYZER_H
 
 #include <vector>
+#include <ast/helpers/Context.h>
 
 namespace flare::ast {
     class Node;
 
     class LoopAnalyzer {
-        Node *statementList;
+        Node *node;
+
+        bool analysisComplete = false;
+
+        bool _isParallizable = true;
+
+    private:
+
+        void analyze();
+
+        void analyzeAssignment();
+
+        void analyzeExprNode();
+
+        void analyzeVarDerefNode();
 
     public:
         explicit LoopAnalyzer(Node *smtL) {
-            this->statementList = smtL;
+            this->node = smtL;
         }
 
         bool isParallizable() {
-            return false;
+            if (!this->analysisComplete) {
+                this->analyze();
+            }
+            return this->_isParallizable;
         }
 
         std::vector<Node *> getPrivatizationVars() {

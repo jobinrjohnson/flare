@@ -27,6 +27,6 @@ namespace flare::ast {
     }
 
     void Node::printCallStack(Context *, std::string className, std::string functionName) {
-        std::cout << className << "@" << functionName << std::endl;
+//        std::cout << className << "@" << functionName << std::endl;
     }
 }

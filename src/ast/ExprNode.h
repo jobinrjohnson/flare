@@ -11,7 +11,7 @@ namespace flare::ast {
 
     class ExprNode : public Node {
 
-    protected:
+    public:
 
         std::vector<Node *> operands;
         OperatorType opr;
@@ -20,7 +20,6 @@ namespace flare::ast {
 
         Value *codeGenUnaryExpr(Context *cxt);
 
-    public:
 
         NodeType getNodeType() override;
 
