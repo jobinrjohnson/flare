@@ -4,6 +4,7 @@
 
 #include <ast/LoopNode.h>
 #include <ast/FunctionNode.h>
+#include <ast/VariableDerefNode.h>
 
 namespace flare::ast {
 
@@ -69,6 +70,12 @@ namespace flare::ast {
         }
         if (builder.GetInsertBlock()->getTerminator() == nullptr) {
             builder.CreateBr(conditionBlock);
+        }
+
+        for (auto i: analyzer->getPrivatizationVars()) {
+            auto x = dynamic_cast<VariableDerefNode *>(i);
+            std::cout << x->variableName << "==\n\n";
+            std::cout.flush();
         }
 
         if (analyzer->isParallizable()) {

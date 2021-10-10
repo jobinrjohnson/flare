@@ -11,14 +11,12 @@
 namespace flare::ast {
     class VariableDerefNode : public Node {
 
-    protected:
+    public:
 
         bool isArrayDeReference = false;
         std::string variableName;
         std::string base;
         Node *arrayIndex;
-
-    public:
 
         NodeType getNodeType();
 

@@ -14,6 +14,8 @@ namespace flare::ast {
     class LoopAnalyzer {
         Node *node;
 
+        std::vector<Node *> privatizeList;
+
         bool analysisComplete = false;
 
         bool _isParallizable = true;
@@ -28,6 +30,8 @@ namespace flare::ast {
 
         void analyzeVarDerefNode();
 
+        void analyzeFunCallNode();
+
     public:
         explicit LoopAnalyzer(Node *smtL) {
             this->node = smtL;
@@ -41,8 +45,10 @@ namespace flare::ast {
         }
 
         std::vector<Node *> getPrivatizationVars() {
-            std::vector<Node *> pVars;
-            return pVars;
+            if (!this->analysisComplete) {
+                this->analyze();
+            }
+            return privatizeList;
         }
 
     };

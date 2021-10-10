@@ -11,7 +11,7 @@
 namespace flare::ast {
     class FunctionCallNode : public Node {
 
-    protected:
+    public:
 
         std::string functionName;
 
@@ -23,7 +23,6 @@ namespace flare::ast {
 
         llvm::Value *performCall(Context *cxt, Function *calleeFunction, ArrayRef<Value *> Args = None);
 
-    public:
 
         FunctionCallNode();
 
