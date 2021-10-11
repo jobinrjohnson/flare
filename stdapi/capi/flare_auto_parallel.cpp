@@ -11,17 +11,16 @@ struct fTask {
     pthread_t *threads;
 };
 
-struct temp {
-    int64_t a;
-    int64_t b;
-};
+//struct temp {
+//    int64_t *a;
+//    int64_t *b;
+//};
 
 void createThread(void *(*f)(void *), void *pVars) {
-    printf("---------------");
+    printf("\n---------------\n");
 
 //    struct temp *x = (struct temp *) pVars;
-//
-//    printf("====================[[[[[[[%ld,%ld]]]]]]]]]===========\n\n\n\n\n", x->a, x->b);
+//    printf("====================[[[[[[[%ld,%ld]]]]]]]]]===========\n\n\n\n\n", *x->a, *x->b);
 
     fflush(stdout);
     pthread_t tid;

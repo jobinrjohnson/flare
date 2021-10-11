@@ -138,7 +138,8 @@ namespace flare::ast {
         for (auto *ele: pVars) {
             auto x = dynamic_cast<VariableDerefNode *>(ele);
             auto var = builder.CreateStructGEP((structPtr), itr++);
-            auto varLoaded = builder.CreateLoad(var);
+            auto varPtrLoaded = builder.CreateLoad(var);
+            auto varLoaded = builder.CreateLoad(varPtrLoaded);
 
             auto declared = new VarDeclNode(x->variableName.c_str(), cxt->getFlareType(varLoaded));
             declared->setInitialValue(new EmptyNode(&(*varLoaded)));
