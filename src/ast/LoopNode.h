@@ -40,6 +40,8 @@ namespace flare::ast {
 
         llvm::Value *codeGenCallThreadedLoopBody(Context *cxt);
 
+        StructType *varPassType;
+
         ~LoopNode() {
             delete (statementList);
             delete (condition);

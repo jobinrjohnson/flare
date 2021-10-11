@@ -5,12 +5,14 @@
 #include <ast/LoopNode.h>
 #include <ast/FunctionNode.h>
 #include <ast/VariableDerefNode.h>
+#include <ast/EmptyNode.h>
 
 namespace flare::ast {
 
     extern Context *globalContext;
     extern Node *mLoopNode;
     extern std::vector<Node *> lopStatementLists;
+    bool isCodegenThreadedLoopBody = false;
 
 
     Value *createCall(Context *cxt, std::string name, Type *returnType, ArrayRef<Type *> paramTypes,
@@ -100,6 +102,17 @@ namespace flare::ast {
 
     llvm::Value *LoopNode::codeGenThreadedLoopBody(Context *cxt) {
 
+        auto pVars = this->analyzer->getPrivatizationVars();
+
+        std::vector<llvm::Type *> items;
+        for (auto *ele: pVars) {
+            auto x = dynamic_cast<VariableDerefNode *>(ele);
+            VarDeclNode *vNode = globalContext->findVariable(x->variableName);
+            items.push_back(vNode->getLLVMVarRef()->getType());
+        }
+
+        // Create LLVM type
+        this->varPassType = StructType::create(context, items, "function_private_vars");
 
         auto type = FunctionType::get(
                 cxt->getBuilder()->getVoidTy(),
@@ -113,19 +126,60 @@ namespace flare::ast {
                 "ts", module.get()
         );
         threadedLoopBody->setDSOLocal(true);
+        isCodegenThreadedLoopBody = true;
         auto entryBlock = BasicBlock::Create(context, "entry", threadedLoopBody);
         builder.SetInsertPoint(entryBlock);
+
+        Function::arg_iterator actualArgs = threadedLoopBody->arg_begin();
+        auto structLoc = &(*actualArgs);
+        auto structPtr = builder.CreateBitCast(structLoc, PointerType::get(this->varPassType, 0), "private_var_struct");
+
+        auto itr = 0;
+        for (auto *ele: pVars) {
+            auto x = dynamic_cast<VariableDerefNode *>(ele);
+            auto var = builder.CreateStructGEP((structPtr), itr++);
+            auto varLoaded = builder.CreateLoad(var);
+
+            auto declared = new VarDeclNode(x->variableName.c_str(), cxt->getFlareType(varLoaded));
+            declared->setInitialValue(new EmptyNode(&(*varLoaded)));
+
+            dynamic_cast<StatementListNode *>(this->statementList)->pushFirst(declared);
+        }
+
         this->statementList->codeGen(cxt);
         builder.CreateRet(nullptr);
+        isCodegenThreadedLoopBody = false;
 
         return nullptr;
     }
 
     llvm::Value *LoopNode::codeGenCallThreadedLoopBody(Context *cxt) {
 
+        auto pVarsStruct = new AllocaInst(
+                this->varPassType,
+                0,
+                "passVar",
+                cxt->getBuilder()->GetInsertBlock()
+        );
+
+        std::vector<llvm::Type *> items;
+        auto pVars = this->analyzer->getPrivatizationVars();
+        auto i = 0;
+        for (auto *ele: pVars) {
+            auto x = dynamic_cast<VariableDerefNode *>(ele);
+            VarDeclNode *vNode = globalContext->findVariable(x->variableName);
+            auto varVal = (vNode->getLLVMVarRef());
+            auto varRef = builder.CreateStructGEP(pVarsStruct, i);
+            builder.CreateStore(varVal, varRef);
+            i += 1;
+        }
+
+        auto pvarsBcasted = builder.CreateBitCast(pVarsStruct, PointerType::get(builder.getVoidTy(), 0));
+
         createCall(cxt, "createThread", cxt->getBuilder()->getVoidTy(), {
-                threadedLoopBody->getType()
-        }, {threadedLoopBody}, false);
+                threadedLoopBody->getType(),
+                PointerType::get(builder.getVoidTy(), 0)
+        }, {threadedLoopBody, pvarsBcasted}, false);
 
         return nullptr;
     }

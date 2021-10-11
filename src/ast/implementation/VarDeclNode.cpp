@@ -102,6 +102,7 @@ namespace flare::ast {
 
         LValue lvl;
         this->llvmVarRef = this->flareType->createInstance(lvl);
+        this->llvmVarRef->setName(this->variableName);
 
         currentBlock->createLocal(this->variableName, this);
 

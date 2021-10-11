@@ -9,6 +9,7 @@ function main(): int {
     a[3] = 4;
 
     let x = 1;
+    let y = 1;
 
     for (let i = 0; i < 10; i = i + 1) {
         let b: int;
@@ -18,6 +19,7 @@ function main(): int {
         //     a[i] = i;
         // }
         printI(x);
+        printI(y);
     }
 
     return 0;

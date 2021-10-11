@@ -40,6 +40,7 @@ namespace flare::ast {
         bool isParallizable() {
             if (!this->analysisComplete) {
                 this->analyze();
+                this->analysisComplete = true;
             }
             return this->_isParallizable;
         }
@@ -47,6 +48,7 @@ namespace flare::ast {
         std::vector<Node *> getPrivatizationVars() {
             if (!this->analysisComplete) {
                 this->analyze();
+                this->analysisComplete = true;
             }
             return privatizeList;
         }

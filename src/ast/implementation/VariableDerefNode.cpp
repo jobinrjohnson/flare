@@ -9,6 +9,7 @@
 
 namespace flare::ast {
 
+    extern bool isCodegenThreadedLoopBody;
 
     NodeType VariableDerefNode::getNodeType() {
         return VAR_DEREF_NODE;
