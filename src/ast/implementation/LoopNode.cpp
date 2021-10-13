@@ -151,8 +151,15 @@ namespace flare::ast {
             auto varPtrLoaded = builder.CreateLoad(var);
             auto varLoaded = builder.CreateLoad(varPtrLoaded);
 
-            auto declared = new VarDeclNode(x->variableName.c_str(), cxt->getFlareType(varLoaded));
-            declared->setInitialValue(new EmptyNode(&(*varLoaded)));
+            auto ftype = cxt->getFlareType(varLoaded);
+            auto declared = new VarDeclNode(x->variableName.c_str(), ftype);
+            if (ftype->getTypePrecedence() == VariableType::VARTYPE_ARRAY) {
+                auto init = new EmptyNode(&(*varPtrLoaded));
+                declared->setInitialValue(init);
+            } else {
+                auto init = new EmptyNode(&(*varLoaded));
+                declared->setInitialValue(init);
+            }
 
             dynamic_cast<StatementListNode *>(this->statementList)->pushFirst(declared);
         }

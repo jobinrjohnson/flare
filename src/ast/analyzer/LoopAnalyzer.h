@@ -42,6 +42,7 @@ namespace flare::ast {
                 this->analyze();
                 this->analysisComplete = true;
             }
+//            return false;
             return this->_isParallizable;
         }
 

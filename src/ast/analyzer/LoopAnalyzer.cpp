@@ -108,9 +108,18 @@ namespace flare::ast {
 
         std::cout.flush();
         auto mNode = dynamic_cast<VariableDerefNode *>(this->node);
-        if (!mNode->base.empty() || mNode->isArrayDeReference) {
-            this->_isParallizable = false;
-            return;
+        if (mNode->isArrayDeReference) {
+
+            auto an = new LoopAnalyzer(mNode->arrayIndex);
+            if (!an->isParallizable()) {
+                this->_isParallizable = false;
+                return;
+            } else {
+
+                this->privatizeList.insert(privatizeList.end(), an->privatizeList.begin(),
+                                           an->privatizeList.end());
+            }
+
         }
 
         if (!isVarInside(dynamic_cast<StatementListNode *>(mLoopNode->statementList), mNode->variableName)) {

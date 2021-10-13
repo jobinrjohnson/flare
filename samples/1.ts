@@ -6,20 +6,20 @@ function main(): int {
 
     let a: int[];
 
-    a[3] = 4;
+    a[0] = 0;
+    a[1] = 1;
+    a[2] = 2;
+    a[3] = 3;
+    a[4] = 4;
+    a[5] = 5;
+    a[6] = 6;
 
-    let x = 1;
+    let x = 0;
     let y = 1;
 
-    for (let i = 0; i < 10; i = i + 1) {
-        let b: int;
-        b = 10;
-        // a[i] = 0;
-        // if (i != 3) {
-        //     a[i] = i;
-        // }
-        printI(x);
-        printI(y);
+    for (let i = 0; i < 7; i = i + 1) {
+        printI(a[x]);
+        // x = x+1;
     }
 
     return 0;

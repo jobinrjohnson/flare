@@ -19,6 +19,12 @@ namespace flare::ast {
     }
 
     Value *VarDeclNode::codeGenArray(Context *cxt) {
+        if (this->initialValue != nullptr) {
+            this->llvmVarRef = this->initialValue->codeGen(cxt);
+            auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
+            currentBlock->createLocal(this->variableName, this);
+            return this->llvmVarRef;
+        }
 
         auto ft = new FArrayType(cxt);
         ft->setArrayType(this->type->subType);
@@ -130,6 +136,13 @@ namespace flare::ast {
                                         this->lineNumber
             );
 
+        }
+
+        if (this->flareType != nullptr) {
+            FArrayType *x;
+            if ((x = dynamic_cast<FArrayType *>(this->flareType)) != nullptr) {
+                return this->codeGenArray(cxt);
+            }
         }
 
         if (this->type != NULL && this->type->type == VariableType::VARTYPE_ARRAY) {
