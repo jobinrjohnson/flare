@@ -42,6 +42,8 @@ namespace flare::ast {
 
         StructType *varPassType;
 
+        StructType *varPrivateType;
+
         ~LoopNode() {
             delete (statementList);
             delete (condition);

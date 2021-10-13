@@ -112,7 +112,11 @@ namespace flare::ast {
         }
 
         // Create LLVM type
-        this->varPassType = StructType::create(context, items, "function_private_vars");
+        this->varPrivateType = StructType::create(context, items, "function_private_vars");
+
+        this->varPassType = StructType::create(context,
+                                               {builder.getInt64Ty(), PointerType::get(this->varPrivateType, 0)},
+                                               "function_pass_type");
 
         auto type = FunctionType::get(
                 cxt->getBuilder()->getVoidTy(),
@@ -132,7 +136,13 @@ namespace flare::ast {
 
         Function::arg_iterator actualArgs = threadedLoopBody->arg_begin();
         auto structLoc = &(*actualArgs);
-        auto structPtr = builder.CreateBitCast(structLoc, PointerType::get(this->varPassType, 0), "private_var_struct");
+
+        auto structPtrf = builder.CreateBitCast(structLoc, PointerType::get(this->varPassType, 0), "pass_var_struct");
+
+        auto mStruct = builder.CreateStructGEP(structPtrf, 1);
+
+        auto structPtr = builder.CreateBitCast(builder.CreateLoad(mStruct), PointerType::get(this->varPrivateType, 0),
+                                               "private_var_struct");
 
         auto itr = 0;
         for (auto *ele: pVars) {
@@ -157,7 +167,7 @@ namespace flare::ast {
     llvm::Value *LoopNode::codeGenCallThreadedLoopBody(Context *cxt) {
 
         auto pVarsStruct = new AllocaInst(
-                this->varPassType,
+                this->varPrivateType,
                 0,
                 "passVar",
                 cxt->getBuilder()->GetInsertBlock()
