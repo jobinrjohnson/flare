@@ -187,7 +187,7 @@ namespace flare::ast {
 
         auto pvarsBcasted = builder.CreateBitCast(pVarsStruct, PointerType::get(builder.getVoidTy(), 0));
 
-        createCall(cxt, "createThread", cxt->getBuilder()->getVoidTy(), {
+        createCall(cxt, "createTask", cxt->getBuilder()->getVoidTy(), {
                 threadedLoopBody->getType(),
                 PointerType::get(builder.getVoidTy(), 0)
         }, {threadedLoopBody, pvarsBcasted}, false);

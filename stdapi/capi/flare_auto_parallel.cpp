@@ -16,7 +16,7 @@ struct temp {
     void *pVars;
 };
 
-void createThread(void *(*f)(void *), void *pVars) {
+void createTask(void *(*f)(void *), void *pVars) {
     printf("\n---------------\n");
 
     auto *x = new temp;
