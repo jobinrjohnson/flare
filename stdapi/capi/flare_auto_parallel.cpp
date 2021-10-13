@@ -29,8 +29,13 @@ void createTask(void *(*f)(void *), void *pVars) {
     pthread_join(tid, NULL);
 }
 
-void runThread() {
-
+void runThread(void *(*f)(void *), void *pVars) {
+    auto *x = (temp *) pVars;
+    if (x->a == 0) {
+        pthread_t tid;
+        pthread_create(&tid, NULL, f, (void *) (x));
+        pthread_join(tid, NULL);
+    }
 }
 
 }

@@ -115,7 +115,6 @@ namespace flare::ast {
                 this->_isParallizable = false;
                 return;
             } else {
-
                 this->privatizeList.insert(privatizeList.end(), an->privatizeList.begin(),
                                            an->privatizeList.end());
             }
