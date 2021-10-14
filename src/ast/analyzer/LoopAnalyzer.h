@@ -37,14 +37,7 @@ namespace flare::ast {
             this->node = smtL;
         }
 
-        bool isParallizable() {
-            if (!this->analysisComplete) {
-                this->analyze();
-                this->analysisComplete = true;
-            }
-//            return false;
-            return this->_isParallizable;
-        }
+        bool isParallizable();
 
         std::vector<Node *> getPrivatizationVars() {
             if (!this->analysisComplete) {

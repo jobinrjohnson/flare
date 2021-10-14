@@ -11,6 +11,8 @@
 #include <ast/FunctionNode.h>
 #include <ast/FunctionCallNode.h>
 
+#define ENABLE_AUTO_PARALLIZATION true
+
 namespace flare::ast {
 
     Context *globalContext;
@@ -142,6 +144,20 @@ namespace flare::ast {
 
         }
 
+    }
+
+    bool LoopAnalyzer::isParallizable() {
+
+        if (!ENABLE_AUTO_PARALLIZATION) {
+            return false;
+        }
+
+        if (!this->analysisComplete) {
+            this->analyze();
+            this->analysisComplete = true;
+        }
+//            return false;
+        return this->_isParallizable;
     }
 
 }
