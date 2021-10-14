@@ -67,6 +67,10 @@ namespace flare::ast {
             this->before->codeGen(cxt->nextLevel());
         }
         this->statementList->codeGen(cxt->nextLevel());
+        if (!analyzer->isParallizable()) {
+            createCall(cxt, "initSpdl", cxt->getBuilder()->getVoidTy(), {
+            }, {}, false);
+        }
         if (this->after != nullptr) {
             this->after->codeGen(cxt->nextLevel());
         }
@@ -74,11 +78,11 @@ namespace flare::ast {
             builder.CreateBr(conditionBlock);
         }
 
-//        for (auto i: analyzer->getPrivatizationVars()) {
-//            auto x = dynamic_cast<VariableDerefNode *>(i);
-//            std::cout << x->variableName << "==\n\n";
-//            std::cout.flush();
-//        }
+        for (auto i: analyzer->getPrivatizationVars()) {
+            auto x = dynamic_cast<VariableDerefNode *>(i);
+            std::cout << "Copied : " << x->variableName << "\n";
+            std::cout.flush();
+        }
 
         if (analyzer->isParallizable()) {
             this->codeGenThreadedLoopBody(cxt);

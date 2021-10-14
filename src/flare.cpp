@@ -33,13 +33,13 @@ namespace flare {
         jit.initialize();
 
 
-        clock_t start = clock();
+//        clock_t start = clock();
 
         jit.execute();
 
-        clock_t stop = clock();
-        double elapsed = (double) (stop - start) / CLOCKS_PER_SEC;
-        printf("\nTime elapsed: %.5f\n", elapsed);
+//        clock_t stop = clock();
+//        double elapsed = (double) (stop - start) / CLOCKS_PER_SEC;
+//        printf("\nTime elapsed: %.5f\n", elapsed);
 
         this->exitCode = jit.getExitCode();
 

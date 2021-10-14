@@ -3,6 +3,7 @@
 //
 #include <cstdio>
 #include <cstring>
+#include <unistd.h>
 
 using namespace std;
 
@@ -16,6 +17,10 @@ void print(char *string) {
 void printI(int value) {
     printf("%d\n", value);
     fflush(stdout);
+}
+
+void initSpdl() {
+    usleep(200);
 }
 
 long int read_int() {

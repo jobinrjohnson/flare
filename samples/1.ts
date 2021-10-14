@@ -19,7 +19,7 @@ function main(): int {
 
     for (let i = 0; i < 7; i = i + 1) {
         printI(a[x]);
-        // x = x+1;
+        x = x + 1;
     }
 
     return 0;
