@@ -9,6 +9,9 @@
 #include "ast/Node.h"
 #include "jit/FlareJit.h"
 
+#include <time.h>
+#include <stdlib.h>
+
 namespace flare {
 
     void Flare::setInputStream(std::istream &stream, std::string streamIdentifier) {
@@ -28,7 +31,15 @@ namespace flare {
         // Execute JIT
         jit::FlareJit jit(module);
         jit.initialize();
+
+
+        clock_t start = clock();
+
         jit.execute();
+
+        clock_t stop = clock();
+        double elapsed = (double) (stop - start) / CLOCKS_PER_SEC;
+        printf("\nTime elapsed: %.5f\n", elapsed);
 
         this->exitCode = jit.getExitCode();
 
