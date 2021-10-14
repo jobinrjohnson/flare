@@ -22,6 +22,7 @@ namespace flare::ast {
 
         LoopAnalyzer *analyzer;
 
+        BasicBlock *mergeBlock2;
 
         Node *preLoop;
         Node *postLoop;

@@ -74,11 +74,11 @@ namespace flare::ast {
             builder.CreateBr(conditionBlock);
         }
 
-        for (auto i: analyzer->getPrivatizationVars()) {
-            auto x = dynamic_cast<VariableDerefNode *>(i);
-            std::cout << x->variableName << "==\n\n";
-            std::cout.flush();
-        }
+//        for (auto i: analyzer->getPrivatizationVars()) {
+//            auto x = dynamic_cast<VariableDerefNode *>(i);
+//            std::cout << x->variableName << "==\n\n";
+//            std::cout.flush();
+//        }
 
         if (analyzer->isParallizable()) {
             this->codeGenThreadedLoopBody(cxt);
@@ -194,10 +194,41 @@ namespace flare::ast {
 
         auto pvarsBcasted = builder.CreateBitCast(pVarsStruct, PointerType::get(builder.getVoidTy(), 0));
 
+
+        Function *insertFunction = builder.GetInsertBlock()->getParent();
+
+        mergeBlock2 = BasicBlock::Create(context, "parallelLoopMerge", insertFunction);
+
+        BasicBlock *conditionBlock = BasicBlock::Create(context, "parallelLoopCondition", insertFunction);
+        BasicBlock *bodyBlock = BasicBlock::Create(context, "parallelLoopBody", insertFunction);
+
+
+        builder.CreateBr(conditionBlock);
+
+        builder.SetInsertPoint(conditionBlock);
+        builder.CreateCondBr(
+                this->condition->codeGen(cxt->nextLevel()),
+                bodyBlock,
+                mergeBlock2
+        );
+
+        builder.SetInsertPoint(bodyBlock);
+        if (this->before != nullptr) {
+            this->before->codeGen(cxt->nextLevel());
+        }
         createCall(cxt, "createTask", cxt->getBuilder()->getVoidTy(), {
                 threadedLoopBody->getType(),
                 PointerType::get(builder.getVoidTy(), 0)
         }, {threadedLoopBody, pvarsBcasted}, false);
+        if (this->after != nullptr) {
+            this->after->codeGen(cxt->nextLevel());
+        }
+        if (builder.GetInsertBlock()->getTerminator() == nullptr) {
+            builder.CreateBr(conditionBlock);
+        }
+
+        builder.SetInsertPoint(mergeBlock2);
+
 
         return nullptr;
     }
