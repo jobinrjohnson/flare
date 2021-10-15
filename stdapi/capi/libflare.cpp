@@ -20,7 +20,7 @@ void printI(int value) {
 }
 
 void initSpdl() {
-    usleep(200);
+    usleep(0);
 }
 
 long int read_int() {

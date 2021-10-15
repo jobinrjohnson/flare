@@ -24,6 +24,8 @@ namespace flare::ast {
 
         BasicBlock *mergeBlock2;
 
+        BasicBlock *conditionBlock2;
+
         Node *preLoop;
         Node *postLoop;
 

@@ -15,7 +15,7 @@ namespace flare::ast {
         return VAR_DEREF_NODE;
     }
 
-    VariableDerefNode::VariableDerefNode(char *mLiteralValue) {
+    VariableDerefNode::VariableDerefNode(const char *mLiteralValue) {
         this->variableName = mLiteralValue;
     }
 

@@ -20,7 +20,7 @@ namespace flare::ast {
 
         NodeType getNodeType();
 
-        VariableDerefNode(char *mLiteralValue);
+        VariableDerefNode(const char *mLiteralValue);
 
         VariableDerefNode(const char *mLiteralValue, const char *base);
 

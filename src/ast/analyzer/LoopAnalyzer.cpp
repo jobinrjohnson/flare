@@ -68,10 +68,13 @@ namespace flare::ast {
         } else if (this->node->getNodeType() == NodeType::FUNCTION_CALL_NODE) {
             this->analyzeFunCallNode();
             return;
+        } else if (this->node->getNodeType() == NodeType::VAR_DECL_NODE) {
+            this->analyzeVarDeclNode();
+            return;
         }
 
         if (analysis == nullptr) {
-            std::cerr << "Analysis Skipped\n";
+            std::cerr << "Analysis Skipped for : " << node->getNodeType() << "\n";
             return;
         }
 
@@ -103,6 +106,19 @@ namespace flare::ast {
         } else if (mNode->opr == VAR_DE_REF || mNode->opr == FUNCTION_CALL) {
             this->node = mNode->operands[0];
             this->analyze();
+        } else {
+            for (auto x: mNode->operands) {
+                auto nanalysis = new LoopAnalyzer(x);
+                if (!nanalysis->isParallizable()) {
+                    this->privatizeList.clear();
+                    this->_isParallizable = false;
+                    break;
+                } else {
+                    this->privatizeList.insert(privatizeList.end(), nanalysis->privatizeList.begin(),
+                                               nanalysis->privatizeList.end());
+                }
+            }
+
         }
     }
 
@@ -144,6 +160,14 @@ namespace flare::ast {
 
         }
 
+    }
+
+    void LoopAnalyzer::analyzeVarDeclNode() {
+        auto mNode = dynamic_cast<VarDeclNode *>(this->node);
+        if (mNode->hasInitializer()) {
+            this->node = mNode->getInitializer();
+            this->analyze();
+        }
     }
 
     bool LoopAnalyzer::isParallizable() {

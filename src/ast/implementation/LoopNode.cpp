@@ -54,13 +54,17 @@ namespace flare::ast {
 
         // TODO improve this implementation
         builder.CreateBr(conditionBlock);
+        conditionBlock2 = BasicBlock::Create(context, "parallelLoopCondition", insertFunction);
 
         builder.SetInsertPoint(conditionBlock);
-        builder.CreateCondBr(
-                this->condition->codeGen(cxt->nextLevel()),
-                bodyBlock,
-                mergeBlock
-        );
+        builder.CreateBr(mergeBlock);
+
+
+//        builder.CreateCondBr(
+//                this->condition->codeGen(cxt->nextLevel()),
+//                bodyBlock,
+//                mergeBlock
+//        );
 
         builder.SetInsertPoint(bodyBlock);
         if (this->before != nullptr) {
@@ -77,6 +81,9 @@ namespace flare::ast {
         if (builder.GetInsertBlock()->getTerminator() == nullptr) {
             builder.CreateBr(conditionBlock);
         }
+
+//        std::string vName = "i";
+//        analyzer->privatizeList.push_back(new VariableDerefNode(vName.c_str()));
 
         for (auto i: analyzer->getPrivatizationVars()) {
             auto x = dynamic_cast<VariableDerefNode *>(i);
@@ -131,7 +138,7 @@ namespace flare::ast {
         threadedLoopBody = Function::Create(
                 type,
                 GlobalValue::ExternalLinkage,
-                "ts", module.get()
+                "threadedLoop", module.get()
         );
         threadedLoopBody->setDSOLocal(true);
         isCodegenThreadedLoopBody = true;
@@ -149,8 +156,16 @@ namespace flare::ast {
                                                "private_var_struct");
 
         auto itr = 0;
+        std::map<std::string, bool> varList;
         for (auto *ele: pVars) {
             auto x = dynamic_cast<VariableDerefNode *>(ele);
+
+            auto itr2 = varList.find(x->variableName);
+            if (itr2 != varList.end()) {
+                continue;
+            }
+            varList.insert(std::pair<std::string, bool>(x->variableName, true));
+
             auto var = builder.CreateStructGEP((structPtr), itr++);
             auto varPtrLoaded = builder.CreateLoad(var);
             auto varLoaded = builder.CreateLoad(varPtrLoaded);
@@ -184,32 +199,16 @@ namespace flare::ast {
                 cxt->getBuilder()->GetInsertBlock()
         );
 
-        std::vector<llvm::Type *> items;
-        auto pVars = this->analyzer->getPrivatizationVars();
-        auto i = 0;
-        for (auto *ele: pVars) {
-            auto x = dynamic_cast<VariableDerefNode *>(ele);
-            VarDeclNode *vNode = globalContext->findVariable(x->variableName);
-            auto varVal = (vNode->getLLVMVarRef());
-            auto varRef = builder.CreateStructGEP(pVarsStruct, i);
-            builder.CreateStore(varVal, varRef);
-            i += 1;
-        }
-
-        auto pvarsBcasted = builder.CreateBitCast(pVarsStruct, PointerType::get(builder.getVoidTy(), 0));
-
-
         Function *insertFunction = builder.GetInsertBlock()->getParent();
 
         mergeBlock2 = BasicBlock::Create(context, "parallelLoopMerge", insertFunction);
 
-        BasicBlock *conditionBlock = BasicBlock::Create(context, "parallelLoopCondition", insertFunction);
         BasicBlock *bodyBlock = BasicBlock::Create(context, "parallelLoopBody", insertFunction);
 
 
-        builder.CreateBr(conditionBlock);
+        builder.CreateBr(conditionBlock2);
 
-        builder.SetInsertPoint(conditionBlock);
+        builder.SetInsertPoint(conditionBlock2);
         builder.CreateCondBr(
                 this->condition->codeGen(cxt->nextLevel()),
                 bodyBlock,
@@ -220,6 +219,31 @@ namespace flare::ast {
         if (this->before != nullptr) {
             this->before->codeGen(cxt->nextLevel());
         }
+
+
+        std::vector<llvm::Type *> items;
+        auto pVars = this->analyzer->getPrivatizationVars();
+        auto i = 0;
+        std::map<std::string, bool> varList;
+        for (auto *ele: pVars) {
+            auto x = dynamic_cast<VariableDerefNode *>(ele);
+
+            auto itr = varList.find(x->variableName);
+            if (itr != varList.end()) {
+                continue;
+            }
+            varList.insert(std::pair<std::string, bool>(x->variableName, true));
+
+            VarDeclNode *vNode = globalContext->findVariable(x->variableName);
+            auto varVal = (vNode->getLLVMVarRef());
+            auto varRef = builder.CreateStructGEP(pVarsStruct, i);
+            builder.CreateStore(varVal, varRef);
+            i += 1;
+        }
+
+        auto pvarsBcasted = builder.CreateBitCast(pVarsStruct, PointerType::get(builder.getVoidTy(), 0));
+
+
         createCall(cxt, "createTask", cxt->getBuilder()->getVoidTy(), {
                 threadedLoopBody->getType(),
                 PointerType::get(builder.getVoidTy(), 0)
@@ -228,7 +252,7 @@ namespace flare::ast {
             this->after->codeGen(cxt->nextLevel());
         }
         if (builder.GetInsertBlock()->getTerminator() == nullptr) {
-            builder.CreateBr(conditionBlock);
+            builder.CreateBr(conditionBlock2);
         }
 
         builder.SetInsertPoint(mergeBlock2);
