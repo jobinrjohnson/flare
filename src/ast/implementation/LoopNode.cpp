@@ -85,9 +85,8 @@ namespace flare::ast {
 //        std::string vName = "i";
 //        analyzer->privatizeList.push_back(new VariableDerefNode(vName.c_str()));
 
-        for (auto i: analyzer->getPrivatizationVars()) {
-            auto x = dynamic_cast<VariableDerefNode *>(i);
-            std::cout << "Copied : " << x->variableName << "\n";
+        for (auto variableName: analyzer->getPrivatizationVars()) {
+            std::cout << "Copied : " << variableName << "\n";
             std::cout.flush();
         }
 
@@ -116,9 +115,8 @@ namespace flare::ast {
         auto pVars = this->analyzer->getPrivatizationVars();
 
         std::vector<llvm::Type *> items;
-        for (auto *ele: pVars) {
-            auto x = dynamic_cast<VariableDerefNode *>(ele);
-            VarDeclNode *vNode = globalContext->findVariable(x->variableName);
+        for (auto variableName: pVars) {
+            VarDeclNode *vNode = globalContext->findVariable(variableName);
             items.push_back(vNode->getLLVMVarRef()->getType());
         }
 
@@ -157,21 +155,19 @@ namespace flare::ast {
 
         auto itr = 0;
         std::map<std::string, bool> varList;
-        for (auto *ele: pVars) {
-            auto x = dynamic_cast<VariableDerefNode *>(ele);
-
-            auto itr2 = varList.find(x->variableName);
+        for (auto variableName: pVars) {
+            auto itr2 = varList.find(variableName);
             if (itr2 != varList.end()) {
                 continue;
             }
-            varList.insert(std::pair<std::string, bool>(x->variableName, true));
+            varList.insert(std::pair<std::string, bool>(variableName, true));
 
             auto var = builder.CreateStructGEP((structPtr), itr++);
             auto varPtrLoaded = builder.CreateLoad(var);
             auto varLoaded = builder.CreateLoad(varPtrLoaded);
 
             auto ftype = cxt->getFlareType(varLoaded);
-            auto declared = new VarDeclNode(x->variableName.c_str(), ftype);
+            auto declared = new VarDeclNode(variableName.c_str(), ftype);
             if (ftype->getTypePrecedence() == VariableType::VARTYPE_ARRAY) {
                 auto init = new EmptyNode(&(*varPtrLoaded));
                 declared->setInitialValue(init);
@@ -225,16 +221,14 @@ namespace flare::ast {
         auto pVars = this->analyzer->getPrivatizationVars();
         auto i = 0;
         std::map<std::string, bool> varList;
-        for (auto *ele: pVars) {
-            auto x = dynamic_cast<VariableDerefNode *>(ele);
-
-            auto itr = varList.find(x->variableName);
+        for (auto variableName: pVars) {
+            auto itr = varList.find(variableName);
             if (itr != varList.end()) {
                 continue;
             }
-            varList.insert(std::pair<std::string, bool>(x->variableName, true));
+            varList.insert(std::pair<std::string, bool>(variableName, true));
 
-            VarDeclNode *vNode = globalContext->findVariable(x->variableName);
+            VarDeclNode *vNode = globalContext->findVariable(variableName);
             auto varVal = (vNode->getLLVMVarRef());
             auto varRef = builder.CreateStructGEP(pVarsStruct, i);
             builder.CreateStore(varVal, varRef);

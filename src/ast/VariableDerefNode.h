@@ -24,7 +24,7 @@ namespace flare::ast {
 
         VariableDerefNode(const char *mLiteralValue, const char *base);
 
-        VariableDerefNode(char *mLiteralValue, Node *index);
+        VariableDerefNode(const char *mLiteralValue, Node *index);
 
         llvm::Value *codeGen(Context *cxt);
 

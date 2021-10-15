@@ -10,6 +10,7 @@
 #include <ast/VariableDerefNode.h>
 #include <ast/FunctionNode.h>
 #include <ast/FunctionCallNode.h>
+#include <ast/EmptyNode.h>
 
 #define ENABLE_AUTO_PARALLIZATION true
 
@@ -88,6 +89,8 @@ namespace flare::ast {
         this->_isParallizable = false;
         auto mNode = dynamic_cast<AssignmentNode *>(this->node);
         if (mNode->index != nullptr) {
+//            this->_isParallizable = true;
+//            this->privatizeList.push_back(mNode->base.c_str());
             // array assignment
         } else {
             if (isVarInside(dynamic_cast<StatementListNode *>(mLoopNode->statementList), mNode->varName)) {
@@ -140,7 +143,7 @@ namespace flare::ast {
         }
 
         if (!isVarInside(dynamic_cast<StatementListNode *>(mLoopNode->statementList), mNode->variableName)) {
-            this->privatizeList.push_back(mNode);
+            this->privatizeList.push_back(mNode->variableName);
         }
 
     }

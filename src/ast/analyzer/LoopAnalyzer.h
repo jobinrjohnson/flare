@@ -31,7 +31,7 @@ namespace flare::ast {
 
         Node *node;
 
-        std::vector<Node *> privatizeList;
+        std::vector<std::string> privatizeList;
 
         bool analysisComplete = false;
 
@@ -43,7 +43,7 @@ namespace flare::ast {
 
         bool isParallizable();
 
-        std::vector<Node *> getPrivatizationVars() {
+        std::vector<std::string> getPrivatizationVars() {
             if (!this->analysisComplete) {
                 this->analyze();
                 this->analysisComplete = true;

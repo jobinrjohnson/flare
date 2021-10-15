@@ -10,6 +10,12 @@ function main(): int {
 
     for (let i = 0; i < 5; i = i + 1) {
         let x = y + i;
+        // a[i] = 100
+        printI(i)
+        printI(i)
+        printI(i)
+        printI(i)
+        printI(i)
         printI(i)
     }
 

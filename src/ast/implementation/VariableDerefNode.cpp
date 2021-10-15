@@ -19,7 +19,7 @@ namespace flare::ast {
         this->variableName = mLiteralValue;
     }
 
-    VariableDerefNode::VariableDerefNode(char *mLiteralValue, Node *index) {
+    VariableDerefNode::VariableDerefNode(const char *mLiteralValue, Node *index) {
         this->variableName = mLiteralValue;
         this->arrayIndex = index;
         this->isArrayDeReference = true;
