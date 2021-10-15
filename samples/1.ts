@@ -10,9 +10,9 @@ function main(): int {
 
     for (let i = 0; i < 5; i = i + 1) {
         let x = y + i;
-        // a[i] = 100
-        printI(i)
-        printI(i)
+        a[i] = i * i;
+        printI(a[i])
+        printI(x)
         printI(i)
         printI(i)
         printI(i)

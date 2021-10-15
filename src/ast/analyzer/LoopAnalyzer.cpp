@@ -89,8 +89,8 @@ namespace flare::ast {
         this->_isParallizable = false;
         auto mNode = dynamic_cast<AssignmentNode *>(this->node);
         if (mNode->index != nullptr) {
-//            this->_isParallizable = true;
-//            this->privatizeList.push_back(mNode->base.c_str());
+            this->_isParallizable = true;
+            this->privatizeList.push_back(mNode->varName);
             // array assignment
         } else {
             if (isVarInside(dynamic_cast<StatementListNode *>(mLoopNode->statementList), mNode->varName)) {
