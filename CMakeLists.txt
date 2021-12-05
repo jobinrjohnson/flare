@@ -18,13 +18,13 @@ message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 message(STATUS "Using C_FLAGS: ${CMAKE_CXX_FLAGS}")
 
-find_package(jsoncpp REQUIRED)
-include_directories(${jsoncpp_INCLUDE_DIRS})
+#find_package(jsoncpp REQUIRED)
+#include_directories(${jsoncpp_INCLUDE_DIRS})
 #link_libraries(${jsoncpp_LIBRARIES})
 
 
 add_subdirectory(src/)
 add_subdirectory(stdapi/capi)
 
-enable_testing()
-add_subdirectory(test/)
+#enable_testing()
+#add_subdirectory(test/)

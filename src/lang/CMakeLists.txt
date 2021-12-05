@@ -18,4 +18,4 @@ add_library(lang
         ${FLEX_Scanner_OUTPUTS}
         ${BISON_Parser_OUTPUTS}
         scanner.h
-        driver.cpp driver.h scanner-helper.h)
+        driver.cpp driver.h scanner-helper.h FlexLexer.h)
