@@ -28,11 +28,17 @@ namespace lang {
 
         void setDebug(bool b);
 
+
+#ifdef TARGET_DARWIN
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Woverloaded-virtual"
         virtual int yylex(Parser::semantic_type *yylval,
                           Parser::location_type *l, Driver &driver);
 #pragma clang diagnostic pop
+#else
+        virtual int yylex(Parser::semantic_type *yylval,
+                          Parser::location_type *l, Driver &driver);
+#endif
 
     };
 } // namespace lang

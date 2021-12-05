@@ -35,7 +35,12 @@ namespace flare::jit {
                 .setTargetOptions(opts)
                 .create();
 
+#ifdef TARGET_DARWIN
+        sys::DynamicLibrary::LoadLibraryPermanently("../../cmake-build-debug/stdapi/capi/libcapi.dylib");
+#else
         sys::DynamicLibrary::LoadLibraryPermanently("../../cmake-build-debug/stdapi/capi/libcapi.so");
+#endif
+
 
     }
 
