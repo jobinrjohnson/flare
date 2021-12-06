@@ -42,7 +42,7 @@ jobs:
 
       - name: Prepare container
         run: |
-          sudo apt install flex bison libfl-dev build-essential
+          sudo apt install flex bison libfl-dev build-essential llvm-12
 
       - name: Build
         run: |
