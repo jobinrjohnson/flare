@@ -95,7 +95,7 @@
 %type <statementList> compound_statement statements
 %type <varDecl> variable_declaration array_declaration class_variable
 %type <assignmentNode> assignment_expr
-%type <ifStatementNode> if_else_if if_statement
+%type <ifStatementNode> if_statement if
 %type <logSmtNode> log_statement
 %type <statementNode> return_statement throw_smt
 %type <functionNode> function_declaration function_definition class_function class_function_declaration
@@ -152,7 +152,7 @@ statements:
 statement:
     expr                                { $$->setLineNumber(driver.cursor->end.line); }
     | variable_declaration              { $$->setLineNumber(driver.cursor->end.line); }
-    | if_else_if                        { $$->setLineNumber(driver.cursor->end.line); }
+    | if                                { $$->setLineNumber(driver.cursor->end.line); }
     | log_statement                     { $$->setLineNumber(driver.cursor->end.line); }
     | return_statement                  { $$->setLineNumber(driver.cursor->end.line); }
     | statement ';'                     { $$ = $1; }
@@ -277,10 +277,9 @@ if_statement:
     KW_IF '(' expr ')' statement                           {
         $$ = new IfStatementNode($3, $5);
     }
-    | if_statement KW_ELSE if_statement                                  { $1->addBranch($3); $$ = $1; }
 ;
 
-if_else_if:
+if:
     if_statement                                            {}
     | if_statement KW_ELSE statement                         {
         $1->addElseBranch($3);
