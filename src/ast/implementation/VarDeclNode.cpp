@@ -25,6 +25,12 @@ namespace flare::ast {
         this->flareType = ft;
         cxt->registerType("array_1", this->flareType); // TODO naming
 
+
+//        if(this->initialValue != nullptr){
+//
+//        }
+
+
         LValue lv;
         this->llvmVarRef = this->flareType->createInstance(lv);
 

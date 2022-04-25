@@ -93,7 +93,7 @@
 %type <expression> expr arithmetic_expr relative_expr logical_expr
 %type <literal> scalar
 %type <statementList> compound_statement statements
-%type <varDecl> variable_declaration array_declaration class_variable
+%type <varDecl> variable_declaration array_declaration class_variable array_definition
 %type <assignmentNode> assignment_expr
 %type <ifStatementNode> if_statement if
 %type <logSmtNode> log_statement
@@ -106,7 +106,7 @@
 %type <arguments> arguments
 %type <varType> var_type
 %type <classDeclNode> class_decl
-%type <nodeList> class_contents
+%type <nodeList> class_contents expr_list
 %type <variableDerefNode> var_deref
 %type <exceptionHandleNode> try_catch try_catch_finally
 
@@ -308,8 +308,30 @@ var_type:
     | IDENTIFIER        { $$ = new VarType; $$->type = OTHER; $$->name = $1; }
 ;
 
+expr_list:
+    expr                                    {
+        $$ = new std::vector<Node *>();
+        $$->push_back($1);
+    }
+    | expr_list ',' expr         {
+        $1->push_back($3);
+    }
+;
+
+array_definition:
+    '[' expr_list ']'                  {}
+    | '[' ']'                  {}
+;
+
 array_declaration:
     KW_LET IDENTIFIER ':' var_type '[' ']'           {
+            VarType *vType = new VarType{
+                .type = VARTYPE_ARRAY,
+                .subType = $4
+            };
+            $$ = new VarDeclNode($2, vType);
+    }
+    | KW_LET IDENTIFIER ':' var_type '[' ']'  '=' array_definition  {
             VarType *vType = new VarType{
                 .type = VARTYPE_ARRAY,
                 .subType = $4

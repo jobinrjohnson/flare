@@ -13,6 +13,7 @@ namespace flare::ast {
     }
 
     llvm::Value *ClassDeclNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "ClassDeclNode", __FUNCTION__);
 
         // Codegen for class variables
         std::vector<llvm::Type *> items;

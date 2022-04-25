@@ -10,6 +10,7 @@ namespace flare::ast {
     }
 
     llvm::Value *EmptyNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "EmptyNode", __FUNCTION__);
         return this->llvmValue;
     }
 }

@@ -32,6 +32,7 @@ namespace flare::ast {
     }
 
     llvm::Value *FunctionCallNode::codeGen(flare::ast::Context *cxt) {
+        this->printCallStack(cxt, "FunctionCallNode", __FUNCTION__);
 
         if (this->isObjectCreation()) {
             return this->codeGenObjectCreate(cxt);

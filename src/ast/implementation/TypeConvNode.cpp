@@ -15,6 +15,7 @@ namespace flare::ast {
     }
 
     llvm::Value *TypeConvNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "TypeConvNode", __FUNCTION__);
         return nullptr;
     }
 

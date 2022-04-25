@@ -13,6 +13,7 @@ namespace flare::ast {
 
 
     llvm::Value *ExceptionHandleNode::codeGen(Context *cxt) {
+        this->printCallStack(cxt, "ExceptionHandleNode", __FUNCTION__);
 
         // Add personality block
         cxt->getCurrentFunction()->setPersonalityFunction(cxt->getPersonalityFunction());
