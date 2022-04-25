@@ -16,33 +16,33 @@
 namespace flare::ast {
 
     void Context::pushFunction(FunctionNode *function) {
-        functions.push(function);
+        functions->push(function);
     }
 
     void Context::popFunction() {
-        functions.pop();
+        functions->pop();
     }
 
     FunctionNode *Context::getCurrentFunction() {
-        if (this->functions.empty()) {
+        if (this->functions->empty()) {
             return nullptr;
         }
-        return functions.top();
+        return functions->top();
     }
 
     void Context::pushStatementList(ast::Node *node) {
-        this->statementList.push_back(node);
+        this->statementList->push_back(node);
     }
 
     void Context::popStatementList() {
-        this->statementList.pop_back();
+        this->statementList->pop_back();
     }
 
     Node *Context::getCurrentStatementList() {
-        if (this->statementList.empty()) {
+        if (this->statementList->empty()) {
             return nullptr;
         }
-        return statementList.back();
+        return statementList->back();
     }
 
     llvm::Value *Context::findLocal() {
@@ -51,8 +51,8 @@ namespace flare::ast {
 
     VarDeclNode *Context::findVariable(std::string name) {
         VarDeclNode *variable = nullptr;
-        std::vector<Node *>::iterator i = this->statementList.end();
-        while (i != this->statementList.begin()) {
+        std::vector<Node *>::iterator i = this->statementList->end();
+        while (i != this->statementList->begin()) {
             StatementListNode *node = dynamic_cast<StatementListNode *>(*(--i));
             variable = node->findLocal(name);
             if (variable != nullptr) {
@@ -63,8 +63,8 @@ namespace flare::ast {
     }
 
     BaseType *Context::findType(std::string name) {
-        auto val = this->types.find(name);
-        if (val != this->types.end()) {
+        auto val = this->types->find(name);
+        if (val != this->types->end()) {
             return val->second;
         }
         return nullptr;
@@ -76,7 +76,7 @@ namespace flare::ast {
             throw "already in";
         }
 
-        this->types.insert(std::pair<std::string, BaseType *>(name, type));
+        this->types->insert(std::pair<std::string, BaseType *>(name, type));
         return true;
     }
 
@@ -123,7 +123,7 @@ namespace flare::ast {
             valType = valType->getPointerElementType();
         }
 
-        for (auto const &x : this->types) {
+        for (auto const &x: *this->types) {
             auto fType = x.second->getLLVMType();
             // TODO fix this
             if (fType == valType || value->getType() == fType) {
@@ -166,6 +166,12 @@ namespace flare::ast {
             this->personalityFunction->setDSOLocal(true);
         }
         return this->personalityFunction;
+    }
+
+    Context::Context() {
+        this->functions = new std::stack<FunctionNode *>;
+        this->types = new std::map<std::string, BaseType *>;
+        statementList = new std::vector<Node *>;
     }
 
 

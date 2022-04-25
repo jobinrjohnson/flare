@@ -39,7 +39,7 @@ namespace flare::ast {
 
 
         auto *variable = dynamic_cast<VarDeclNode *>(vNode);
-        Value *value = this->expression->codeGen(cxt->nextLevel());
+        Value *value = this->expression->codeGen(cxt->next());
 
         if (!cxt->getFlareType(value)->isInbuiltTy()) {
 
@@ -72,8 +72,8 @@ namespace flare::ast {
 
         auto *at = variable->getFlareType();
 
-        Value *value = this->expression->codeGen(cxt->nextLevel());
-        auto indexVal = this->index->codeGen(cxt->nextLevel());
+        Value *value = this->expression->codeGen(cxt->next());
+        auto indexVal = this->index->codeGen(cxt->next());
 
         at->apply(OperatorType::ASSIGNMENT, {variable->getLLVMVarRef(), indexVal, value});
 
@@ -101,7 +101,7 @@ namespace flare::ast {
             throw new exceptions::SemanticException("Invalid variable name", this->lineNumber);
         }
 
-        Value *value = this->expression->codeGen(cxt->nextLevel());
+        Value *value = this->expression->codeGen(cxt->next());
 
         ClassObjectType *coType;
         if ((coType = dynamic_cast<ClassObjectType *>(vNode->getFlareType())) != nullptr) {

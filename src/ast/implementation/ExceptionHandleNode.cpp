@@ -34,7 +34,7 @@ namespace flare::ast {
 
         // try block
         cxt->getCurrentFunction()->pushExceptionHandler(this);
-        this->tryBlock->codeGen(cxt);
+        this->tryBlock->codeGen(cxt->next());
         cxt->getCurrentFunction()->popExceptionHandler();
 
         // Ending last normal block
@@ -61,11 +61,11 @@ namespace flare::ast {
         caughtResult->addClause(static_cast<Constant *>(ptr));
 
         // TODO properly
-        this->catchBlocks.begin()->second->codeGen(cxt);
+        this->catchBlocks.begin()->second->codeGen(cxt->next());
 
         // TODO properly
         if (this->finallyNode != nullptr && exceptionBlock->getTerminator() == nullptr)
-            this->finallyNode->codeGen(cxt);
+            this->finallyNode->codeGen(cxt->next());
 
         if (exceptionBlock->getTerminator() == nullptr) {
             builder.CreateBr(afterExceptionBlock);

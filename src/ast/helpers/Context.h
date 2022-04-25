@@ -31,21 +31,30 @@ namespace flare::ast {
 
     class Context {
 
-        std::stack<FunctionNode *> functions;
+        std::stack<FunctionNode *> *functions;
 
-        std::map<std::string, BaseType *> types;
+        std::map<std::string, BaseType *> *types;
 
         Function *personalityFunction;
 
     public:
 
+        Context();
+
         int depth = 0;
 
-        std::vector<Node *> statementList;
+        std::vector<Node *> *statementList;
 
-        Context *nextLevel() {
-            depth++;
-            return this;
+        Context *next() {
+
+            auto *cxt = new Context();
+            cxt->depth = this->depth + 1;
+            cxt->functions = this->functions;
+            cxt->types = this->types;
+            cxt->personalityFunction = this->personalityFunction;
+            cxt->statementList = this->statementList;
+
+            return cxt;
         }
 
         void pushStatementList(Node *);

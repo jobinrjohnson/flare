@@ -43,14 +43,14 @@ namespace flare::ast {
             llvm::BasicBlock *thenBlock = llvm::BasicBlock::Create(context, "IFthen");
 
             builder.CreateCondBr(
-                    this->condition[i]->codeGen(cxt->nextLevel()),
+                    this->condition[i]->codeGen(cxt->next()),
                     thenBlock,
                     elseIfBlock
             );
 
             function->getBasicBlockList().push_back(thenBlock);
             builder.SetInsertPoint(thenBlock);
-            this->statementList[i]->codeGen(cxt->nextLevel());
+            this->statementList[i]->codeGen(cxt->next());
             if (builder.GetInsertBlock()->getTerminator() == nullptr) {
                 builder.CreateBr(mergeBlock);
             }

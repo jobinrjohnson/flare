@@ -85,7 +85,7 @@ namespace flare::ast {
         }
 
         // Original Function body.
-        this->statementListNode->codeGen(cxt);
+        this->statementListNode->codeGen(cxt->next());
 
         // The function exit part
         this->codeGenExit(cxt);

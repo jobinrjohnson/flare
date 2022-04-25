@@ -26,8 +26,8 @@ namespace flare::ast {
     Value *ExprNode::codeGenBinaryExpr(Context *cxt) {
 
         std::vector<Value *> ops = {
-                this->operands[0]->codeGen(cxt->nextLevel()), // LHS
-                this->operands[1]->codeGen(cxt->nextLevel()) // RHS
+                this->operands[0]->codeGen(cxt->next()), // LHS
+                this->operands[1]->codeGen(cxt->next()) // RHS
         };
 
         auto fType1 = cxt->getFlareType(ops.at(0));
@@ -44,7 +44,7 @@ namespace flare::ast {
     Value *ExprNode::codeGenUnaryExpr(Context *cxt) {
 
         llvm::Value *value;
-        Value *operand = this->operands[0]->codeGen(cxt->nextLevel());
+        Value *operand = this->operands[0]->codeGen(cxt->next());
 
         switch (this->opr) {
             case VAR_DE_REF:

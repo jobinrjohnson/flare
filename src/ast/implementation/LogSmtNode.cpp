@@ -17,7 +17,7 @@ namespace flare::ast {
     llvm::Value *LogSmtNode::codeGen(Context *cxt) {
         this->printCallStack(cxt, "LogSmtNode", __FUNCTION__);
 
-        Value *printValue = this->node->codeGen(cxt);
+        Value *printValue = this->node->codeGen(cxt->next());
 
         FunctionType *printfType = FunctionType::get(
                 Type::getInt32Ty(context),

@@ -52,7 +52,7 @@ namespace flare::ast {
 
         std::vector<Value *> calleeArgs;
         for (ExprNode *element: *(this->argumentList)) {
-            calleeArgs.push_back(element->codeGen(cxt->nextLevel()));
+            calleeArgs.push_back(element->codeGen(cxt->next()));
         }
 
         return this->performCall(cxt, calleeFunction, calleeArgs);
@@ -98,7 +98,7 @@ namespace flare::ast {
         calleeArgs.push_back(variable->getLLVMVarRef());
         if (this->argumentList != nullptr) {
             for (ExprNode *element: *(this->argumentList)) {
-                calleeArgs.push_back(element->codeGen(cxt->nextLevel()));
+                calleeArgs.push_back(element->codeGen(cxt->next()));
             }
         }
 

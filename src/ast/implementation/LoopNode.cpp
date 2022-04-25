@@ -17,7 +17,7 @@ namespace flare::ast {
 
 
         if (this->preLoop != nullptr) {
-            this->preLoop->codeGen(cxt->nextLevel());
+            this->preLoop->codeGen(cxt->next());
         }
 
         Function *insertFunction = builder.GetInsertBlock()->getParent();
@@ -31,18 +31,18 @@ namespace flare::ast {
 
         builder.SetInsertPoint(conditionBlock);
         builder.CreateCondBr(
-                this->condition->codeGen(cxt->nextLevel()),
+                this->condition->codeGen(cxt->next()),
                 bodyBlock,
                 mergeBlock
         );
 
         builder.SetInsertPoint(bodyBlock);
         if (this->before != nullptr) {
-            this->before->codeGen(cxt->nextLevel());
+            this->before->codeGen(cxt->next());
         }
-        this->statementList->codeGen(cxt->nextLevel());
+        this->statementList->codeGen(cxt->next());
         if (this->after != nullptr) {
-            this->after->codeGen(cxt->nextLevel());
+            this->after->codeGen(cxt->next());
         }
         if (builder.GetInsertBlock()->getTerminator() == nullptr) {
             builder.CreateBr(conditionBlock);

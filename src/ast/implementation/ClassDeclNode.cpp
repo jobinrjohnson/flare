@@ -34,7 +34,7 @@ namespace flare::ast {
 
         // Codegen for class functions
         for (FunctionNode *ele:this->functions) {
-            ele->codeGen(cxt);
+            ele->codeGen(cxt->next());
         }
 
         return nullptr;
@@ -108,7 +108,7 @@ namespace flare::ast {
 
             Value *val;
             if (ele->hasInitializer()) {
-                val = ele->getInitializer()->codeGen(cxt);
+                val = ele->getInitializer()->codeGen(cxt->next());
             } else {
                 val = ele->getFlareType()->getDefaultValue();
             }

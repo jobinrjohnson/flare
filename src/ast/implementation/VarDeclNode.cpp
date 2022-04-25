@@ -45,7 +45,7 @@ namespace flare::ast {
 
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
 
-        Value *value = this->initialValue->codeGen(cxt);
+        Value *value = this->initialValue->codeGen(cxt->next());
 
         this->llvmVarRef = new llvm::GlobalVariable(
                 *module,
@@ -74,13 +74,13 @@ namespace flare::ast {
             Type *variableType = this->flareType->getLLVMPtrType();
             this->llvmVarRef = new AllocaInst(variableType, 0, this->variableName, builder.GetInsertBlock());
             currentBlock->createLocal(this->variableName, this);
-            initializerValue = this->initialValue->codeGen(cxt);
+            initializerValue = this->initialValue->codeGen(cxt->next());
             builder.CreateStore(initializerValue, this->llvmVarRef);
             return this->llvmVarRef;
         }
 
         if (initialValue != nullptr) {
-            initializerValue = this->initialValue->codeGen(cxt);
+            initializerValue = this->initialValue->codeGen(cxt->next());
             types::BaseType *initializerType = cxt->getFlareType(initializerValue);
 
             // If it is already an alloc inst (in the case of class) just rename it to this.

@@ -30,7 +30,7 @@ namespace flare::ast {
 
         Value *finalValue = nullptr;
         for (auto const &value:this->statements) {
-            finalValue = value->codeGen(cxt);
+            finalValue = value->codeGen(cxt->next());
             if (cxt->getCurrentFunction() != nullptr && builder.GetInsertBlock()->getTerminator() != nullptr) {
                 goto end;
             }

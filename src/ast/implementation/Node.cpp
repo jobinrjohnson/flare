@@ -21,12 +21,16 @@ namespace flare::ast {
         auto *cxt = new Context();
         cxt->initTypes();
 
-        this->codeGen(cxt);
+        this->codeGen(cxt->next());
         delete (cxt);
 
     }
 
-    void Node::printCallStack(Context *, std::string className, std::string functionName) {
-        std::cout << className << "@" << functionName << std::endl;
+    void Node::printCallStack(Context *cxt, std::string className, std::string functionName) {
+        std::string intent = "";
+        for (int i = 1; i < cxt->depth; i++) {
+            intent = intent.append("|--");
+        }
+        std::cout << intent << className << "@" << functionName << std::endl;
     }
 }

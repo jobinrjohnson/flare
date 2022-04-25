@@ -9,7 +9,7 @@ llvm::Value *flare::ast::StatementNode::codeGen(Context *cxt) {
     this->printCallStack(cxt, "StatementNode", __FUNCTION__);
 
     if (this->type == RETURN) {
-        Value *operand = this->operands[0]->codeGen(cxt);
+        Value *operand = this->operands[0]->codeGen(cxt->next());
 
         Node *functionNode = cxt->getCurrentFunction();
         if (functionNode == nullptr) {
