@@ -11,6 +11,7 @@ namespace flare::ast {
 
 
     llvm::Value *FunctionCallNode::codeGenObjectCreate(Context *cxt) {
+        this->printCallStack(cxt, "FunctionCallNode", __FUNCTION__);
 
         ClassObjectType *fType = dynamic_cast<ClassObjectType *>(cxt->findType(this->className));
         if (fType == nullptr) {
@@ -71,7 +72,7 @@ namespace flare::ast {
     FunctionCallNode::FunctionCallNode() {}
 
     llvm::Value *FunctionCallNode::codeGenObjectFunction(Context *cxt) {
-
+        this->printCallStack(cxt, "FunctionCallNode", __FUNCTION__);
 
         Node *vNode = cxt->findVariable(this->objectName);
         if (vNode == nullptr) {
@@ -106,6 +107,7 @@ namespace flare::ast {
     }
 
     llvm::Value *FunctionCallNode::performCall(Context *cxt, Function *calleeFunction, ArrayRef<Value *> calleeArgs) {
+        this->printCallStack(cxt, "FunctionCallNode", __FUNCTION__);
 
         if (cxt->getCurrentFunction()->hasExceptionHandler()) {
             ExceptionHandleNode *eNode = cxt->getCurrentFunction()->getExceptionHandler();

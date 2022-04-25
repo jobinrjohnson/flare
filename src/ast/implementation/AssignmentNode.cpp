@@ -61,6 +61,7 @@ namespace flare::ast {
 
     // TODO refactor later
     llvm::Value *AssignmentNode::codeGenArrayAssign(Context *cxt) {
+        this->printCallStack(cxt, "AssignmentNode", __FUNCTION__);
         VarDeclNode *vNode = cxt->findVariable(this->varName);
 
         if (vNode == nullptr) {
@@ -94,6 +95,7 @@ namespace flare::ast {
     }
 
     llvm::Value *AssignmentNode::codeGenObjectAssign(Context *cxt) {
+        this->printCallStack(cxt, "AssignmentNode", __FUNCTION__);
 
         VarDeclNode *vNode = cxt->findVariable(this->base);
 

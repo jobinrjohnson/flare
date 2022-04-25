@@ -30,6 +30,7 @@ flare::ast::StatementNode::StatementNode(flare::ast::StatementType type, Node *n
 }
 
 llvm::Value *StatementNode::codeGenThrowE(Context *cxt) {
+    this->printCallStack(cxt, "StatementNode", __FUNCTION__);
 
     // TODO this properly
 

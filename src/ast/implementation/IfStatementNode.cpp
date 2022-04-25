@@ -33,6 +33,7 @@ namespace flare::ast {
     }
 
     llvm::Value *IfStatementNode::codegenIfElseIf(Context *cxt) {
+        this->printCallStack(cxt, "IfStatementNode", __FUNCTION__);
 
         llvm::Function *function = builder.GetInsertBlock()->getParent();
         llvm::BasicBlock *mergeBlock = llvm::BasicBlock::Create(context, "IFmerge");

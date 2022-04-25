@@ -70,6 +70,7 @@ namespace flare::ast {
     }
 
     llvm::Value *ClassDeclNode::codeGenConstructor(Context *cxt) {
+        this->printCallStack(cxt, "ClassDeclNode", __FUNCTION__);
 
         std::vector<Type *> argVector;
         argVector.push_back(this->getClassLLVMPointerType());

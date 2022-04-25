@@ -19,6 +19,7 @@ namespace flare::ast {
     }
 
     Value *VarDeclNode::codeGenArray(Context *cxt) {
+        this->printCallStack(cxt, "VarDeclNode", __FUNCTION__);
 
         auto ft = new FArrayType(cxt);
         ft->setArrayType(this->type->subType);
@@ -42,6 +43,7 @@ namespace flare::ast {
     }
 
     llvm::Value *VarDeclNode::codeGenGlobalVariable(Context *cxt) {
+        this->printCallStack(cxt, "VarDeclNode", __FUNCTION__);
 
         auto *currentBlock = dynamic_cast<StatementListNode *>(cxt->getCurrentStatementList());
 
@@ -65,6 +67,7 @@ namespace flare::ast {
 
 
     llvm::Value *VarDeclNode::codeGenLocalVariable(Context *cxt) {
+        this->printCallStack(cxt, "VarDeclNode", __FUNCTION__);
 
         Value *initializerValue = nullptr;
 

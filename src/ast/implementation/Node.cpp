@@ -31,6 +31,10 @@ namespace flare::ast {
         for (int i = 1; i < cxt->depth; i++) {
             intent = intent.append("|--");
         }
-        std::cout << intent << className << "@" << functionName << std::endl;
+        if (functionName.compare("codeGen") == 0) {
+            std::cout << intent << "○ " << className << "@" << functionName << std::endl;
+        } else {
+            std::cout << intent << "|--- " << className << "@" << functionName << std::endl;
+        }
     }
 }

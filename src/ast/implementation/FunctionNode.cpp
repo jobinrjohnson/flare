@@ -11,6 +11,7 @@ namespace flare::ast {
 
     // Generate the function prototype
     FunctionType *FunctionNode::codeGenSignature(Context *cxt) {
+        this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
         std::vector<Type *> argVector;
 
         if (this->isClassFunction()) {
@@ -104,6 +105,7 @@ namespace flare::ast {
 
 
     Value *FunctionNode::codeGenExit(Context *cxt) {
+        this->printCallStack(cxt, "FunctionNode", __FUNCTION__);
 
         // If there is no terminator
         if (builder.GetInsertBlock()->getTerminator() == nullptr) {

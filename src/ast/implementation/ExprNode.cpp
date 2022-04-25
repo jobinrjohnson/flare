@@ -24,6 +24,7 @@ namespace flare::ast {
     }
 
     Value *ExprNode::codeGenBinaryExpr(Context *cxt) {
+        this->printCallStack(cxt, "ExprNode", __FUNCTION__);
 
         std::vector<Value *> ops = {
                 this->operands[0]->codeGen(cxt->next()), // LHS
@@ -42,6 +43,7 @@ namespace flare::ast {
     }
 
     Value *ExprNode::codeGenUnaryExpr(Context *cxt) {
+        this->printCallStack(cxt, "ExprNode", __FUNCTION__);
 
         llvm::Value *value;
         Value *operand = this->operands[0]->codeGen(cxt->next());

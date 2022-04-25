@@ -12,7 +12,6 @@ namespace flare::ast {
     }
 
     llvm::Value *LoopNode::codeGen(Context *cxt) {
-
         this->printCallStack(cxt, "LoopNode", __FUNCTION__);
 
 
